@@ -87,17 +87,30 @@ function initMobileNav() {
 
 /* ---- Scroll Animations (Intersection Observer) ---- */
 function initScrollAnimations() {
-  const targets = document.querySelectorAll('.animate-on-scroll');
+  // Use both .animate-on-scroll and .reveal classes for flexibility
+  const targets = document.querySelectorAll('.animate-on-scroll, .reveal');
   if (!targets.length) return;
 
+  let revealIndex = 0;
+
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry, idx) => {
       if (entry.isIntersecting) {
+        // Add staggered delay for reveal elements
+        if (entry.target.classList.contains('reveal')) {
+          // Stagger every 6 elements max per viewport
+          const staggerDelay = (idx % 6) * 80; // 80ms between each
+          entry.target.style.transitionDelay = `${staggerDelay}ms`;
+        }
+        
         entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  }, { 
+    threshold: 0.12, 
+    rootMargin: '0px 0px -40px 0px' 
+  });
 
   targets.forEach(el => observer.observe(el));
 }
@@ -410,6 +423,56 @@ function adminLogout() {
   window.location.href = 'login.html';
 }
 
+/* ---- Hero Search ---- */
+function initHeroSearch() {
+  const searchInput = document.querySelector('.hero-search input');
+  const searchBtn = document.querySelector('.hero-search button');
+  if (!searchInput || !searchBtn) return;
+
+  function performSearch() {
+    const query = searchInput.value.toLowerCase().trim();
+    const serviceCards = document.querySelectorAll('.service-card');
+    let visibleCount = 0;
+
+    serviceCards.forEach(card => {
+      const title = card.querySelector('h3').textContent.toLowerCase();
+      const description = card.querySelector('p').textContent.toLowerCase();
+      const matches = title.includes(query) || description.includes(query);
+      
+      if (query === '' || matches) {
+        card.style.display = 'block';
+        card.style.animation = 'fadeIn 0.3s ease-in';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Show a message if no results
+    if (query && visibleCount === 0) {
+      showToast({
+        title: 'No Results',
+        description: `No courses or programs found matching "${query}".`,
+        type: 'success',
+        duration: 3000
+      });
+    }
+  }
+
+  // Search on button click
+  searchBtn.addEventListener('click', performSearch);
+
+  // Search on Enter key
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      performSearch();
+    }
+  });
+
+  // Live search as user types
+  searchInput.addEventListener('input', performSearch);
+}
+
 /* ---- Init All ---- */
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
@@ -422,4 +485,5 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAdminAuth();
   initAdminTabs();
   initAdminSearch();
+  initHeroSearch();
 });

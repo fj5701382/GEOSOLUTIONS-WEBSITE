@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ── Mobile menu toggle ── Enhanced with overlay, no-scroll, ESC close */
   const hamburger = document.querySelector('.hamburger');
-  const mobileNav = document.querySelector('.mobile-nav, .nav-menu');  // Supports both patterns
+  const mobileNav = document.querySelector('.mobile-nav');
   const body = document.body;
 
   const toggleMenu = () => {
@@ -65,8 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const scrollTopBtn = document.getElementById('scroll-top');
   scrollTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  /* ── Reveal on scroll (IntersectionObserver) ── */
-  const reveals = document.querySelectorAll('.reveal');
+  /* ── Reveal on scroll (IntersectionObserver) ── 
+     Note: Main reveal animation is handled by main.js initScrollAnimations()
+     This is a fallback for any elements not caught by main.js ── */
+  const reveals = document.querySelectorAll('.reveal:not(.visible)');
   if (reveals.length) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e, i) => {
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
           io.unobserve(e.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     reveals.forEach(el => io.observe(el));
   }
 

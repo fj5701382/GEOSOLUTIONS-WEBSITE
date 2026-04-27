@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard — Geosolution Educational Services</title>
   <meta name="description" content="Geosolution Educational Services Admin Dashboard" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
 </head>
 <body class="admin-page">
 
@@ -16,8 +16,10 @@
     <div class="container">
       <div class="admin-header-inner">
         <div class="admin-logo">
-          <div class="admin-logo-icon">G</div>
-          <h1>Admin Dashboard</h1>
+          <a href="index.html" class="nav-logo">
+           <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img" style="height:200px;width:auto;display:inline-block;vertical-align:middle;margin-right:0px;">
+
+          </a>
         </div>
         <div style="display:flex;align-items:center;gap:.75rem">
           <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -54,10 +56,10 @@
               </div>
               <div class="search-wrapper">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="regSearch" class="form-control" placeholder="Search name or service..." style="height:2.4rem;padding-left:2.25rem;width:280px" />
+<input type="text" id="regSearch" class="form-control" placeholder="Search name or service..." style="height:2.4rem;padding-left:2.25rem;width:100%;max-width:280px" />
               </div>
             </div>
-            <div style="overflow-x:auto">
+            <div>
               <table class="data-table">
                 <thead>
                   <tr>
@@ -88,10 +90,10 @@
               </div>
               <div class="search-wrapper">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="msgSearch" class="form-control" placeholder="Search name..." style="height:2.4rem;padding-left:2.25rem;width:280px" />
+<input type="text" id="msgSearch" class="form-control" placeholder="Search name..." style="height:2.4rem;padding-left:2.25rem;width:100%;max-width:280px" />
               </div>
             </div>
-            <div style="overflow-x:auto">
+            <div>
               <table class="data-table">
                 <thead>
                   <tr>
@@ -116,6 +118,6 @@
 
 </div>
 
-<script src="js/main.js"></script>
+<script src="../js/main.js"></script>
 </body>
 </html>

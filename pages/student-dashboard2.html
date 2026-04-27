@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard — GEO ACADEMY</title>
+  <link rel="stylesheet" href="../css/style2.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <style>
+    body { background: var(--gray-100); min-height: 100vh; }
+    .dash-layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, var(--blue) 0%, #1e40af 100%);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      box-shadow: 4px 0 20px rgba(30,58,138,0.25);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header { padding: 24px 22px 20px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .sidebar-logo .logo-main { color: white; }
+    .sidebar-logo .logo-sub { color: rgba(255,255,255,0.6); }
+    .sidebar-logo .geo-logo-icon { background: rgba(255,255,255,0.2); }
+
+    .sidebar-user {
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-avatar {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 15px; color: white; flex-shrink: 0;
+    }
+
+    .sidebar-user-info .user-name { font-size: 13px; font-weight: 700; color: white; }
+    .sidebar-user-info .user-role { font-size: 11px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+    .nav-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.35); padding: 10px 10px 6px; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 12px; border-radius: 10px; cursor: pointer;
+      color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500;
+      margin-bottom: 2px; user-select: none; transition: all 0.2s ease;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-item.active { background: rgba(255,255,255,0.15); color: white; font-weight: 700; }
+    .nav-item.active .nav-icon { background: white; color: var(--blue); }
+
+    .nav-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0; transition: all 0.2s ease;
+    }
+
+    .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .btn-logout {
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; background: rgba(220,38,38,0.15);
+      border: 1px solid rgba(220,38,38,0.3); border-radius: 10px;
+      color: #fca5a5; font-family: var(--font-body); font-size: 14px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn-logout:hover { background: rgba(220,38,38,0.25); color: #fecaca; }
+
+    .main-content { margin-left: 260px; flex: 1; display: flex; flex-direction: column; }
+    .topbar {
+      background: white; padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--gray-600); }
+    .menu-toggle svg { width: 22px; height: 22px; }
+    .page-title { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--gray-900); }
+    .topbar-right { display: flex; align-items: center; gap: 14px; }
+    .topbar-user { display: flex; align-items: center; gap: 10px; }
+    .topbar-avatar {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; color: white;
+    }
+    .topbar-name { font-size: 14px; font-weight: 600; color: var(--gray-700); }
+    .btn-logout-mobile {
+      display: none; padding: 8px 16px; background: var(--red); color: white;
+      border: none; border-radius: 8px; font-family: var(--font-body);
+      font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition);
+    }
+    .btn-logout-mobile:hover { background: #b91c1c; }
+
+    .content-area { padding: 28px 32px; flex: 1; }
+    .dash-section { display: none; }
+    .dash-section.active { display: block; }
+
+    .welcome-card {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      color: white;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-card::after {
+      content: "🎓";
+      position: absolute; right: 28px; top: 50%; transform: translateY(-50%);
+      font-size: 60px; opacity: 0.15;
+    }
+    .welcome-card h2 { font-family: var(--font-display); font-size: 24px; margin-bottom: 6px; }
+    .welcome-card p { font-size: 14px; opacity: 0.75; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 28px; }
+    .stat-card {
+      background: white; border-radius: var(--radius-lg); padding: 22px 20px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .stat-card.blue::before { background: linear-gradient(90deg, var(--blue), var(--blue-mid)); }
+    .stat-card.green::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
+    .stat-card.orange::before { background: linear-gradient(90deg, #ea580c, #f97316); }
+    .stat-card.purple::before { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .stat-icon { font-size: 28px; margin-bottom: 10px; }
+    .stat-value { font-family: var(--font-display); font-size: 34px; font-weight: 900; color: var(--gray-900); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-400); }
+
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 18px; }
+    .result-card {
+      background: white; border-radius: var(--radius-lg); padding: 20px 22px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+      transition: all 0.25s ease;
+    }
+    .result-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .result-subject { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); margin-bottom: 8px; }
+    .result-score { font-family: var(--font-display); font-size: 42px; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+    .result-score.excellent { color: #16a34a; }
+    .result-score.good { color: var(--blue); }
+    .result-score.average { color: #ea580c; }
+    .result-score.poor { color: var(--red); }
+    .result-grade { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .grade-a { background: #dcfce7; color: #16a34a; }
+    .grade-b { background: #dbeafe; color: #1d4ed8; }
+    .grade-c { background: #fef3c7; color: #b45309; }
+    .grade-d { background: #fee2e2; color: var(--red); }
+    .result-term { font-size: 12px; color: var(--gray-400); margin-top: 6px; }
+    .section-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--gray-900); margin-bottom: 20px; }
+    .info-card {
+      background: white; border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+    }
+    .info-row { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--gray-100); }
+    .info-row:last-child { border-bottom: none; }
+    .info-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .info-label { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); }
+    .info-value { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+
+    /* ── PROFILE CARD STYLES ── */
+    .profile-card-container {
+      padding: 0 !important;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 32px 28px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(107, 114, 128, 0.03) 100%);
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .profile-image-wrapper {
+      flex-shrink: 0;
+    }
+
+    .profile-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 3px solid white;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .profile-avatar-large {
+      width: 120px;
+      height: 120px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 900;
+      color: white;
+    }
+
+    .profile-header-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--gray-900);
+      margin-bottom: 6px;
+    }
+
+    .profile-identifier {
+      font-size: 14px;
+      color: var(--gray-600);
+      margin-bottom: 10px;
+    }
+
+    .profile-status {
+      display: inline-block;
+      background: #dcfce7;
+      color: #16a34a;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .profile-divider {
+      height: 1px;
+      background: var(--gray-100);
+    }
+
+    @media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .menu-toggle { display: flex; }
+      .topbar { padding: 14px 20px; }
+      .content-area { padding: 20px; }
+      .topbar-name { display: none; }
+      .btn-logout-mobile { display: block; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; gap: 12px; }
+      .results-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="dash-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+
+      
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebarAvatar">MA</div>
+      <div class="sidebar-user-info">
+        <div class="user-name" id="sidebarName">Student</div>
+        <div class="user-role">Student</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">My Portal</div>
+      <div class="nav-item active" data-target="overviewSection">
+        <div class="nav-icon">📊</div><span>Overview</span>
+      </div>
+      <div class="nav-item" data-target="resultsSection">
+        <div class="nav-icon">📋</div><span>My Results</span>
+      </div>
+      <div class="nav-item" data-target="profileSection">
+        <div class="nav-icon">👤</div><span>My Profile</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logoutBtn"><span>🚪</span><span>Logout</span></button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1 class="page-title">Student Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-user">
+          <div class="topbar-avatar" id="topbarAvatar">MA</div>
+          <span class="topbar-name" id="topbarName">Student</span>
+        </div>
+        <button class="btn-logout-mobile" id="logoutBtnMobile">Logout</button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <!-- OVERVIEW -->
+      <div id="overviewSection" class="dash-section active">
+        <div class="welcome-card">
+          <h2 id="welcomeMsg">Welcome back! 🎓</h2>
+          <p id="welcomeSub">Track your academic progress and results.</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-icon">📚</div>
+            <div class="stat-value">8</div>
+            <div class="stat-label">Subjects</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value">76%</div>
+            <div class="stat-label">Average Score</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon">📝</div>
+            <div class="stat-value">5</div>
+            <div class="stat-label">Exams Taken</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-value">B+</div>
+            <div class="stat-label">Overall Grade</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="resultsSection" class="dash-section">
+        <h2 class="section-title">My Academic Results</h2>
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="result-subject">Mathematics</div>
+            <div class="result-score excellent">92</div>
+            <span class="result-grade grade-a">A1 — Excellent</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+          <div class="result-card">
+            <div class="result-subject">English Language</div>
+            <div class="result-score good">78</div>
+            <span class="result-grade grade-b">B2 — Good</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+          <div class="result-card">
+            <div class="result-subject">Physics</div>
+            <div class="result-score good">81</div>
+            <span class="result-grade grade-b">B1 — Good</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+          <div class="result-card">
+            <div class="result-subject">Chemistry</div>
+            <div class="result-score average">65</div>
+            <span class="result-grade grade-c">C4 — Average</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+          <div class="result-card">
+            <div class="result-subject">Biology</div>
+            <div class="result-score excellent">88</div>
+            <span class="result-grade grade-a">A2 — Excellent</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+          <div class="result-card">
+            <div class="result-subject">Geography</div>
+            <div class="result-score good">74</div>
+            <span class="result-grade grade-b">B3 — Good</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+          <div class="result-card">
+            <div class="result-subject">Civic Education</div>
+            <div class="result-score excellent">90</div>
+            <span class="result-grade grade-a">A1 — Excellent</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+          <div class="result-card">
+            <div class="result-subject">Economics</div>
+            <div class="result-score average">62</div>
+            <span class="result-grade grade-c">C5 — Average</span>
+            <div class="result-term">1st Term · 2024/2025</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="profileSection" class="dash-section">
+        <h2 class="section-title">My Profile</h2>
+        <div class="info-card profile-card-container" id="profileCard">
+          <!-- Populated by JS with profile image and all info -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/mockUsers.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const user = GeoAuth.requireAuth("student");
+  if (!user) return;
+
+  const initials = user.avatar || GeoAuth.getInitials(user.fullName);
+  document.getElementById("sidebarAvatar").textContent = initials;
+  document.getElementById("sidebarName").textContent = user.fullName.split(" ")[0];
+  document.getElementById("topbarAvatar").textContent = initials;
+  document.getElementById("topbarName").textContent = user.fullName;
+  document.getElementById("welcomeMsg").textContent = `Welcome back, ${user.fullName.split(" ")[0]}! 🎓`;
+  document.getElementById("welcomeSub").textContent = `REG: ${user.identifier} · Check your results and academic progress.`;
+
+  document.getElementById("profileCard").innerHTML = `
+    <div class="profile-header">
+      <div class="profile-image-wrapper">
+        ${user.profileImage ? `<img src="${user.profileImage}" alt="${user.fullName}" class="profile-image">` : `<div class="profile-avatar-large">${initials}</div>`}
+      </div>
+      <div class="profile-header-info">
+        <h3 class="profile-name">${user.fullName}</h3>
+        <p class="profile-identifier">${user.identifier}</p>
+        <span class="profile-status">Approved ✓</span>
+      </div>
+    </div>
+    <div class="profile-divider"></div>
+    <div class="info-row"><div class="info-icon">📧</div><div><div class="info-label">Email Address</div><div class="info-value">${user.email}</div></div></div>
+    <div class="info-row"><div class="info-icon">📱</div><div><div class="info-label">Phone Number</div><div class="info-value">${user.phoneNumber || "Not provided"}</div></div></div>
+    <div class="info-row"><div class="info-icon">🆔</div><div><div class="info-label">Registration Number</div><div class="info-value">${user.identifier}</div></div></div>
+    <div class="info-row"><div class="info-icon">📅</div><div><div class="info-label">Registration Date</div><div class="info-value">${user.regDate || new Date(user.createdAt).toLocaleDateString("en-GB")}</div></div></div>
+    <div class="info-row"><div class="info-icon">🎓</div><div><div class="info-label">Role</div><div class="info-value">Student</div></div></div>
+    <div class="info-row"><div class="info-icon">✅</div><div><div class="info-label">Account Status</div><div class="info-value">Approved</div></div></div>
+    <div class="info-row"><div class="info-icon">⏰</div><div><div class="info-label">Member Since</div><div class="info-value">${new Date(user.createdAt).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</div></div></div>
+  `;
+
+  document.getElementById("logoutBtn").addEventListener("click", () => GeoAuth.logout());
+  document.getElementById("logoutBtnMobile").addEventListener("click", () => GeoAuth.logout());
+  document.getElementById("menuToggle").addEventListener("click", () => document.querySelector(".sidebar").classList.toggle("open"));
+
+  document.querySelectorAll(".nav-item").forEach(item => {
+    item.addEventListener("click", () => {
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+      item.classList.add("active");
+      const target = item.dataset.target;
+      document.querySelectorAll(".dash-section").forEach(s => s.classList.remove("active"));
+      document.getElementById(target).classList.add("active");
+    });
+  });
+});
+</script>
+</body>
+</html>
