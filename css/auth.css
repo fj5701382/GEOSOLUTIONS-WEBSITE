@@ -15,6 +15,19 @@ img {
   width: auto !important;
 }
 
+/* Mobile responsive logo sizing */
+@media (max-width: 768px) {
+  .geo-logo-img {
+    max-height: 40px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .geo-logo-img {
+    max-height: 32px !important;
+  }
+}
+
 /* ── AUTH LAYOUT ── */
 .auth-page {
   min-height: 100vh;
@@ -624,36 +637,483 @@ select.form-control {
 }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 900px) {
+/* Tablet and below */
+@media (max-width: 1024px) {
   .auth-page {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
   }
 
   .auth-right {
-    min-height: 220px;
+    min-height: 240px;
     order: -1;
+    padding: 20px;
   }
-
-  .right-illustration { display: none; }
-
-  .testimonial-card {
-    margin: 16px 20px;
-  }
-
-  .feature-chips { padding: 0 20px 16px; }
 
   .auth-left {
-    padding: 32px 28px;
+    padding: 40px 32px;
+  }
+
+  .right-illustration {
+    transform: translate(-50%, -55%);
+  }
+
+  .illus-circle {
+    width: 140px;
+    height: 140px;
+    font-size: 56px;
+  }
+
+  .illus-title {
+    font-size: 18px;
+  }
+
+  .illus-sub {
+    font-size: 12px;
+    max-width: 180px;
+  }
+
+  .feature-chips {
+    padding: 0 16px 16px;
+  }
+
+  .testimonial-card {
+    margin: 12px 16px;
+    padding: 16px 18px;
+  }
+
+  .testimonial-quote {
+    font-size: 12.5px;
   }
 }
 
+/* Small tablet */
+@media (max-width: 768px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .auth-left {
+    padding: 32px 24px;
+    justify-content: flex-start;
+    padding-top: 24px;
+  }
+
+  .auth-left::before {
+    width: 200px;
+    height: 200px;
+    top: -60px;
+    left: -80px;
+  }
+
+  .auth-left::after {
+    width: 150px;
+    height: 150px;
+    bottom: -40px;
+    right: -50px;
+  }
+
+  .auth-logo-wrap {
+    margin-bottom: 28px;
+  }
+
+  .auth-card {
+    max-width: 100%;
+  }
+
+  .auth-heading {
+    font-size: 28px;
+  }
+
+  .auth-subheading {
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .form-control {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .btn-primary {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .auth-footer {
+    font-size: 13px;
+    margin-top: 16px;
+  }
+
+  .auth-right {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .right-illustration {
+    position: static;
+    transform: none;
+    margin-bottom: 12px;
+  }
+
+  .illus-circle {
+    width: 100px;
+    height: 100px;
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .illus-title {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .illus-sub {
+    font-size: 11px;
+    max-width: 100%;
+  }
+
+  .testimonial-card {
+    margin: 8px 0;
+    padding: 14px 16px;
+  }
+
+  .testimonial-quote {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .author-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .author-info .author-name {
+    font-size: 12px;
+  }
+
+  .author-info .author-role {
+    font-size: 10px;
+  }
+
+  .feature-chips {
+    padding: 0;
+    gap: 6px;
+  }
+
+  .feature-chip {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .feature-chip span {
+    font-size: 12px;
+  }
+
+  .floating-icons {
+    display: none;
+  }
+
+  .bg-grid {
+    background-size: 40px 40px;
+  }
+
+  .bg-orb-1 {
+    width: 200px;
+    height: 200px;
+    top: -60px;
+    right: -80px;
+  }
+
+  .bg-orb-2 {
+    width: 120px;
+    height: 120px;
+    top: 50%;
+    left: -50px;
+  }
+
+  .bg-orb-3 {
+    width: 80px;
+    height: 80px;
+    bottom: 100px;
+    right: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-left {
+    padding: 24px 16px;
+  }
+
+  .auth-left::before,
+  .auth-left::after {
+    display: none;
+  }
+
+  .auth-logo-wrap {
+    margin-bottom: 20px;
+  }
+
+  .auth-heading {
+    font-size: 24px;
+  }
+
+  .auth-subheading {
+    font-size: 12.5px;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-label {
+    font-size: 11px;
+  }
+
+  .form-control {
+    padding: 11px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  select.form-control {
+    padding-right: 36px;
+  }
+
+  .input-group .form-control {
+    padding-right: 44px;
+  }
+
+  .btn-primary {
+    padding: 11px 18px;
+    font-size: 13.5px;
+  }
+
+  .checkbox-label {
+    font-size: 12px;
+  }
+
+  .upload-text {
+    font-size: 12px;
+  }
+
+  .upload-hint {
+    font-size: 10px;
+  }
+
+  .auth-footer {
+    font-size: 12px;
+  }
+
+  .register-cols {
+    gap: 12px;
+  }
+}
+
+/* Small mobile */
 @media (max-width: 480px) {
-  .auth-left { padding: 24px 20px; }
-  .auth-heading { font-size: 26px; }
-  .bg-orb-1 { width: 200px; height: 200px; top: -40px; right: -40px; }
-  .bg-orb-2 { width: 120px; height: 120px; top: 40%; left: -30px; }
-  .bg-orb-3 { width: 80px; height: 80px; bottom: 80px; right: 30px; }
+  .auth-left {
+    padding: 20px 14px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .auth-logo-wrap {
+    margin-bottom: 16px;
+  }
+
+  .auth-heading {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .auth-subheading {
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+
+  .form-group {
+    margin-bottom: 13px;
+  }
+
+  .form-label {
+    font-size: 11px;
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    padding: 10px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  select.form-control {
+    padding-right: 34px;
+    background-size: 14px;
+  }
+
+  .input-suffix svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-primary {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .error-message {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .checkbox-input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .checkbox-label {
+    font-size: 11.5px;
+  }
+
+  .auth-footer {
+    font-size: 11.5px;
+    margin-top: 14px;
+  }
+
+  .auth-right {
+    min-height: auto;
+    display: none;
+  }
+
+  .success-card {
+    max-width: 90%;
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+
+  .success-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .success-title {
+    font-size: 20px;
+  }
+
+  .success-body {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .btn-secondary {
+    font-size: 13px;
+    padding: 10px 18px;
+  }
+
+  .image-upload-label {
+    padding: 20px 16px;
+  }
+
+  .upload-icon {
+    font-size: 28px;
+  }
+
+  .register-cols {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .bg-orb-1 {
+    width: 150px;
+    height: 150px;
+    top: -50px;
+    right: -60px;
+  }
+
+  .bg-orb-2 {
+    width: 90px;
+    height: 90px;
+    top: 60%;
+    left: -40px;
+  }
+
+  .bg-orb-3 {
+    width: 60px;
+    height: 60px;
+    bottom: 140px;
+    right: 10px;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 360px) {
+  .auth-left {
+    padding: 16px 12px;
+  }
+
+  .auth-heading {
+    font-size: 20px;
+  }
+
+  .form-label {
+    font-size: 10px;
+  }
+
+  .form-control,
+  select.form-control {
+    font-size: 11px;
+  }
+
+  .btn-primary {
+    font-size: 12px;
+  }
+
+  .auth-footer {
+    font-size: 11px;
+  }
+
+  .success-card {
+    padding: 24px 16px;
+  }
+
+  .success-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .success-title {
+    font-size: 18px;
+  }
+
+  .success-body {
+    font-size: 12px;
+  }
 }
 
 /* ── REGISTER PAGE EXTRAS ── */
@@ -663,9 +1123,7 @@ select.form-control {
   gap: 14px;
 }
 
-@media (max-width: 480px) {
-  .register-cols { grid-template-columns: 1fr; }
-}
+/* No need for additional media query here as it's covered in the main responsive section above */
 
 .role-extra-fields {
   display: none;

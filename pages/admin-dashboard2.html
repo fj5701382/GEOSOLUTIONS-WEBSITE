@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1e3a8a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Admin Dashboard — GEO ACADEMY</title>
   <link rel="stylesheet" href="../css/style2.css">
   <link rel="stylesheet" href="../css/animations.css">
@@ -577,6 +580,14 @@
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
+    @media (max-width: 1024px) {
+      .page-title { font-size: 20px; }
+      .content-area { padding: 24px; }
+      .stats-grid { gap: 16px; }
+      .welcome-card { padding: 24px 28px; }
+      .welcome-card h2 { font-size: 22px; }
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
@@ -586,26 +597,297 @@
       }
       .main-content { margin-left: 0; }
       .menu-toggle { display: flex; }
-      .topbar { padding: 14px 20px; }
-      .content-area { padding: 20px; }
+      .topbar { 
+        padding: 14px 16px;
+        flex-wrap: wrap;
+      }
+      .topbar-left {
+        gap: 12px;
+      }
+      .content-area { padding: 16px; }
       .topbar-name { display: none; }
       .btn-logout-mobile { display: block; }
-      .account-card { flex-wrap: wrap; }
-      .account-actions { width: 100%; }
-    }
-
-    @media (max-width: 768px) {
+      .page-title { font-size: 18px; }
+      .account-card { 
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 16px;
+      }
+      .account-info { width: 100%; }
+      .account-actions { 
+        width: 100%;
+        gap: 6px;
+      }
+      .btn-approve, .btn-reject {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      .section-title { font-size: 18px; }
+      .stats-grid { gap: 12px; }
+      .stat-value { font-size: 28px; }
+      .welcome-card::after { display: none; }
+      
       table th:nth-child(4),
       table td:nth-child(4),
       table th:nth-child(6),
       table td:nth-child(6) { display: none; }
     }
-    @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr; gap: 12px; }
+
+    @media (max-width: 640px) {
+      .sidebar-nav {
+        padding: 12px 10px;
+      }
+      .nav-item {
+        padding: 9px 10px;
+        font-size: 13px;
+      }
+      .nav-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+      }
+      .page-title { font-size: 16px; }
+      .topbar { padding: 12px 14px; }
+      .content-area { padding: 14px; }
+      .welcome-card { 
+        padding: 20px 16px;
+        margin-bottom: 16px;
+      }
+      .welcome-card h2 { font-size: 18px; }
+      .welcome-card p { font-size: 13px; }
+      .stats-grid { gap: 10px; margin-bottom: 16px; }
+      .stat-card { padding: 16px 14px; }
+      .stat-icon { font-size: 24px; margin-bottom: 8px; }
+      .stat-value { font-size: 24px; }
+      .stat-label { font-size: 10px; }
+      .section-title { font-size: 16px; margin-bottom: 16px; }
+      .account-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px;
+        gap: 10px;
+      }
+      .account-avatar { width: 40px; height: 40px; }
+      .account-actions { 
+        width: 100%;
+        gap: 8px;
+      }
+      .btn-approve, .btn-reject {
+        flex: 1;
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+
       table th:nth-child(3),
       table td:nth-child(3),
       table th:nth-child(5),
       table td:nth-child(5) { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .dash-layout {
+        min-height: auto;
+      }
+      .sidebar {
+        width: 240px;
+        box-shadow: 4px 0 15px rgba(30,58,138,0.2);
+      }
+      .sidebar-header {
+        padding: 16px 16px 14px;
+      }
+      .sidebar-logo {
+        font-size: 12px;
+      }
+      .sidebar-user {
+        padding: 12px 14px;
+      }
+      .sidebar-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+      }
+      .sidebar-user-info .user-name {
+        font-size: 12px;
+      }
+      .sidebar-user-info .user-role {
+        font-size: 10px;
+      }
+      .sidebar-nav {
+        padding: 10px 8px;
+      }
+      .nav-section-label {
+        font-size: 9px;
+        padding: 8px 8px 4px;
+      }
+      .nav-item {
+        gap: 10px;
+        padding: 8px 8px;
+        font-size: 12px;
+        margin-bottom: 1px;
+      }
+      .nav-icon {
+        width: 26px;
+        height: 26px;
+        font-size: 12px;
+      }
+      .sidebar-footer {
+        padding: 12px 8px;
+      }
+      .btn-logout {
+        padding: 8px 10px;
+        font-size: 12px;
+        gap: 8px;
+      }
+      .topbar { 
+        padding: 10px 12px;
+        gap: 8px;
+      }
+      .topbar-left {
+        gap: 10px;
+      }
+      .topbar-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+      }
+      .page-title { 
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .menu-toggle {
+        padding: 4px;
+      }
+      .menu-toggle svg {
+        width: 20px;
+        height: 20px;
+      }
+      .btn-logout-mobile {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+      .content-area { 
+        padding: 12px;
+        flex: 1;
+      }
+      .welcome-card { 
+        padding: 16px 12px;
+        margin-bottom: 14px;
+      }
+      .welcome-card h2 { 
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+      .welcome-card p { font-size: 12px; }
+      .stats-grid { 
+        grid-template-columns: 1fr;
+        gap: 10px; 
+        margin-bottom: 14px;
+      }
+      .stat-card { 
+        padding: 14px 12px;
+      }
+      .stat-icon { font-size: 22px; }
+      .stat-value { font-size: 22px; }
+      .stat-label { font-size: 9px; }
+      .section-header {
+        margin-bottom: 14px;
+      }
+      .section-title { 
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+      .section-count {
+        padding: 3px 10px;
+        font-size: 10px;
+      }
+      .account-card {
+        padding: 12px;
+        gap: 8px;
+      }
+      .account-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+      }
+      .account-info h4 {
+        font-size: 13px;
+      }
+      .account-meta {
+        font-size: 11px;
+        gap: 8px;
+      }
+      .account-email {
+        font-size: 11px;
+      }
+      .account-date {
+        font-size: 10px;
+      }
+      .account-actions {
+        gap: 6px;
+      }
+      .btn-approve, .btn-reject {
+        padding: 6px 10px;
+        font-size: 10px;
+        gap: 4px;
+      }
+      .btn-approve svg, .btn-reject svg {
+        width: 12px;
+        height: 12px;
+      }
+      .table-wrap {
+        border-radius: 12px;
+        overflow-x: auto;
+      }
+      table {
+        font-size: 12px;
+      }
+      th {
+        padding: 10px 12px;
+        font-size: 9px;
+      }
+      td {
+        padding: 10px 12px;
+        font-size: 11px;
+      }
+      .table-user {
+        gap: 6px;
+        font-size: 12px;
+      }
+      .t-avatar {
+        width: 24px;
+        height: 24px;
+        font-size: 9px;
+      }
+      .empty-state {
+        padding: 32px 14px;
+      }
+      .empty-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+      .empty-state p {
+        font-size: 13px;
+      }
+
+      table th:nth-child(2),
+      table td:nth-child(2),
+      table th:nth-child(3),
+      table td:nth-child(3),
+      table th:nth-child(5),
+      table td:nth-child(5),
+      table th:nth-child(6),
+      table td:nth-child(6) { display: none; }
+    }
+
+    @media (max-width: 360px) {
+      .page-title { font-size: 13px; }
+      .sidebar-user-info .user-name { font-size: 11px; }
+      .stat-value { font-size: 18px; }
+      .welcome-card h2 { font-size: 14px; }
+      .section-title { font-size: 13px; }
+      .account-info h4 { font-size: 12px; }
+      .btn-approve, .btn-reject { padding: 5px 8px; font-size: 9px; }
     }
   </style>
 </head>
