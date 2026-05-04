@@ -10,23 +10,12 @@ img {
 }
 
 .geo-logo-img {
-  max-height: 48px !important;
-  height: auto !important;
-  width: auto !important;
+  max-height: 200px !important;
+  height: 200px !important;
+  width: 200px !important;
 }
 
-/* Mobile responsive logo sizing */
-@media (max-width: 768px) {
-  .geo-logo-img {
-    max-height: 40px !important;
-  }
-}
 
-@media (max-width: 480px) {
-  .geo-logo-img {
-    max-height: 32px !important;
-  }
-}
 
 /* ── AUTH LAYOUT ── */
 .auth-page {
@@ -68,7 +57,7 @@ img {
   right: -60px;
   width: 200px;
   height: 200px;
-  background: #fef2f2;
+  background: var(--red-pale);
   border-radius: 50%;
   opacity: 0.6;
   pointer-events: none;
@@ -1224,13 +1213,6 @@ select.form-control {
   background: var(--gray-50);
 }
 
-
-/* ── Auth logo fix ── */
-.geo-logo-img {
-  max-height: 52px !important;
-  height: 52px !important;
-  width: auto !important;
-}
 
 /* ── Auth page extra mobile ── */
 @media (max-width: 480px) {
