@@ -16,39 +16,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileNav = document.querySelector('.mobile-nav');
   const body = document.body;
 
+  const backdrop = document.getElementById('navBackdrop');
+  const closeBtn = document.getElementById('mobileNavClose');
+
+  const openMenu = () => {
+    hamburger.classList.add('open');
+    mobileNav?.classList.add('open');
+    backdrop?.classList.add('open');
+    body.classList.add('no-scroll');
+    hamburger.setAttribute('aria-expanded', 'true');
+  };
+
+  const closeMenu = () => {
+    hamburger.classList.remove('open');
+    mobileNav?.classList.remove('open');
+    backdrop?.classList.remove('open');
+    body.classList.remove('no-scroll');
+    hamburger.setAttribute('aria-expanded', 'false');
+  };
+
   const toggleMenu = () => {
-    const isOpen = hamburger.classList.contains('open');
-    hamburger.classList.toggle('open');
-    mobileNav?.classList.toggle('open');
-    body.classList.toggle('no-scroll', !isOpen);  // Lock scroll when open
+    hamburger.classList.contains('open') ? closeMenu() : openMenu();
   };
 
   hamburger?.addEventListener('click', toggleMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  backdrop?.addEventListener('click', closeMenu);
 
   // Close on link click
   mobileNav?.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileNav.classList.remove('open');
-      body.classList.remove('no-scroll');
-    });
+    a.addEventListener('click', closeMenu);
   });
 
   // Close on ESC key
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && hamburger.classList.contains('open')) {
-      toggleMenu();
-      body.classList.remove('no-scroll');
-    }
-  });
-
-  // Close on backdrop click (targets ::before pseudo via parent)
-  mobileNav?.addEventListener('click', (e) => {
-    if (e.target === mobileNav || e.target.classList.contains('mobile-nav')) {
-      hamburger.classList.remove('open');
-      mobileNav.classList.remove('open');
-      body.classList.remove('no-scroll');
-    }
+    if (e.key === 'Escape') closeMenu();
   });
 
   /* ── Active nav link ── */
@@ -158,29 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     searchWrap?.style.removeProperty('box-shadow');
   });
 
-  /* ── Dark/Light Mode Toggle ── */
-  const themeToggle = document.getElementById('themeToggle');
-  if (themeToggle) {
-    // Load saved theme
-    const savedTheme = localStorage.getItem('geosolution-theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeToggle.setAttribute('data-theme', savedTheme);
-    
-    // Toggle handler
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const newTheme = isDark ? 'light' : 'dark';
-      
-      // Update HTML attribute
-      document.documentElement.setAttribute('data-theme', newTheme);
-      themeToggle.setAttribute('data-theme', newTheme);
-      
-      // Save preference
-      localStorage.setItem('geosolution-theme', newTheme);
-      
-      // Smooth transition
-      document.body.style.transition = 'all 0.3s ease';
-    });
-  }
+
 
 });

@@ -1223,3 +1223,20 @@ select.form-control {
   border-color: var(--gray-400);
   background: var(--gray-50);
 }
+
+
+/* ── Auth logo fix ── */
+.geo-logo-img {
+  max-height: 52px !important;
+  height: 52px !important;
+  width: auto !important;
+}
+
+/* ── Auth page extra mobile ── */
+@media (max-width: 480px) {
+  .auth-left { padding: 24px 20px 40px; }
+  .auth-card { padding: 28px 18px; }
+  .bg-orb { width: 120px; height: 120px; }
+  .bg-orb.bg-orb-1 { width: 160px; height: 160px; }
+  .register-cols { grid-template-columns: 1fr; }
+}

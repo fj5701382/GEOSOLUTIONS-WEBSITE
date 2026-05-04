@@ -5,9 +5,9 @@
 html, body { overflow-x: hidden; }
 
 .geo-logo-img {
-  max-height: 48px !important;
-  height: auto !important;
-  width: auto !important;
+  max-height: 200px !important;
+  height: 200px !important;
+  width: 200px !important;
 }
 
 :root {

@@ -4,21 +4,6 @@
 //           Active Nav, Toast Notifications, Mobile Nav
 // =====================================================
 
-/* ---- Theme ---- */
-(function initTheme() {
-  const saved = localStorage.getItem('geo-theme') || 'light';
-  document.documentElement.setAttribute('data-theme', saved);
-})();
-
-function setTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('geo-theme', theme);
-}
-
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'light';
-  setTheme(current === 'dark' ? 'light' : 'dark');
-}
 
 /* ---- Navbar Scroll Effect ---- */
 function initNavbar() {
@@ -68,20 +53,34 @@ function setActiveNavLink() {
 function initMobileNav() {
   const hamburger = document.querySelector('.hamburger');
   const mobileNav = document.querySelector('.mobile-nav');
+  const backdrop  = document.getElementById('navBackdrop');
+  const closeBtn  = document.getElementById('mobileNavClose');
   if (!hamburger || !mobileNav) return;
 
-  hamburger.addEventListener('click', () => {
-    const isOpen = mobileNav.classList.toggle('open');
-    hamburger.classList.toggle('open', isOpen);
-    hamburger.setAttribute('aria-expanded', isOpen);
-  });
+  const open = () => {
+    mobileNav.classList.add('open');
+    hamburger.classList.add('open');
+    backdrop?.classList.add('open');
+    document.body.classList.add('no-scroll');
+    hamburger.setAttribute('aria-expanded', 'true');
+  };
+  const close = () => {
+    mobileNav.classList.remove('open');
+    hamburger.classList.remove('open');
+    backdrop?.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+    hamburger.setAttribute('aria-expanded', 'false');
+  };
 
-  // Close when nav link is clicked
+  hamburger.addEventListener('click', () =>
+    mobileNav.classList.contains('open') ? close() : open()
+  );
+  closeBtn?.addEventListener('click', close);
+  backdrop?.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
   mobileNav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileNav.classList.remove('open');
-      hamburger.classList.remove('open');
-    });
+    link.addEventListener('click', close);
   });
 }
 

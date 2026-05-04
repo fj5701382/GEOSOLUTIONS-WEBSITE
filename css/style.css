@@ -14,6 +14,10 @@
   --red-dark: #b91c1c;
   --yellow: #f7c948;
   --yellow-bg: #fff8e1;
+  /* Teal palette (referenced throughout) */
+  --teal:       #2ec4b6;
+  --teal-dark:  #1a9e92;
+  --teal-light: #e0f7f5;
   --shadow-sm: 0 2px 8px rgba(220, 38, 38, .12);
   --shadow-md: 0 8px 30px rgba(220, 38, 38, .18);
   --shadow-lg: 0 20px 60px rgba(30, 64, 175, .12);
@@ -99,10 +103,12 @@ ul {
 
 .geo-logo-img {
   max-height: 200px !important;
-  height: auto !important;
+  height: 200px !important;
   width: 200px !important;
   object-fit: contain;
   display: block;
+  margin-left: -30px;
+  margin-top: 12px;
 }
 
 /* ── Utility ── */
@@ -410,45 +416,50 @@ ul {
 
 /* Mobile Nav Overlay */
 .mobile-nav {
-  display: none;
   position: fixed;
-  inset: 0;
-  left: -100%;
   top: 0;
-  width: 100%;
-  max-width: 350px;
+  left: -100%;
+  width: 80%;
+  max-width: 320px;
   height: 100vh;
   background: var(--bg-primary);
-  backdrop-filter: blur(8px);
-  z-index: 999;
+  z-index: 1000;
+  display: flex;
   flex-direction: column;
-  padding: 1rem 1.5rem;
-  gap: 0.1rem;
+  padding: 88px 1.5rem 2rem;
+  gap: 0;
   overflow-y: auto;
   transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 4px 0 40px rgba(0,0,0,.2);
 }
 
 .mobile-nav.open {
-  display: flex;
   left: 0;
 }
 
-.mobile-nav::before {
-  content: '';
+/* Dark backdrop when nav is open */
+.mobile-nav-backdrop {
+  display: none;
   position: fixed;
   inset: 0;
-  right: 20%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: -1;
+  background: rgba(0,0,0,.45);
+  z-index: 999;
+  cursor: pointer;
+}
+.mobile-nav-backdrop.open {
+  display: block;
 }
 
 .mobile-nav .nav-link {
-  font-size: clamp(1rem, 3vw, 1.125rem);
-  padding: 1rem 0;
+  font-size: 1rem;
+  padding: 0.9rem 0;
   font-weight: 600;
   color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  display: block;
+}
+.mobile-nav .nav-link:last-of-type {
+  border-bottom: none;
 }
 
 .mobile-nav-footer {
@@ -457,8 +468,15 @@ ul {
   margin-top: auto;
 }
 
+.mobile-nav-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
 .mobile-nav-footer .btn {
-  width: 80%;
+  width: 100%;
   justify-content: center;
 }
 
@@ -1194,6 +1212,10 @@ ul {
   background: var(--dark);
   color: rgba(255, 255, 255, .75);
   padding: 70px 0 0;
+}
+
+[data-theme="dark"] .footer {
+  background: #000;
 }
 
 .footer-grid {
@@ -2398,4 +2420,194 @@ img[loading="lazy"]:not([src=""]) {
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: 150px;
   }
+}
+
+/* ── Body scroll lock ── */
+body.no-scroll { overflow: hidden; }
+
+/* ── Mobile close button inside nav ── */
+.mobile-nav-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  line-height: 1;
+  padding: 4px 8px;
+}
+
+/* ── Nav logo inline style override ── */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  margin: 0 !important;
+}
+
+/* ── Scroll-to-top button ── */
+#scroll-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 998;
+  box-shadow: 0 4px 16px rgba(220,38,38,.35);
+}
+#scroll-top.visible { opacity: 1; pointer-events: auto; }
+#scroll-top:hover { transform: translateY(-3px); }
+
+/* ── 404 page ── */
+.not-found {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+}
+.not-found h1 {
+  font-size: clamp(5rem, 18vw, 10rem);
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.not-found h2 {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  color: var(--dark);
+  margin-bottom: 1rem;
+}
+.not-found p {
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ════════════════════════════════════════════
+   MOBILE RESPONSIVE — comprehensive additions
+   ════════════════════════════════════════════ */
+
+/* ── 1024px tablet ── */
+@media (max-width: 1024px) {
+  .hero-inner,
+  .academic-inner,
+  .about-teaser-inner,
+  .about-story-inner,
+  .techhub-inner,
+  .contact-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  .hero-stats { justify-content: center; }
+  .hero-visual { max-width: 500px; margin: 0 auto; }
+  .hero-content { text-align: left; }
+  .tech-grid-imgs { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .achievements-inner { grid-template-columns: repeat(2, 1fr); }
+  .mission-grid { grid-template-columns: 1fr; }
+  .about-story-inner img { max-width: 100%; }
+}
+
+/* ── 768px mobile ── */
+@media (max-width: 768px) {
+  /* Navbar */
+  .nav-menu,
+  .nav-actions { display: none !important; }
+  .hamburger { display: flex !important; }
+
+  /* Hero */
+  .hero { padding-top: calc(72px + 1rem); min-height: auto; }
+  .hero-inner { padding: 32px 0 48px; gap: 32px; }
+  .hero-content { text-align: center; }
+  .hero-badge { display: inline-flex; }
+  .hero-stats { justify-content: center; flex-wrap: wrap; gap: 16px; }
+  .hero-visual { max-width: 400px; margin: 0 auto; }
+  .hero-float-badge { display: none; }
+  .hero-search { max-width: 100%; }
+  .hero-subtitle { max-width: 100%; }
+
+  /* Sections */
+  .services, .academic, .techhub,
+  .testimonials, .about-teaser, .gallery { padding: 56px 0; }
+  .page-hero { padding: 110px 0 50px; }
+  .contact-section, .services-detail,
+  .tech-programs, .team-section,
+  .about-mission, .about-story { padding: 56px 0; }
+
+  /* Grids */
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .achievements-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .tech-grid-imgs { grid-template-columns: 1fr; gap: 12px; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .mission-grid, .team-grid { grid-template-columns: 1fr 1fr; }
+  .services-detail-grid { grid-template-columns: 1fr; }
+  .programs-grid { grid-template-columns: 1fr; }
+  .tech-programs-grid { grid-template-columns: 1fr; }
+
+  /* Contact */
+  .contact-inner { grid-template-columns: 1fr; gap: 32px; }
+  .contact-form { padding: 28px 20px; }
+  .form-row { grid-template-columns: 1fr; }
+
+  /* About */
+  .about-img-small, .about-year-badge { display: none; }
+  .academic-badge { right: 12px; bottom: 12px; }
+
+  /* Gallery */
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 170px;
+  }
+  .gallery-item.gallery-wide { grid-column: span 2; }
+  .gallery-item.gallery-tall { grid-row: span 1; }
+  .gallery-overlay { opacity: 1; }
+
+  /* Admin table — hide less important columns */
+  .data-table th:nth-child(3),
+  .data-table td:nth-child(3),
+  .data-table th:nth-child(4),
+  .data-table td:nth-child(4) { display: none; }
+}
+
+/* ── 480px small phones ── */
+@media (max-width: 480px) {
+  .services-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .achievements-inner { grid-template-columns: 1fr 1fr; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; }
+  .hero-title { font-size: 1.5rem; }
+  .hero-search { flex-direction: column; border-radius: var(--radius); gap: 8px; }
+  .hero-search input, .hero-search button {
+    width: 100%;
+    border-radius: var(--radius-sm);
+  }
+  .hero-search button { justify-content: center; }
+  .mission-grid, .team-grid { grid-template-columns: 1fr; }
+  .contact-form { padding: 20px 14px; }
+  .page-hero { padding: 100px 0 36px; }
+  .services, .academic, .techhub,
+  .testimonials, .about-teaser, .gallery { padding: 40px 0; }
+  .contact-section, .services-detail,
+  .tech-programs, .team-section,
+  .about-mission, .about-story { padding: 40px 0; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .testi-card { padding: 24px 18px; }
+  .section-title { font-size: 1.4rem; }
+  .btn { padding: 11px 20px; font-size: 0.87rem; }
 }
