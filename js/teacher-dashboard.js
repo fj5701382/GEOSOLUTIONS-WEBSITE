@@ -1,6 +1,6 @@
 /* ============================================================
-   student-dashboard.js
-   Profile edit functionality for student-dashboard2.html
+   teacher-dashboard.js
+   Profile edit functionality for teacher-dashboard2.html
    ============================================================ */
 
 (function () {
@@ -10,16 +10,16 @@
      Each entry: { id, field on user object, editable? }
   ── */
   const EDITABLE_FIELDS = [
-    { id: "pf-name",  key: "fullName",     editable: true  },
-    { id: "pf-email", key: "email",        editable: true  },
-    { id: "pf-phone", key: "phoneNumber",  editable: true  },
-    { id: "pf-dept",  key: "department",   editable: true  },
+    { id: "pf-name",     key: "fullName",     editable: true  },
+    { id: "pf-email",    key: "email",        editable: true  },
+    { id: "pf-phone",    key: "phoneNumber",  editable: true  },
+    { id: "pf-subject",  key: "subject",      editable: true  },
   ];
 
   const READ_ONLY_FIELDS = [
     { id: "pf-regnum",  key: "identifier"  },
-    { id: "pf-regdate", key: "regDate"     },
-    { id: "pf-role",    key: null, value: "Student" },
+    { id: "pf-regdate", key: "createdAt"   },
+    { id: "pf-role",    key: null, value: "Teacher" },
     { id: "pf-status",  key: null, value: "Approved" },
   ];
 
@@ -55,15 +55,15 @@
 
   /* ── Build editable profile HTML ── */
   function buildEditableProfile(user) {
-    const initials = (user.avatar) || ((user.fullName || "S").split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase());
+    const initials = (user.avatar) || ((user.fullName || "T").split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase());
 
     const avatarHtml = user.profileImage
       ? `<img src="${user.profileImage}" alt="${user.fullName}" class="profile-image" id="profileImage">`
       : `<div class="profile-avatar-large" id="profileAvatarLarge">${initials}</div>`;
 
     const safeVal = (val) => val ? String(val).replace(/"/g, "&quot;") : "";
-    const regDate = user.regDate || (user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB") : "—");
-    const memberSince = user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "—";
+    const regDate = new Date(user.createdAt).toLocaleDateString("en-GB");
+    const memberSince = new Date(user.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
     return `
       <!-- Action buttons -->
@@ -85,18 +85,18 @@
           ${avatarHtml}
         </div>
         <div class="profile-header-info">
-          <h3 class="profile-name" id="profileDisplayName">${user.fullName || "Student"}</h3>
+          <h3 class="profile-name" id="profileDisplayName">${user.fullName || "Teacher"}</h3>
           <p class="profile-identifier">${user.identifier || ""}</p>
           <span class="profile-status">Approved ✓</span>
         </div>
       </div>
-      
+
       <!-- Profile picture upload section -->
       <div class="profile-image-container">
         <input type="file" id="imageUpload" accept="image/*">
         <button class="btn-change-photo" id="changePhotoBtn">📷 Change Photo</button>
       </div>
-      
+
       <div class="profile-divider"></div>
 
       <!-- Editable fields -->
@@ -125,10 +125,10 @@
       </div>
 
       <div class="info-row">
-        <div class="info-icon">🏫</div>
+        <div class="info-icon">📚</div>
         <div class="profile-field-group">
-          <div class="profile-field-label">Department / Programme</div>
-          <input class="profile-field-input" id="pf-dept" type="text" value="${safeVal(user.department) || ""}" placeholder="Not specified" readonly aria-label="Department">
+          <div class="profile-field-label">Subject</div>
+          <input class="profile-field-input" id="pf-subject" type="text" value="${safeVal(user.subject) || ""}" placeholder="Not specified" readonly aria-label="Subject">
         </div>
       </div>
 
@@ -153,7 +153,7 @@
         <div class="info-icon">🎓</div>
         <div class="profile-field-group">
           <div class="profile-field-label">Role</div>
-          <input class="profile-field-input" id="pf-role" type="text" value="Student" readonly aria-label="Role">
+          <input class="profile-field-input" id="pf-role" type="text" value="Teacher" readonly aria-label="Role">
         </div>
       </div>
 
@@ -266,7 +266,7 @@
       const topbarName = document.getElementById("topbarName");
       if (topbarName) topbarName.textContent = updated.fullName || user.fullName;
       const welcomeMsg = document.getElementById("welcomeMsg");
-      if (welcomeMsg) welcomeMsg.textContent = `Welcome back, ${(updated.fullName || user.fullName).split(" ")[0]}! 🎓`;
+      if (welcomeMsg) welcomeMsg.textContent = `Welcome, ${(updated.fullName || user.fullName).split(" ")[0]}! 📚`;
 
       exitEditMode();
       showToast("✓ Profile updated successfully!");
@@ -286,6 +286,6 @@
   }
 
   /* ── Expose to global scope so inline init script can call it ── */
-  window.GeoStudentDashboard = { initProfileEdit };
+  window.GeoTeacherDashboard = { initProfileEdit };
 
 })();

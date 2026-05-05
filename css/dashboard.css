@@ -239,6 +239,202 @@ body { background: var(--gray-100); min-height: 100vh; }
       background: var(--gray-100);
     }
 
+    /* ── PROFILE PICTURE & EDIT FUNCTIONALITY ── */
+    .profile-actions {
+      display: flex;
+      gap: 12px;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--gray-100);
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .btn-edit-profile,
+    .btn-save-profile,
+    .btn-cancel-profile,
+    .btn-change-photo {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-edit-profile {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: white;
+      border-color: #7c3aed;
+    }
+
+    .btn-edit-profile:hover {
+      background: linear-gradient(135deg, #6d28d9, #5b21b6);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-save-profile {
+      background: #16a34a;
+      color: white;
+      border-color: #16a34a;
+    }
+
+    .btn-save-profile:hover {
+      background: #15803d;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-cancel-profile {
+      background: #f5f5f5;
+      color: #666;
+      border-color: #e5e5e5;
+    }
+
+    .btn-cancel-profile:hover {
+      background: #ececec;
+      border-color: #d0d0d0;
+    }
+
+    .btn-change-photo {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+      margin-top: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-change-photo:hover {
+      background: #1d4ed8;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-edit-profile.hidden,
+    .btn-save-profile.hidden,
+    .btn-cancel-profile.hidden {
+      display: none;
+    }
+
+    .btn-save-profile.visible,
+    .btn-cancel-profile.visible {
+      display: inline-flex;
+    }
+
+    /* Profile image container */
+    .profile-image-container {
+      flex: 0 0 auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .profile-image,
+    .profile-avatar-large {
+      transition: all 0.3s ease;
+    }
+
+    .profile-image-wrapper:hover .profile-image,
+    .profile-image-wrapper:hover .profile-avatar-large {
+      filter: brightness(0.9);
+    }
+
+    /* File input hidden */
+    #imageUpload {
+      display: none;
+    }
+
+    /* Editable profile fields styling */
+    .profile-field-group {
+      flex: 1;
+      width: 100%;
+    }
+
+    .profile-field-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray-400);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .profile-field-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--gray-900);
+      background: white;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .profile-field-input[readonly] {
+      background: var(--gray-50);
+      cursor: not-allowed;
+      color: var(--gray-700);
+    }
+
+    .profile-field-input:not([readonly]) {
+      border-color: #3b82f6;
+      background: #f0f9ff;
+    }
+
+    .profile-field-input:not([readonly]):focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      background: white;
+    }
+
+    /* Profile editing state */
+    .profile-card-container.profile-editing .profile-field-input[readonly] {
+      background: white;
+      border-color: var(--gray-200);
+      cursor: text;
+    }
+
+    /* Toast notification */
+    .profile-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1f2937;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+
+    .profile-toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .profile-toast.error {
+      background: #dc2626;
+    }
+
     @media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 1024px) {
       .page-title { font-size: 20px; }
@@ -315,6 +511,20 @@ body { background: var(--gray-100); min-height: 100vh; }
       .info-icon { width: 32px; height: 32px; }
       .info-label { font-size: 10px; }
       .info-value { font-size: 13px; }
+      .profile-actions {
+        padding: 16px 20px;
+        gap: 8px;
+      }
+      .btn-edit-profile,
+      .btn-save-profile,
+      .btn-cancel-profile,
+      .btn-change-photo {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+      .btn-change-photo {
+        width: 100%;
+      }
     }
 
     @media (max-width: 480px) {
@@ -405,9 +615,21 @@ body { background: var(--gray-100); min-height: 100vh; }
         font-size: 12px;
         color: var(--gray-900);
       }
-    }
-
-    @media (max-width: 360px) {
+      .profile-actions {
+        padding: 14px 16px;
+        gap: 6px;
+      }
+      .btn-edit-profile,
+      .btn-save-profile,
+      .btn-cancel-profile,
+      .btn-change-photo {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+      .btn-change-photo {
+        width: 100%;
+        margin-top: 6px;
+      }
       .page-title { font-size: 13px; }
       .sidebar-user-info .user-name { font-size: 11px; }
       .stat-value { font-size: 18px; }

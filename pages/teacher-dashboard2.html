@@ -125,7 +125,7 @@
 
       <div id="profileSection" class="dash-section">
         <h2 class="section-title">My Profile</h2>
-        <div class="info-card" id="profileCard"></div>
+        <div class="info-card profile-card-container" id="profileCard"></div>
       </div>
     </div>
   </div>
@@ -133,6 +133,8 @@
 
 <script src="../js/mockUsers.js"></script>
 <script src="../js/auth.js"></script>
+<script src="../js/teacher-dashboard.js"></script>
+<script src="../js/dashboard.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const user = GeoAuth.requireAuth("teacher");
@@ -152,14 +154,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(id).textContent = subject;
   });
 
-  document.getElementById("profileCard").innerHTML = `
-    <div class="info-row"><div class="info-icon">👤</div><div><div class="info-label">Full Name</div><div class="info-value">${user.fullName}</div></div></div>
-    <div class="info-row"><div class="info-icon">📧</div><div><div class="info-label">Email</div><div class="info-value">${user.email}</div></div></div>
-    <div class="info-row"><div class="info-icon">📚</div><div><div class="info-label">Subject</div><div class="info-value">${user.subject || "N/A"}</div></div></div>
-    <div class="info-row"><div class="info-icon">🎓</div><div><div class="info-label">Role</div><div class="info-value">Teacher</div></div></div>
-    <div class="info-row"><div class="info-icon">✅</div><div><div class="info-label">Status</div><div class="info-value">Approved</div></div></div>
-    <div class="info-row"><div class="info-icon">📅</div><div><div class="info-label">Registered</div><div class="info-value">${new Date(user.createdAt).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</div></div></div>
-  `;
+  /* Profile section — built and wired by external teacher-dashboard.js */
+  GeoTeacherDashboard.initProfileEdit(user);
 
   document.getElementById("logoutBtn").addEventListener("click", () => GeoAuth.logout());
   document.getElementById("logoutBtnMobile").addEventListener("click", () => GeoAuth.logout());
