@@ -93,8 +93,10 @@
 .account-card:nth-child(3) { animation-delay: 0.15s; }
 
 /* ── SIDEBAR ── */
-.sidebar {
-  animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+@media (min-width: 769px) {
+  .sidebar {
+    animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
 }
 
 .main-content {

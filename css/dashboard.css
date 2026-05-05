@@ -446,14 +446,34 @@ body { background: var(--gray-100); min-height: 100vh; }
       .profile-card-container { padding: 20px; }
     }
     
+    /* ── SIDEBAR OVERLAY (mobile) ── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 99;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
     @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        max-width: 80vw;
+        z-index: 1000;
+      }
       .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0; }
+      .main-content { margin-left: 0; width: 100%; }
       .menu-toggle { display: flex; }
       .topbar { padding: 14px 16px; flex-wrap: wrap; }
       .topbar-left { gap: 12px; }
-      .content-area { padding: 16px; }
+      .content-area { padding: 16px; overflow-x: hidden; }
       .topbar-name { display: none; }
       .btn-logout-mobile { display: block; }
       .page-title { font-size: 18px; }
@@ -529,7 +549,16 @@ body { background: var(--gray-100); min-height: 100vh; }
 
     @media (max-width: 480px) {
       .dash-layout { min-height: auto; }
-      .sidebar { width: 240px; box-shadow: 4px 0 15px rgba(30,58,138,0.2); }
+      .sidebar {
+        transform: translateX(-100%);
+        width: 240px;
+        max-width: 85vw;
+        z-index: 1000;
+        box-shadow: 4px 0 15px rgba(30,58,138,0.2);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; width: 100%; }
+      .menu-toggle { display: flex; }
       .sidebar-header { padding: 16px 16px 14px; }
       .sidebar-user { padding: 12px 14px; }
       .sidebar-avatar { width: 36px; height: 36px; font-size: 13px; }
@@ -548,7 +577,7 @@ body { background: var(--gray-100); min-height: 100vh; }
       .menu-toggle { padding: 4px; }
       .menu-toggle svg { width: 20px; height: 20px; }
       .btn-logout-mobile { padding: 6px 12px; font-size: 11px; }
-      .content-area { padding: 12px; flex: 1; }
+      .content-area { padding: 12px; flex: 1; overflow-x: hidden; }
       .welcome-card { padding: 16px 12px; margin-bottom: 14px; }
       .welcome-card h2 { font-size: 16px; margin-bottom: 4px; }
       .welcome-card p { font-size: 12px; }

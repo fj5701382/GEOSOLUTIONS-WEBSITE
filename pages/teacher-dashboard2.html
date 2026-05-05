@@ -44,6 +44,7 @@
       <button class="btn-logout" id="logoutBtn"><span>🚪</span><span>Logout</span></button>
     </div>
   </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <div class="main-content">
     <header class="topbar">
@@ -159,7 +160,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("logoutBtn").addEventListener("click", () => GeoAuth.logout());
   document.getElementById("logoutBtnMobile").addEventListener("click", () => GeoAuth.logout());
-  document.getElementById("menuToggle").addEventListener("click", () => document.querySelector(".sidebar").classList.toggle("open"));
+
+  // Sidebar + overlay helpers
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  function openSidebar() { sidebar.classList.add("open"); overlay.classList.add("active"); }
+  function closeSidebar() { sidebar.classList.remove("open"); overlay.classList.remove("active"); }
+
+  document.getElementById("menuToggle").addEventListener("click", () => {
+    sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
+  });
+  overlay.addEventListener("click", closeSidebar);
 
   document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", () => {
@@ -168,6 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const target = item.dataset.target;
       document.querySelectorAll(".dash-section").forEach(s => s.classList.remove("active"));
       document.getElementById(target).classList.add("active");
+      if (window.innerWidth <= 768) closeSidebar();
     });
   });
 });

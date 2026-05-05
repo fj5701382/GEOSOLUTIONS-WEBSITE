@@ -15,6 +15,19 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("logoutBtnMobile").addEventListener("click", () => GeoAuth.logout());
 
   // Sidebar navigation
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+
+  function openSidebar() {
+    sidebar.classList.add("open");
+    overlay.classList.add("active");
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("active");
+  }
+
   document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", () => {
       document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
@@ -22,13 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const target = item.dataset.target;
       document.querySelectorAll(".dash-section").forEach(s => s.classList.remove("active"));
       document.getElementById(target).classList.add("active");
+      // Auto-close sidebar on mobile after selecting a section
+      if (window.innerWidth <= 768) closeSidebar();
     });
   });
 
   // Mobile menu toggle
   document.getElementById("menuToggle").addEventListener("click", () => {
-    document.querySelector(".sidebar").classList.toggle("open");
+    sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
   });
+
+  // Close sidebar when tapping the overlay
+  overlay.addEventListener("click", closeSidebar);
 });
 
 function loadStats() {
