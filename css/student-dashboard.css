@@ -1,0 +1,195 @@
+/* ============================================================
+   student-dashboard.css
+   Profile edit feature styles for student-dashboard2.html
+   ============================================================ */
+
+/* ── Profile Action Buttons ── */
+.profile-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.btn-edit-profile,
+.btn-save-profile,
+.btn-cancel-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-edit-profile {
+  background: var(--blue, #1e3a8a);
+  color: #fff;
+}
+.btn-edit-profile:hover {
+  background: #1e40af;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(30, 58, 138, 0.3);
+}
+.btn-edit-profile:active { transform: scale(0.97); }
+
+.btn-save-profile {
+  background: #16a34a;
+  color: #fff;
+}
+.btn-save-profile:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
+}
+.btn-save-profile:active { transform: scale(0.97); }
+
+.btn-cancel-profile {
+  background: transparent;
+  color: var(--gray-600, #6b7280);
+  border: 1.5px solid var(--gray-300, #d1d5db);
+}
+.btn-cancel-profile:hover {
+  background: var(--gray-100, #f3f4f6);
+  border-color: var(--gray-400, #9ca3af);
+  transform: translateY(-1px);
+}
+.btn-cancel-profile:active { transform: scale(0.97); }
+
+/* Hidden state */
+.btn-save-profile,
+.btn-cancel-profile {
+  display: none;
+}
+.btn-save-profile.visible,
+.btn-cancel-profile.visible {
+  display: inline-flex;
+}
+.btn-edit-profile.hidden {
+  display: none;
+}
+
+/* ── Editable Profile Fields ── */
+.profile-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.profile-field-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-400, #9ca3af);
+}
+
+.profile-field-input {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-900, #111827);
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 100%;
+  outline: none;
+  cursor: default;
+  transition: background 0.2s, border 0.2s, padding 0.2s, border-radius 0.2s;
+  -webkit-appearance: none;
+}
+
+.profile-field-input[readonly] {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Edit mode: inputs become visually active */
+.profile-editing .profile-field-input:not([readonly]) {
+  background: var(--blue-pale, #eff6ff);
+  border: 1.5px solid var(--blue, #1e3a8a);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: text;
+  pointer-events: auto;
+}
+
+.profile-editing .profile-field-input:not([readonly]):focus {
+  border-color: #1e40af;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+  outline: none;
+}
+
+/* Read-only fields in edit mode — visually subdued */
+.profile-editing .profile-field-input[readonly] {
+  opacity: 0.6;
+}
+
+/* ── Toast Notification ── */
+.profile-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  background: #16a34a;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.profile-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.profile-toast.error {
+  background: #dc2626;
+}
+
+/* ── Dark mode adjustments ── */
+[data-theme="dark"] .profile-field-input,
+.dark-mode .profile-field-input {
+  color: var(--gray-100, #f3f4f6);
+}
+
+[data-theme="dark"] .profile-editing .profile-field-input:not([readonly]),
+.dark-mode .profile-editing .profile-field-input:not([readonly]) {
+  background: rgba(30, 58, 138, 0.25);
+  border-color: #60a5fa;
+}
+
+[data-theme="dark"] .btn-cancel-profile,
+.dark-mode .btn-cancel-profile {
+  color: #d1d5db;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .btn-cancel-profile:hover,
+.dark-mode .btn-cancel-profile:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .profile-actions {
+    flex-direction: column;
+  }
+  .btn-edit-profile,
+  .btn-save-profile,
+  .btn-cancel-profile {
+    width: 100%;
+    justify-content: center;
+  }
+}

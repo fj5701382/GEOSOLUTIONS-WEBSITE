@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../css/dashboard.css">
 <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/inline-styles.css">
+  <link rel="stylesheet" href="../css/student-dashboard.css">
 </head>
 <body>
 <div class="dash-layout">
@@ -166,6 +167,7 @@
 
 <script src="../js/mockUsers.js"></script>
 <script src="../js/auth.js"></script>
+<script src="../js/student-dashboard.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const user = GeoAuth.requireAuth("student");
@@ -179,26 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("welcomeMsg").textContent = `Welcome back, ${user.fullName.split(" ")[0]}! 🎓`;
   document.getElementById("welcomeSub").textContent = `REG: ${user.identifier} · Check your results and academic progress.`;
 
-  document.getElementById("profileCard").innerHTML = `
-    <div class="profile-header">
-      <div class="profile-image-wrapper">
-        ${user.profileImage ? `<img src="${user.profileImage}" alt="${user.fullName}" class="profile-image">` : `<div class="profile-avatar-large">${initials}</div>`}
-      </div>
-      <div class="profile-header-info">
-        <h3 class="profile-name">${user.fullName}</h3>
-        <p class="profile-identifier">${user.identifier}</p>
-        <span class="profile-status">Approved ✓</span>
-      </div>
-    </div>
-    <div class="profile-divider"></div>
-    <div class="info-row"><div class="info-icon">📧</div><div><div class="info-label">Email Address</div><div class="info-value">${user.email}</div></div></div>
-    <div class="info-row"><div class="info-icon">📱</div><div><div class="info-label">Phone Number</div><div class="info-value">${user.phoneNumber || "Not provided"}</div></div></div>
-    <div class="info-row"><div class="info-icon">🆔</div><div><div class="info-label">Registration Number</div><div class="info-value">${user.identifier}</div></div></div>
-    <div class="info-row"><div class="info-icon">📅</div><div><div class="info-label">Registration Date</div><div class="info-value">${user.regDate || new Date(user.createdAt).toLocaleDateString("en-GB")}</div></div></div>
-    <div class="info-row"><div class="info-icon">🎓</div><div><div class="info-label">Role</div><div class="info-value">Student</div></div></div>
-    <div class="info-row"><div class="info-icon">✅</div><div><div class="info-label">Account Status</div><div class="info-value">Approved</div></div></div>
-    <div class="info-row"><div class="info-icon">⏰</div><div><div class="info-label">Member Since</div><div class="info-value">${new Date(user.createdAt).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</div></div></div>
-  `;
+  /* Profile section — built and wired by external student-dashboard.js */
+  GeoStudentDashboard.initProfileEdit(user);
 
   document.getElementById("logoutBtn").addEventListener("click", () => GeoAuth.logout());
   document.getElementById("logoutBtnMobile").addEventListener("click", () => GeoAuth.logout());
