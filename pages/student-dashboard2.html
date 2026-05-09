@@ -39,6 +39,19 @@
       <div class="nav-item" data-target="profileSection">
         <div class="nav-icon">👤</div><span>My Profile</span>
       </div>
+      <div class="nav-item" data-target="eduNeedsSection">
+        <div class="nav-icon">🎒</div><span>Edu Needs</span>
+      </div>
+      <div class="nav-item payment-countdown-btn" id="paymentCountdownBtn">
+        <div class="nav-icon payment-icon-pulse">⏳</div>
+        <div class="payment-timer-col">
+          <span class="payment-timer-label">Next Payment</span>
+          <span class="timer-text" id="paymentTimerText">Pending</span>
+        </div>
+      </div>
+      <div class="nav-item" id="makePaymentBtn">
+        <div class="nav-icon">💳</div><span>Make Payment</span>
+      </div>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" id="logoutBtn"><span>🚪</span><span>Logout</span></button>
@@ -162,7 +175,45 @@
           <!-- Populated by JS with profile image and all info -->
         </div>
       </div>
+
+      <!-- EDU NEEDS -->
+      <div id="eduNeedsSection" class="dash-section">
+        <h2 class="section-title">Educational Needs</h2>
+        <div class="info-card">
+           <div class="edu-needs-placeholder">
+             <div class="edu-icon">🎒</div>
+             <h3>Coming Soon</h3>
+             <p>School materials, educational tools, e-books, learning resources, and student services will be available here.</p>
+           </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="paymentModalOverlay">
+  <div class="payment-modal">
+    <button class="close-modal" id="closePaymentModal">&times;</button>
+    <div class="modal-header-icon">💳</div>
+    <h2>Make Payment</h2>
+    <p class="payment-subtitle">Renew your access for the next 30 days</p>
+    
+    <div class="payment-amount">
+      <span class="currency">$</span>
+      <span class="amount">50.00</span>
+    </div>
+    
+    <div class="payment-method">
+      <label>Select Payment Method</label>
+      <select class="payment-select" id="paymentMethodSelect">
+        <option value="card">Credit / Debit Card</option>
+        <option value="transfer">Bank Transfer</option>
+        <option value="crypto">Cryptocurrency</option>
+      </select>
+    </div>
+    
+    <button class="btn-confirm-payment" id="confirmPaymentBtn">Confirm Payment</button>
   </div>
 </div>
 
@@ -202,11 +253,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", () => {
+      if (item.id === "makePaymentBtn" || item.id === "paymentCountdownBtn") return;
+
       document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
       item.classList.add("active");
       const target = item.dataset.target;
-      document.querySelectorAll(".dash-section").forEach(s => s.classList.remove("active"));
-      document.getElementById(target).classList.add("active");
+      if (target) {
+        document.querySelectorAll(".dash-section").forEach(s => s.classList.remove("active"));
+        const targetEl = document.getElementById(target);
+        if (targetEl) targetEl.classList.add("active");
+      }
       if (window.innerWidth <= 768) closeSidebar();
     });
   });

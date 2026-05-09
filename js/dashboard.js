@@ -182,10 +182,110 @@
     },
   };
 
+  /* ── Payment & Countdown Manager ── */
+  const PaymentManager = {
+    STORAGE_KEY: "geoNextPaymentDate",
+
+    init: function () {
+      this.setupModal();
+      this.updateTimer();
+      // Update timer every minute to avoid too many DOM updates (or every second if you prefer)
+      setInterval(() => this.updateTimer(), 60000);
+    },
+
+    setupModal: function () {
+      const makePaymentBtn = document.getElementById("makePaymentBtn");
+      const modalOverlay = document.getElementById("paymentModalOverlay");
+      const closeModalBtn = document.getElementById("closePaymentModal");
+      const confirmBtn = document.getElementById("confirmPaymentBtn");
+
+      if (makePaymentBtn && modalOverlay) {
+        makePaymentBtn.addEventListener("click", () => {
+          modalOverlay.classList.add("active");
+        });
+      }
+
+      if (closeModalBtn && modalOverlay) {
+        closeModalBtn.addEventListener("click", () => {
+          modalOverlay.classList.remove("active");
+        });
+      }
+
+      if (confirmBtn) {
+        confirmBtn.addEventListener("click", () => {
+          this.processPayment();
+        });
+      }
+    },
+
+    processPayment: function () {
+      // Calculate 30 days from now
+      const newDate = new Date();
+      newDate.setDate(newDate.getDate() + 30);
+      
+      // Save to localStorage
+      localStorage.setItem(this.STORAGE_KEY, newDate.getTime().toString());
+      
+      // Close modal
+      const modalOverlay = document.getElementById("paymentModalOverlay");
+      if (modalOverlay) {
+        modalOverlay.classList.remove("active");
+      }
+      
+      // Show success toast
+      if (window.ProfilePictureManager) {
+        window.ProfilePictureManager.showToast("Payment successful! Access renewed for 30 days.");
+      }
+      
+      // Immediately update the timer UI
+      this.updateTimer();
+    },
+
+    updateTimer: function () {
+      const timerText = document.getElementById("paymentTimerText");
+      const btn = document.getElementById("paymentCountdownBtn");
+      const pulseIcon = btn ? btn.querySelector(".payment-icon-pulse") : null;
+      
+      if (!timerText || !btn) return;
+
+      const nextDateStr = localStorage.getItem(this.STORAGE_KEY);
+      if (!nextDateStr) {
+        timerText.textContent = "Pending";
+        btn.classList.remove("payment-due");
+        if (pulseIcon) pulseIcon.classList.remove("due");
+        return;
+      }
+
+      const nextDate = parseInt(nextDateStr, 10);
+      const now = new Date().getTime();
+      const diff = nextDate - now;
+
+      if (diff <= 0) {
+        // Expired
+        timerText.textContent = "Payment Due";
+        btn.classList.add("payment-due");
+        if (pulseIcon) pulseIcon.classList.add("due");
+      } else {
+        // Active
+        btn.classList.remove("payment-due");
+        if (pulseIcon) pulseIcon.classList.remove("due");
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        timerText.textContent = `${days}d ${hours}h ${minutes}m`;
+      }
+    }
+  };
+
   /* ── Initialize on DOM ready ── */
   function initDashboard() {
     /* Initialize profile picture manager */
     ProfilePictureManager.init();
+    
+    /* Initialize Payment Manager */
+    PaymentManager.init();
 
     /* Hook into profile edit functions if they exist */
     const card = document.getElementById("profileCard");
@@ -223,4 +323,5 @@
   /* Expose to global scope */
   window.ProfilePictureManager = ProfilePictureManager;
   window.ProfileEditIntegration = ProfileEditIntegration;
+  window.PaymentManager = PaymentManager;
 })();
