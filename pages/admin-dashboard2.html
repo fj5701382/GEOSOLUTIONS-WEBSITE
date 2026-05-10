@@ -14,117 +14,284 @@
   <link rel="stylesheet" href="../css/inline-styles.css">
 </head>
 <body>
-<div class="dash-layout">
+<div class="admin-dash-wrapper">
   <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
+  <aside class="admin-sidebar admin-glass-panel" id="sidebar">
+    <div class="admin-sidebar-header">
       <div class="geo-logo sidebar-logo">
         <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
+      </div>
+      <button class="mobile-close-btn" id="closeSidebar">✕</button>
+    </div>
 
+    <div class="admin-sidebar-nav">
+      <div class="admin-nav-item active" data-target="overviewSection">
+        <span class="admin-nav-icon">📊</span>
+        <span class="admin-nav-text">Dashboard Overview</span>
+      </div>
+      <div class="admin-nav-item" data-target="studentsSection">
+        <span class="admin-nav-icon">👨‍🎓</span>
+        <span class="admin-nav-text">Students</span>
+      </div>
+      <div class="admin-nav-item" data-target="teachersSection">
+        <span class="admin-nav-icon">👨‍🏫</span>
+        <span class="admin-nav-text">Teachers</span>
+      </div>
+      <div class="admin-nav-item" data-target="paymentsSection">
+        <span class="admin-nav-icon">💳</span>
+        <span class="admin-nav-text">Payments</span>
+      </div>
+      <div class="admin-nav-item" data-target="analyticsSection">
+        <span class="admin-nav-icon">📈</span>
+        <span class="admin-nav-text">Analytics</span>
+      </div>
+      <div class="admin-nav-item" data-target="pendingSection">
+        <span class="admin-nav-icon">⏳</span>
+        <span class="admin-nav-text">Pending Approvals</span>
+      </div>
+      <div class="admin-nav-item" data-target="usersSection">
+        <span class="admin-nav-icon">👥</span>
+        <span class="admin-nav-text">All Users</span>
+      </div>
+      <div class="admin-nav-item" data-target="messagesSection">
+        <span class="admin-nav-icon">💬</span>
+        <span class="admin-nav-text">Messages</span>
+      </div>
+      <div class="admin-nav-item" data-target="coursesSection">
+        <span class="admin-nav-icon">📚</span>
+        <span class="admin-nav-text">Courses</span>
+      </div>
+      <div class="admin-nav-item" data-target="settingsSection">
+        <span class="admin-nav-icon">⚙️</span>
+        <span class="admin-nav-text">Settings</span>
       </div>
     </div>
 
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" id="adminAvatar">SA</div>
-      <div class="sidebar-user-info">
-        <div class="user-name" id="adminName">Administrator</div>
-        <div class="user-role">Admin</div>
-      </div>
-    </div>
-
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Management</div>
-      <div class="nav-item active" data-target="overviewSection">
-        <div class="nav-icon">📊</div>
-        <span>Overview</span>
-      </div>
-      <div class="nav-item" data-target="pendingSection">
-        <div class="nav-icon">⏳</div>
-        <span>Pending Approvals</span>
-      </div>
-      <div class="nav-item" data-target="usersSection">
-        <div class="nav-icon">👥</div>
-        <span>All Users</span>
-      </div>
-    </nav>
-
-    <div class="sidebar-footer">
-      <button class="btn-logout" id="logoutBtn">
-        <span>🚪</span>
-        <span>Logout</span>
+    <div class="admin-sidebar-footer">
+      <button class="admin-btn-logout" id="logoutBtn">
+        <span class="admin-nav-icon">🚪</span>
+        <span class="admin-nav-text">Logout</span>
       </button>
     </div>
   </aside>
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- OVERLAY FOR MOBILE -->
+  <div class="admin-sidebar-overlay" id="sidebarOverlay"></div>
 
   <!-- MAIN CONTENT -->
-  <div class="main-content">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="menu-toggle" id="menuToggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <main class="admin-main-content">
+    <!-- TOP NAVBAR -->
+    <header class="admin-topbar admin-glass-panel">
+      <div class="admin-topbar-left">
+        <button class="admin-menu-toggle" id="menuToggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
         </button>
-        <h1 class="page-title">Admin Dashboard</h1>
+        <div class="admin-search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search dashboard...">
+        </div>
       </div>
-      <div class="topbar-right">
-                <button class="theme-toggle geo-inline-10" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
+
+      <div class="admin-topbar-right">
+        <button class="admin-theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
           <span class="slider">
             <span class="slider-icon sun">☀️</span>
             <span class="slider-icon moon">🌙</span>
           </span>
         </button>
-        <div class="topbar-user">
-          <div class="topbar-avatar" id="topbarAvatar">SA</div>
-          <span class="topbar-name" id="topbarName">Administrator</span>
+        
+        <button class="admin-notification-btn">
+          <span class="bell-icon">🔔</span>
+          <span class="notification-badge">3</span>
+        </button>
+
+        <div class="admin-profile-menu">
+          <div class="admin-profile-info">
+            <span class="admin-name" id="adminName">Administrator</span>
+            <span class="admin-role">Super Admin</span>
+          </div>
+          <div class="admin-avatar" id="adminAvatarContainer">
+            <img src="../images/avatar-placeholder.png" alt="Admin" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%233b82f6\'/><text x=\'50%\' y=\'50%\' fill=\'white\' font-size=\'18\' font-family=\'sans-serif\' font-weight=\'bold\' text-anchor=\'middle\' dy=\'.35em\'>AD</text></svg>'">
+          </div>
         </div>
-        <button class="btn-logout-mobile" id="logoutBtnMobile">Logout</button>
       </div>
     </header>
 
-    <div class="content-area">
+    <!-- CONTENT SECTIONS -->
+    <div class="admin-content-area">
       <!-- OVERVIEW SECTION -->
-      <div id="overviewSection" class="dash-section active">
-        <div class="welcome-card">
+      <div id="overviewSection" class="admin-section active">
+        <div class="admin-glass-card welcome-banner" style="margin-bottom: 24px;">
           <h2>Welcome back, Administrator! 👋</h2>
-          <p>Here's what's happening at GEO ACADEMY today.</p>
+          <p>Here's what's happening at GEO ACADEMY today. This dashboard has been completely redesigned with a glassmorphism and modern blue gradient aesthetic.</p>
         </div>
 
-        <div class="stats-grid">
-          <div class="stat-card blue">
-            <div class="stat-icon">🎓</div>
-            <div class="stat-value" id="statStudents">0</div>
-            <div class="stat-label">Active Students</div>
+        <div class="admin-stats-grid">
+          <!-- Total Students -->
+          <div class="admin-stat-card admin-glass-panel gradient-blue">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">🎓</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">12%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="1250">0</div>
+              <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-pulse"></div>
           </div>
-          <div class="stat-card green">
-            <div class="stat-icon">📚</div>
-            <div class="stat-value" id="statTeachers">0</div>
-            <div class="stat-label">Active Teachers</div>
+
+          <!-- Total Teachers -->
+          <div class="admin-stat-card admin-glass-panel gradient-purple">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">👨‍🏫</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">5%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="85">0</div>
+              <div class="stat-label">Total Teachers</div>
+            </div>
+            <div class="stat-pulse"></div>
           </div>
-          <div class="stat-card red">
-            <div class="stat-icon">⏳</div>
-            <div class="stat-value" id="statPending">0</div>
-            <div class="stat-label">Pending Approvals</div>
+
+          <!-- Pending Approvals -->
+          <div class="admin-stat-card admin-glass-panel gradient-orange">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">⏳</span>
+              </div>
+              <div class="stat-trend negative">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">3%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="24">0</div>
+              <div class="stat-label">Pending Approvals</div>
+            </div>
+            <div class="stat-pulse"></div>
           </div>
-          <div class="stat-card purple">
-            <div class="stat-icon">👥</div>
-            <div class="stat-value" id="statTotal">0</div>
-            <div class="stat-label">Total Accounts</div>
+
+          <!-- Active Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-green">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">💳</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">18%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="980">0</div>
+              <div class="stat-label">Active Payments</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Expired Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-red">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">⚠️</span>
+              </div>
+              <div class="stat-trend negative">
+                <span class="trend-icon">↓</span>
+                <span class="trend-value">2%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="45">0</div>
+              <div class="stat-label">Expired Payments</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Total Revenue -->
+          <div class="admin-stat-card admin-glass-panel gradient-emerald">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">💰</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">22%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value-container">
+                <span class="stat-currency">₦</span>
+                <span class="stat-value counter" data-target="4500000">0</span>
+              </div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Courses -->
+          <div class="admin-stat-card admin-glass-panel gradient-indigo">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">📚</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">8%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="120">0</div>
+              <div class="stat-label">Total Courses</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Messages -->
+          <div class="admin-stat-card admin-glass-panel gradient-pink">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">💬</span>
+              </div>
+              <div class="stat-trend neutral">
+                <span class="trend-icon">-</span>
+                <span class="trend-value">0%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="38">0</div>
+              <div class="stat-label">Unread Messages</div>
+            </div>
+            <div class="stat-pulse"></div>
           </div>
         </div>
       </div>
 
       <!-- PENDING SECTION -->
-      <div id="pendingSection" class="dash-section">
-        <div class="section-header">
-          <h2 class="section-title">Pending Account Approvals</h2>
+      <div id="pendingSection" class="admin-section">
+        <div class="admin-glass-card" style="padding: 24px; margin-bottom: 20px;">
+          <h2 class="section-title" style="color: white; margin-bottom: 0;">Pending Account Approvals</h2>
         </div>
         <div id="pendingList"></div>
       </div>
 
       <!-- USERS SECTION -->
-      <div id="usersSection" class="dash-section">
-        <div class="section-header">
-          <h2 class="section-title">All Users</h2>
+      <div id="usersSection" class="admin-section">
+        <div class="admin-glass-card" style="padding: 24px; margin-bottom: 20px;">
+          <h2 class="section-title" style="color: white; margin-bottom: 0;">All Users</h2>
         </div>
         <div class="table-wrap">
           <table>
@@ -142,12 +309,412 @@
           </table>
         </div>
       </div>
+
+      <!-- PLACEHOLDER SECTIONS -->
+      <div id="studentsSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Student Management</h2>
+            <p class="section-subtitle">View, edit, and manage all registered students</p>
+          </div>
+          <div class="header-right">
+            <button class="admin-btn-primary" id="exportStudentsBtn">
+              <span class="btn-icon">📥</span> Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="studentSearch" placeholder="Search by name, ID, or email...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterCourse">
+                <option value="">All Courses</option>
+                <option value="Frontend Development">Frontend Development</option>
+                <option value="Backend Development">Backend Development</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Data Science">Data Science</option>
+              </select>
+              
+              <select class="admin-select" id="filterStatus">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Pending">Pending</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="studentsTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllStudents" class="admin-checkbox"></th>
+                  <th>Student Name</th>
+                  <th>Student ID</th>
+                  <th>Email Address</th>
+                  <th>Course enrolled</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Reg. Date</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Loading Skeleton -->
+            <div id="tableLoader" class="table-loader hidden">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="tableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No students found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="pageStart">1</span> to <span id="pageEnd">5</span> of <span id="totalStudents">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextPage">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="teachersSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Teacher Management</h2>
+            <p class="section-subtitle">Manage instructors, view payment requests, and update roles</p>
+          </div>
+          <div class="header-right" style="display: flex; gap: 12px;">
+            <button class="admin-btn-primary" id="exportTeachersBtn">
+              <span class="btn-icon">📥</span> Export CSV
+            </button>
+            <button class="admin-btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+              <span class="btn-icon">➕</span> Add Teacher
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="teacherSearch" placeholder="Search by name, ID, or email...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterTeacherCourse">
+                <option value="">All Courses</option>
+                <option value="Frontend Development">Frontend Development</option>
+                <option value="Backend Development">Backend Development</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Data Science">Data Science</option>
+              </select>
+              
+              <select class="admin-select" id="filterTeacherPayment">
+                <option value="">All Payments</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Requested">Requested</option>
+              </select>
+
+              <select class="admin-select" id="filterTeacherStatus">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Pending">Pending</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="teachersTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllTeachers" class="admin-checkbox"></th>
+                  <th>Teacher Info</th>
+                  <th>Contact Info</th>
+                  <th>Assigned Course</th>
+                  <th>Payment Info & Bank</th>
+                  <th>Account Status</th>
+                  <th>Reg. Date</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teachersTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Loading Skeleton -->
+            <div id="teacherTableLoader" class="table-loader hidden">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="teacherTableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No teachers found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="teacherPageStart">1</span> to <span id="teacherPageEnd">5</span> of <span id="totalTeachers">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevTeacherPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextTeacherPage">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- PAYMENTS SECTION -->
+      <div id="paymentsSection" class="admin-section">
+        <!-- Payment Summary Cards -->
+        <div class="admin-stats-grid" style="margin-bottom: 24px;">
+          <!-- Total Revenue -->
+          <div class="admin-stat-card admin-glass-panel gradient-emerald">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">💰</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value-container">
+                <span class="stat-currency">₦</span><span class="stat-value counter" data-target="4500000">0</span>
+              </div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+          </div>
+          <!-- Active Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-blue">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">✅</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="980">0</div>
+              <div class="stat-label">Active Payments</div>
+            </div>
+          </div>
+          <!-- Pending Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-orange">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">⏳</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="45">0</div>
+              <div class="stat-label">Pending Payments</div>
+            </div>
+          </div>
+          <!-- Failed Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-red">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">❌</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="12">0</div>
+              <div class="stat-label">Failed Payments</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Payment Management</h2>
+            <p class="section-subtitle">Monitor transactions, approve payments, and manage receipts</p>
+          </div>
+          <div class="header-right">
+            <button class="admin-btn-primary" id="exportPaymentsBtn">
+              <span class="btn-icon">📥</span> Export History
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="paymentSearch" placeholder="Search by name, ID, or reference...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterPaymentMethod">
+                <option value="">All Methods</option>
+                <option value="Paystack">Paystack</option>
+                <option value="Flutterwave">Flutterwave</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+              </select>
+              
+              <select class="admin-select" id="filterPaymentStatus">
+                <option value="">All Statuses</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Failed">Failed</option>
+                <option value="Expired">Expired</option>
+                <option value="Refunded">Refunded</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="paymentsTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllPayments" class="admin-checkbox"></th>
+                  <th>Student Info</th>
+                  <th>Transaction Ref</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Payment Date</th>
+                  <th>Expiry Date</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Empty State -->
+            <div id="paymentTableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No payments found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="paymentPageStart">1</span> to <span id="paymentPageEnd">5</span> of <span id="totalPayments">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevPaymentPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextPaymentPage">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Receipt Modal Overlay -->
+      <div id="receiptModalOverlay" class="admin-modal-overlay hidden">
+        <div class="admin-receipt-modal glass-panel">
+          <div class="receipt-header">
+            <div class="school-logo-area">
+              <span class="logo-icon">🌍</span>
+              <span class="logo-text">GEO ACADEMY</span>
+            </div>
+            <button class="close-modal-btn" id="closeReceiptBtn">✖</button>
+          </div>
+          
+          <div class="receipt-body" id="printableReceipt">
+            <div class="receipt-title-area">
+              <h2>PAYMENT RECEIPT</h2>
+              <p class="receipt-ref">Ref: <span id="modalRef">TXN-000000</span></p>
+            </div>
+            
+            <div class="receipt-details-grid">
+              <div class="receipt-box">
+                <p class="receipt-label">Billed To</p>
+                <h4 id="modalStudentName">Student Name</h4>
+                <p id="modalStudentId">ID: GEO-000</p>
+              </div>
+              <div class="receipt-box">
+                <p class="receipt-label">Payment Date</p>
+                <h4 id="modalDate">Oct 12, 2024</h4>
+              </div>
+              <div class="receipt-box">
+                <p class="receipt-label">Payment Method</p>
+                <h4 id="modalMethod">Paystack</h4>
+              </div>
+              <div class="receipt-box">
+                <p class="receipt-label">Status</p>
+                <h4 id="modalStatus" style="color: #10b981;">Paid</h4>
+              </div>
+            </div>
+            
+            <table class="receipt-items-table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th style="text-align: right;">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Course Enrollment Fee</td>
+                  <td style="text-align: right;">₦<span id="modalAmount">0</span></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td><strong>Total Paid</strong></td>
+                  <td style="text-align: right;"><strong>₦<span id="modalTotal">0</span></strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          
+          <div class="receipt-footer-actions">
+            <button class="admin-btn-secondary" id="printReceiptBtn">
+              <span class="btn-icon">🖨️</span> Print
+            </button>
+            <button class="admin-btn-primary" id="downloadReceiptBtn">
+              <span class="btn-icon">⬇️</span> Download PDF
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="analyticsSection" class="admin-section">
+        <div class="admin-glass-card"><h2>Analytics</h2><p>Content for this section goes here.</p></div>
+      </div>
+      <div id="messagesSection" class="admin-section">
+        <div class="admin-glass-card"><h2>Messages</h2><p>Content for this section goes here.</p></div>
+      </div>
+      <div id="coursesSection" class="admin-section">
+        <div class="admin-glass-card"><h2>Courses</h2><p>Content for this section goes here.</p></div>
+      </div>
+      <div id="settingsSection" class="admin-section">
+        <div class="admin-glass-card"><h2>Settings</h2><p>Content for this section goes here.</p></div>
+      </div>
     </div>
-  </div>
+  </main>
 </div>
 
 <script src="../js/mockUsers.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/admin.js"></script>
+<script src="../js/admin-dashboard.js"></script>
 </body>
 </html>
