@@ -197,11 +197,24 @@
       const makePaymentBtn = document.getElementById("makePaymentBtn");
       const modalOverlay = document.getElementById("paymentModalOverlay");
       const closeModalBtn = document.getElementById("closePaymentModal");
-      const confirmBtn = document.getElementById("confirmPaymentBtn");
+      const paymentForm = document.getElementById("paystackPaymentForm");
+      
+      const receiptModalOverlay = document.getElementById("receiptModalOverlay");
+      const closeReceiptModal = document.getElementById("closeReceiptModal");
+      const printReceiptBtn = document.getElementById("printReceiptBtn");
 
       if (makePaymentBtn && modalOverlay) {
         makePaymentBtn.addEventListener("click", () => {
           modalOverlay.classList.add("active");
+          
+          // Auto-fill email if user is logged in
+          const emailInput = document.getElementById("payEmail");
+          if (emailInput && typeof GeoAuth !== "undefined") {
+            const user = GeoAuth.getCurrentUser();
+            if (user && user.email) {
+              emailInput.value = user.email;
+            }
+          }
         });
       }
 
@@ -211,34 +224,132 @@
         });
       }
 
-      if (confirmBtn) {
-        confirmBtn.addEventListener("click", () => {
-          this.processPayment();
+      if (paymentForm) {
+        paymentForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          this.processPaymentWithPaystack();
+        });
+      }
+      
+      // Receipt Modal Setup
+      if (closeReceiptModal && receiptModalOverlay) {
+        closeReceiptModal.addEventListener("click", () => {
+          receiptModalOverlay.classList.remove("active");
+        });
+      }
+      
+      if (printReceiptBtn) {
+        printReceiptBtn.addEventListener("click", () => {
+          window.print();
         });
       }
     },
 
-    processPayment: function () {
-      // Calculate 30 days from now
-      const newDate = new Date();
-      newDate.setDate(newDate.getDate() + 30);
+    processPaymentWithPaystack: function () {
+      const emailInput = document.getElementById("payEmail");
+      const email = emailInput ? emailInput.value : "student@geoacademy.edu";
+      const amount = 15000; // 15,000 NGN
       
-      // Save to localStorage
-      localStorage.setItem(this.STORAGE_KEY, newDate.getTime().toString());
+      const submitBtn = document.getElementById("confirmPaymentBtn");
+      const btnText = submitBtn ? submitBtn.querySelector(".btn-text") : null;
+      const btnLoader = submitBtn ? submitBtn.querySelector(".btn-loader") : null;
       
-      // Close modal
-      const modalOverlay = document.getElementById("paymentModalOverlay");
-      if (modalOverlay) {
-        modalOverlay.classList.remove("active");
+      // Show loading state
+      if (submitBtn) submitBtn.disabled = true;
+      if (btnText) btnText.style.display = "none";
+      if (btnLoader) btnLoader.style.display = "inline-block";
+
+      const handler = PaystackPop.setup({
+        key: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Replace with your public key
+        email: email,
+        amount: amount * 100, // Paystack expects amount in kobo
+        currency: 'NGN',
+        ref: 'GEO_' + Math.floor((Math.random() * 1000000000) + 1),
+        callback: (response) => {
+          // Reset button state
+          if (submitBtn) submitBtn.disabled = false;
+          if (btnText) btnText.style.display = "inline-block";
+          if (btnLoader) btnLoader.style.display = "none";
+          
+          // Close payment modal
+          const modalOverlay = document.getElementById("paymentModalOverlay");
+          if (modalOverlay) modalOverlay.classList.remove("active");
+          
+          // Verify on backend
+          this.verifyPaymentOnBackend(response.reference, email, amount);
+        },
+        onClose: () => {
+          // Reset button state
+          if (submitBtn) submitBtn.disabled = false;
+          if (btnText) btnText.style.display = "inline-block";
+          if (btnLoader) btnLoader.style.display = "none";
+          
+          if (window.ProfilePictureManager) {
+            window.ProfilePictureManager.showToast("Payment window closed.", true);
+          }
+        }
+      });
+      
+      handler.openIframe();
+    },
+    
+    verifyPaymentOnBackend: function(reference, email, amount) {
+      // In a real scenario, you would make a fetch() call to the PHP backend
+      // fetch(\`/php/api/verify_payment.php?reference=\${reference}\`)
+      // For this demo, we simulate a successful backend verification
+      
+      setTimeout(() => {
+        // Calculate 30 days from now
+        const newDate = new Date();
+        newDate.setDate(newDate.getDate() + 30);
+        
+        // Save to localStorage
+        localStorage.setItem(this.STORAGE_KEY, newDate.getTime().toString());
+        
+        // Save receipt to history
+        this.savePaymentHistory(reference, email, amount);
+        
+        // Show success toast
+        if (window.ProfilePictureManager) {
+          window.ProfilePictureManager.showToast("Payment successful! Access renewed for 30 days.");
+        }
+        
+        // Immediately update the timer UI
+        this.updateTimer();
+        
+        // Show receipt
+        this.showReceipt(reference, amount);
+      }, 500);
+    },
+    
+    savePaymentHistory: function(reference, email, amount) {
+      try {
+        const history = JSON.parse(localStorage.getItem("geoPaymentHistory") || "[]");
+        history.unshift({
+          reference,
+          email,
+          amount,
+          date: new Date().toISOString(),
+          status: "success"
+        });
+        localStorage.setItem("geoPaymentHistory", JSON.stringify(history));
+      } catch(e) {
+        console.warn("Could not save payment history");
       }
+    },
+    
+    showReceipt: function(reference, amount) {
+      const user = typeof GeoAuth !== "undefined" ? GeoAuth.getCurrentUser() : null;
       
-      // Show success toast
-      if (window.ProfilePictureManager) {
-        window.ProfilePictureManager.showToast("Payment successful! Access renewed for 30 days.");
+      const receiptModal = document.getElementById("receiptModalOverlay");
+      if (receiptModal) {
+        document.getElementById("receiptRef").textContent = reference;
+        document.getElementById("receiptDate").textContent = new Date().toLocaleString();
+        document.getElementById("receiptName").textContent = user ? user.fullName : "Student Name";
+        document.getElementById("receiptReg").textContent = user ? user.identifier : "GEO/XXXX/XXX";
+        
+        receiptModal.classList.add("active");
       }
-      
-      // Immediately update the timer UI
-      this.updateTimer();
     },
 
     updateTimer: function () {

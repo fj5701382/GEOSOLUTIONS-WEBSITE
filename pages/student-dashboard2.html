@@ -197,26 +197,72 @@
     <button class="close-modal" id="closePaymentModal">&times;</button>
     <div class="modal-header-icon">💳</div>
     <h2>Make Payment</h2>
-    <p class="payment-subtitle">Renew your access for the next 30 days</p>
+    <p class="payment-subtitle">Renew your access for the next 30 days via Paystack</p>
     
-    <div class="payment-amount">
-      <span class="currency">$</span>
-      <span class="amount">50.00</span>
-    </div>
-    
-    <div class="payment-method">
-      <label>Select Payment Method</label>
-      <select class="payment-select" id="paymentMethodSelect">
-        <option value="card">Credit / Debit Card</option>
-        <option value="transfer">Bank Transfer</option>
-        <option value="crypto">Cryptocurrency</option>
-      </select>
-    </div>
-    
-    <button class="btn-confirm-payment" id="confirmPaymentBtn">Confirm Payment</button>
+    <form id="paystackPaymentForm" class="realtime-payment-form">
+      <div class="form-group">
+        <label for="payEmail">Email Address</label>
+        <input type="email" id="payEmail" class="form-control" placeholder="student@geoacademy.edu" required readonly>
+      </div>
+      
+      <div class="form-group">
+        <label for="payAmount">Amount (NGN)</label>
+        <div class="payment-amount-display">
+          <span class="currency">₦</span>
+          <span class="amount">15,000.00</span>
+        </div>
+      </div>
+      
+      <div class="payment-method">
+        <label>Payment Gateway</label>
+        <div class="gateway-option active">
+          <span class="gateway-icon">🔒</span>
+          <span>Paystack (Card, Transfer, USSD)</span>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn-confirm-payment" id="confirmPaymentBtn">
+        <span class="btn-text">Pay ₦15,000</span>
+        <span class="btn-loader" style="display:none;"></span>
+      </button>
+    </form>
   </div>
 </div>
 
+<!-- RECEIPT MODAL -->
+<div class="modal-overlay" id="receiptModalOverlay">
+  <div class="receipt-modal">
+    <button class="close-modal" id="closeReceiptModal">&times;</button>
+    <div class="receipt-content" id="printableReceipt">
+      <div class="receipt-header">
+        <div class="receipt-logo">
+          <img src="../images/logo.jpg" alt="Geo Academy">
+        </div>
+        <h2>Payment Receipt</h2>
+        <p>GEO ACADEMY PORTAL</p>
+      </div>
+      <div class="receipt-body">
+        <div class="receipt-row"><span>Reference:</span> <strong id="receiptRef">...</strong></div>
+        <div class="receipt-row"><span>Date:</span> <strong id="receiptDate">...</strong></div>
+        <div class="receipt-row"><span>Student:</span> <strong id="receiptName">...</strong></div>
+        <div class="receipt-row"><span>Reg No:</span> <strong id="receiptReg">...</strong></div>
+        <div class="receipt-row"><span>Status:</span> <strong class="status-success">SUCCESSFUL</strong></div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-row total"><span>Amount Paid:</span> <strong>₦15,000.00</strong></div>
+      </div>
+      <div class="receipt-footer">
+        <p>Thank you for your payment!</p>
+        <p>Your portal access has been renewed for 30 days.</p>
+      </div>
+    </div>
+    <div class="receipt-actions">
+      <button class="btn-secondary" id="downloadReceiptBtn">⬇ Download PDF</button>
+      <button class="btn-primary" id="printReceiptBtn">🖨 Print Receipt</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="../js/mockUsers.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/student-dashboard.js"></script>
