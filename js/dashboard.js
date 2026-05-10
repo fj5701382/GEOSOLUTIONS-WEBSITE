@@ -279,6 +279,139 @@
     }
   };
 
+  /* ── Teacher Payment Manager ── */
+  const TeacherPaymentManager = {
+    STORAGE_KEY: "teacherPaymentData",
+
+    init: function () {
+      this.setupModal();
+      this.setupForm();
+    },
+
+    setupModal: function () {
+      const paymentBtnNav = document.getElementById("paymentBtnNav");
+      const modalOverlay = document.getElementById("paymentModalOverlay");
+      const closeModalBtn = document.getElementById("closePaymentModal");
+
+      if (paymentBtnNav && modalOverlay) {
+        paymentBtnNav.addEventListener("click", () => {
+          modalOverlay.classList.add("active");
+          
+          /* Update active state in sidebar */
+          document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+          paymentBtnNav.classList.add("active");
+          
+          /* Close sidebar on mobile */
+          if (window.innerWidth <= 768) {
+            const sidebar = document.querySelector(".sidebar");
+            const overlay = document.getElementById("sidebarOverlay");
+            if (sidebar) sidebar.classList.remove("open");
+            if (overlay) overlay.classList.remove("active");
+          }
+        });
+      }
+
+      if (closeModalBtn && modalOverlay) {
+        closeModalBtn.addEventListener("click", () => {
+          modalOverlay.classList.remove("active");
+        });
+      }
+    },
+
+    setupForm: function () {
+      const form = document.getElementById("paymentForm");
+      if (!form) return;
+
+      const accountInput = document.getElementById("payAccountNumber");
+      
+      /* Real-time account number validation */
+      if (accountInput) {
+        accountInput.addEventListener("input", function(e) {
+          /* Remove non-digits */
+          this.value = this.value.replace(/\D/g, '');
+        });
+      }
+
+      const cancelBtn = document.getElementById("cancelPaymentBtn");
+      if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+          form.reset();
+          const modalOverlay = document.getElementById("paymentModalOverlay");
+          if (modalOverlay) modalOverlay.classList.remove("active");
+        });
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById("submitPaymentBtn");
+        const btnText = submitBtn ? submitBtn.querySelector(".btn-text") : null;
+        const btnLoader = submitBtn ? submitBtn.querySelector(".btn-loader") : null;
+
+        const fullName = document.getElementById("payFullName").value.trim();
+        const bankName = document.getElementById("payBankName").value;
+        const accountNumber = document.getElementById("payAccountNumber").value.trim();
+        const amount = document.getElementById("payAmount").value;
+        const notes = document.getElementById("payNotes").value.trim();
+
+        /* Validation: Account number exactly 10 digits */
+        if (accountNumber.length !== 10) {
+          if (window.ProfilePictureManager) {
+            window.ProfilePictureManager.showToast("Account number must be exactly 10 digits.", true);
+          }
+          return;
+        }
+
+        /* Show loading state */
+        if (submitBtn) submitBtn.disabled = true;
+        if (btnText) btnText.style.display = "none";
+        if (btnLoader) btnLoader.style.display = "inline-flex";
+
+        /* Simulate network request */
+        setTimeout(() => {
+          /* Save data to localStorage */
+          const paymentData = {
+            fullName,
+            bankName,
+            accountNumber,
+            amount,
+            notes,
+            timestamp: new Date().toISOString()
+          };
+          
+          try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(paymentData));
+          } catch (err) {
+            console.warn("Could not save payment data", err);
+          }
+
+          /* Show success notification & Confirmation Message */
+          if (window.ProfilePictureManager) {
+            window.ProfilePictureManager.showToast("✓ Payment details submitted successfully!");
+          }
+
+          /* Clear the form */
+          form.reset();
+
+          /* Reset button state */
+          if (submitBtn) submitBtn.disabled = false;
+          if (btnText) btnText.style.display = "inline-block";
+          if (btnLoader) btnLoader.style.display = "none";
+
+          /* Close modal */
+          const modalOverlay = document.getElementById("paymentModalOverlay");
+          if (modalOverlay) {
+            modalOverlay.classList.remove("active");
+          }
+          
+          /* Switch back to overview in sidebar */
+          const overviewBtn = document.querySelector('[data-target="overviewSection"]');
+          if (overviewBtn) overviewBtn.click();
+        }, 1500);
+      });
+    }
+  };
+
   /* ── Initialize on DOM ready ── */
   function initDashboard() {
     /* Initialize profile picture manager */
@@ -286,6 +419,9 @@
     
     /* Initialize Payment Manager */
     PaymentManager.init();
+
+    /* Initialize Teacher Payment Manager */
+    TeacherPaymentManager.init();
 
     /* Hook into profile edit functions if they exist */
     const card = document.getElementById("profileCard");
@@ -324,4 +460,5 @@
   window.ProfilePictureManager = ProfilePictureManager;
   window.ProfileEditIntegration = ProfileEditIntegration;
   window.PaymentManager = PaymentManager;
+  window.TeacherPaymentManager = TeacherPaymentManager;
 })();

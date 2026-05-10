@@ -39,6 +39,9 @@
       <div class="nav-item" data-target="profileSection">
         <div class="nav-icon">👤</div><span>My Profile</span>
       </div>
+      <div class="nav-item" id="paymentBtnNav">
+        <div class="nav-icon">💳</div><span>Payment Details</span>
+      </div>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" id="logoutBtn"><span>🚪</span><span>Logout</span></button>
@@ -128,6 +131,76 @@
         <h2 class="section-title">My Profile</h2>
         <div class="info-card profile-card-container" id="profileCard"></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Form Modal -->
+<div class="modal-overlay" id="paymentModalOverlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 class="modal-title">Payment Details</h3>
+      <button class="modal-close" id="closePaymentModal" aria-label="Close modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="paymentForm" class="modern-form">
+        <div class="form-group">
+          <label for="payFullName">Full Name <span class="required">*</span></label>
+          <input type="text" id="payFullName" class="form-input" placeholder="e.g. John Doe" required>
+        </div>
+        <div class="form-group">
+          <label for="payBankName">Bank Name <span class="required">*</span></label>
+          <div class="select-wrapper">
+            <select id="payBankName" class="form-input" required>
+              <option value="" disabled selected>Select a bank</option>
+              <option value="Access Bank">Access Bank</option>
+              <option value="GTBank">GTBank</option>
+              <option value="Zenith Bank">Zenith Bank</option>
+              <option value="UBA">UBA</option>
+              <option value="First Bank">First Bank</option>
+              <option value="Fidelity Bank">Fidelity Bank</option>
+              <option value="Union Bank">Union Bank</option>
+              <option value="FCMB">FCMB</option>
+              <option value="Sterling Bank">Sterling Bank</option>
+              <option value="Polaris Bank">Polaris Bank</option>
+              <option value="Ecobank">Ecobank</option>
+              <option value="Wema Bank">Wema Bank</option>
+              <option value="Keystone Bank">Keystone Bank</option>
+              <option value="Stanbic IBTC">Stanbic IBTC</option>
+              <option value="Providus Bank">Providus Bank</option>
+              <option value="Opay">Opay</option>
+              <option value="PalmPay">PalmPay</option>
+              <option value="Moniepoint">Moniepoint</option>
+              <option value="Kuda Bank">Kuda Bank</option>
+              <option value="Jaiz Bank">Jaiz Bank</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="payAccountNumber">Account Number <span class="required">*</span></label>
+          <input type="text" id="payAccountNumber" class="form-input" placeholder="10-digit account number" pattern="\d{10}" title="Account number must be exactly 10 digits" required maxlength="10">
+          <small class="form-error" id="payAccountError">Account number must be 10 digits.</small>
+        </div>
+        <div class="form-group">
+          <label for="payAmount">Amount Expected (₦) <span class="required">*</span></label>
+          <input type="number" id="payAmount" class="form-input" placeholder="e.g. 50000" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="payNotes">Additional Notes</label>
+          <textarea id="payNotes" class="form-input" rows="3" placeholder="Any extra information..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel-payment" id="cancelPaymentBtn">
+            <span>Cancel</span>
+          </button>
+          <button type="submit" class="btn-submit-payment" id="submitPaymentBtn">
+            <span class="btn-text">Submit Details</span>
+            <span class="btn-loader" style="display: none;">
+              <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+            </span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
