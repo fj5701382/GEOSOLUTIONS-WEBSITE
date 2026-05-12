@@ -488,6 +488,263 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 8. Analytics & Charts System
+  const initAnalytics = () => {
+    // Chart.js Global Defaults
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+    Chart.defaults.font.family = "'Plus Jakarta Sans', 'Inter', sans-serif";
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+    const chartColors = {
+      blue: {
+        solid: '#3b82f6',
+        gradient: (ctx) => {
+          const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
+          gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+          return gradient;
+        }
+      },
+      emerald: {
+        solid: '#10b981',
+        gradient: (ctx) => {
+          const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, 'rgba(16, 185, 129, 0.5)');
+          gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+          return gradient;
+        }
+      },
+      purple: {
+        solid: '#8b5cf6',
+        gradient: (ctx) => {
+          const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, 'rgba(139, 92, 246, 0.5)');
+          gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+          return gradient;
+        }
+      },
+      orange: {
+        solid: '#f59e0b',
+        gradient: (ctx) => {
+          const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, 'rgba(245, 158, 11, 0.5)');
+          gradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
+          return gradient;
+        }
+      }
+    };
+
+    // --- 1. Revenue Chart ---
+    const revenueCtx = document.getElementById('revenueChart');
+    if (revenueCtx) {
+      new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Revenue (₦)',
+            data: [1200000, 1500000, 1100000, 1800000, 2200000, 2100000, 2500000, 2900000, 3200000, 3800000, 4200000, 4500000],
+            borderColor: chartColors.emerald.solid,
+            backgroundColor: chartColors.emerald.gradient(revenueCtx.getContext('2d')),
+            fill: true,
+            tension: 0.4,
+            borderWidth: 3,
+            pointBackgroundColor: chartColors.emerald.solid,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.9)',
+              padding: 12,
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 13 },
+              displayColors: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: {
+                callback: value => '₦' + (value / 1000000).toFixed(1) + 'M'
+              }
+            },
+            x: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    // --- 2. User Registrations Chart ---
+    const regCtx = document.getElementById('registrationsChart');
+    if (regCtx) {
+      new Chart(regCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+          datasets: [
+            {
+              label: 'Students',
+              data: [120, 150, 180, 210],
+              backgroundColor: chartColors.blue.solid,
+              borderRadius: 6
+            },
+            {
+              label: 'Teachers',
+              data: [15, 25, 18, 32],
+              backgroundColor: chartColors.purple.solid,
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12, padding: 20 } }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- 3. Course Distribution Chart ---
+    const courseCtx = document.getElementById('courseActivityChart');
+    if (courseCtx) {
+      new Chart(courseCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Frontend', 'Backend', 'UI/UX', 'Data Science', 'Graphic Design'],
+          datasets: [{
+            data: [35, 25, 20, 15, 5],
+            backgroundColor: [
+              chartColors.blue.solid,
+              chartColors.emerald.solid,
+              chartColors.purple.solid,
+              chartColors.orange.solid,
+              '#ef4444'
+            ],
+            borderWidth: 0,
+            hoverOffset: 15
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '70%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 8,
+                padding: 15,
+                usePointStyle: true
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // --- 4. Payment Trends Chart ---
+    const paymentCtx = document.getElementById('paymentTrendsChart');
+    if (paymentCtx) {
+      new Chart(paymentCtx, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Payments',
+            data: [45, 62, 55, 78, 92, 45, 38],
+            borderColor: chartColors.blue.solid,
+            backgroundColor: chartColors.blue.gradient(paymentCtx.getContext('2d')),
+            fill: true,
+            tension: 0.4,
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- 5. Growth Comparison Chart ---
+    const growthCtx = document.getElementById('growthChart');
+    if (growthCtx) {
+      new Chart(growthCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Aug', 'Sep', 'Oct', 'Nov'],
+          datasets: [{
+            label: 'Monthly Growth',
+            data: [65, 78, 82, 95],
+            backgroundColor: (ctx) => {
+              const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
+              gradient.addColorStop(0, '#3b82f6');
+              gradient.addColorStop(1, '#8b5cf6');
+              return gradient;
+            },
+            borderRadius: 20,
+            barThickness: 30
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { callback: v => v + '%' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+  };
+
+  // Run analytics init when analytics section is visited
+  const analyticsNavItem = document.querySelector('[data-target="analyticsSection"]');
+  if (analyticsNavItem) {
+    analyticsNavItem.addEventListener('click', () => {
+      // Small delay to ensure section is visible for Chart.js to calculate dimensions
+      setTimeout(initAnalytics, 100);
+    }, { once: true }); // Only init once
+  }
+
+  // Handle period filter clicks
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // In a real app, this would trigger data fetch and chart update
+      console.log('Filtering for:', btn.getAttribute('data-period'));
+    });
+  });
+
   // Initial render for pending
   renderPending(mockPendingUsers);
 });
