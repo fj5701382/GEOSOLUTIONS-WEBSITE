@@ -62,6 +62,10 @@
         <span class="admin-nav-icon">📚</span>
         <span class="admin-nav-text">Courses</span>
       </div>
+      <div class="admin-nav-item" data-target="notificationsSection">
+        <span class="admin-nav-icon">🔔</span>
+        <span class="admin-nav-text">Notifications</span>
+      </div>
       <div class="admin-nav-item" data-target="settingsSection">
         <span class="admin-nav-icon">⚙️</span>
         <span class="admin-nav-text">Settings</span>
@@ -105,10 +109,26 @@
           </span>
         </button>
         
-        <button class="admin-notification-btn">
-          <span class="bell-icon">🔔</span>
-          <span class="notification-badge">3</span>
-        </button>
+        <div class="admin-notification-container">
+          <button class="admin-notification-btn" id="notifDropdownBtn">
+            <span class="bell-icon">🔔</span>
+            <span class="notification-badge" id="topbarNotifBadge">5</span>
+          </button>
+          
+          <!-- Dropdown Panel -->
+          <div class="notification-dropdown-panel admin-glass-panel hidden" id="notifDropdown">
+            <div class="dropdown-header">
+              <h3>Recent Notifications</h3>
+              <button class="mark-all-read" id="markAllReadBtn">Mark all as read</button>
+            </div>
+            <div class="dropdown-body" id="dropdownNotifList">
+              <!-- Quick notifications injected here -->
+            </div>
+            <div class="dropdown-footer">
+              <button class="view-all-notifs" onclick="document.querySelector('[data-target=\'notificationsSection\']').click()">View All Notifications</button>
+            </div>
+          </div>
+        </div>
 
         <div class="admin-profile-menu">
           <div class="admin-profile-info">
@@ -938,8 +958,103 @@
           </div>
         </div>
       </div>
+      <!-- NOTIFICATIONS SECTION -->
+      <div id="notificationsSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Notification Center</h2>
+            <p class="section-subtitle">Manage system alerts, registrations, and updates</p>
+          </div>
+          <div class="header-right">
+            <div class="table-controls">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="notifSearch" placeholder="Search notifications...">
+              </div>
+              <div class="filter-group">
+                <select class="admin-select" id="filterNotifType">
+                  <option value="">All Types</option>
+                  <option value="Registration">Registrations</option>
+                  <option value="Payment">Payments</option>
+                  <option value="System">System</option>
+                  <option value="Approval">Approvals</option>
+                </select>
+                <select class="admin-select" id="filterNotifStatus">
+                  <option value="">All Status</option>
+                  <option value="Unread">Unread</option>
+                  <option value="Read">Read</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="notifications-list-container" id="notificationsFullList">
+          <!-- Notification cards injected here -->
+        </div>
+      </div>
+
+      <!-- MESSAGES SECTION -->
       <div id="messagesSection" class="admin-section">
-        <div class="admin-glass-card"><h2>Messages</h2><p>Content for this section goes here.</p></div>
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Message Center</h2>
+            <p class="section-subtitle">Communication hub for students and teachers</p>
+          </div>
+          <div class="header-right">
+            <button class="admin-btn-primary" id="composeMessageBtn">
+              <span class="btn-icon">✉️</span> Compose Message
+            </button>
+          </div>
+        </div>
+
+        <div class="message-center-layout">
+          <div class="message-sidebar admin-glass-panel">
+            <div class="sidebar-search">
+              <input type="text" id="messageSearch" placeholder="Search messages...">
+            </div>
+            <div class="message-inbox" id="messageInboxList">
+              <!-- Inbox items injected here -->
+            </div>
+          </div>
+          
+          <div class="message-content-view admin-glass-panel">
+            <div id="noMessageSelected" class="empty-message-state">
+              <div class="empty-icon">💬</div>
+              <h3>Select a message to read</h3>
+              <p>Choose a conversation from the left to view details</p>
+            </div>
+            
+            <div id="messageDetailView" class="message-detail-container hidden">
+              <div class="detail-header">
+                <div class="sender-profile">
+                  <img src="" id="detailSenderImg" alt="">
+                  <div class="sender-info">
+                    <h4 id="detailSenderName">Sender Name</h4>
+                    <span id="detailSenderRole">Student</span>
+                  </div>
+                </div>
+                <div class="detail-actions">
+                  <button class="btn-icon-only" title="Delete">🗑️</button>
+                  <button class="btn-icon-only" title="Archive">📦</button>
+                </div>
+              </div>
+              <div class="detail-body">
+                <div class="message-timestamp" id="detailTimestamp">Today, 10:45 AM</div>
+                <div class="message-text" id="detailBody">
+                  Message content goes here...
+                </div>
+              </div>
+              <div class="detail-footer">
+                <textarea id="replyText" placeholder="Write your reply..."></textarea>
+                <div class="footer-buttons">
+                  <button class="admin-btn-secondary">Attach File</button>
+                  <button class="admin-btn-primary" id="sendReplyBtn">Send Reply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div id="coursesSection" class="admin-section">
         <div class="admin-glass-card"><h2>Courses</h2><p>Content for this section goes here.</p></div>
@@ -1028,6 +1143,18 @@
               <span class="btn-icon">✅</span> Approve Account
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+    <!-- MESSAGE VIEW MODAL -->
+    <div id="messageModalOverlay" class="admin-modal-overlay hidden">
+      <div class="admin-modal glass-panel">
+        <div class="modal-header">
+          <h3>Message Details</h3>
+          <button class="close-modal-btn" id="closeMessageBtn">✖</button>
+        </div>
+        <div class="modal-body" id="modalMessageBody">
+          <!-- Content similar to detail view but for mobile/modal focus -->
         </div>
       </div>
     </div>

@@ -700,9 +700,173 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fallback if user lands directly on analytics or reloads
-  if (document.getElementById('analyticsSection').classList.contains('active')) {
-    initCharts();
+  // 9. Notification & Message Center Logic
+  const mockNotifications = [
+    { id: 1, type: 'Registration', title: 'New Student Joined', msg: 'Alice Walker registered for Frontend Development.', time: '5 mins ago', status: 'unread', icon: '👨‍🎓', priority: 'new' },
+    { id: 2, type: 'Payment', title: 'Payment Received', msg: 'Payment of ₦45,000 confirmed for John Doe.', time: '20 mins ago', status: 'unread', icon: '💳', priority: 'info' },
+    { id: 3, type: 'Approval', title: 'Pending Teacher Approval', msg: 'Robert Fox is waiting for document verification.', time: '1 hour ago', status: 'unread', icon: '⏳', priority: 'urgent' },
+    { id: 4, type: 'System', title: 'System Update', msg: 'The dashboard will undergo maintenance at 2 AM.', time: '3 hours ago', status: 'read', icon: '⚙️', priority: 'warning' },
+    { id: 5, type: 'Registration', title: 'New Teacher Application', msg: 'Dianne Russell applied for UI/UX Design.', time: '5 hours ago', status: 'read', icon: '👨‍🏫', priority: 'new' }
+  ];
+
+  const mockMessages = [
+    { id: 101, name: 'Alice Walker', role: 'Student', msg: 'Hello Admin, I am having trouble accessing my course content.', time: '10:45 AM', status: 'unread', avatar: 'https://i.pravatar.cc/150?u=51' },
+    { id: 102, name: 'Robert Fox', role: 'Teacher', msg: 'I have uploaded the new curriculum for Backend Development.', time: 'Yesterday', status: 'read', avatar: 'https://i.pravatar.cc/150?u=52' },
+    { id: 103, name: 'Esther Howard', role: 'Student', msg: 'Is there a discount for bulk enrollment?', time: '2 days ago', status: 'read', avatar: 'https://i.pravatar.cc/150?u=53' }
+  ];
+
+  // Dropdown Toggle
+  const notifDropdownBtn = document.getElementById('notifDropdownBtn');
+  const notifDropdown = document.getElementById('notifDropdown');
+
+  if (notifDropdownBtn) {
+    notifDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notifDropdown.classList.toggle('hidden');
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    if (notifDropdown && !notifDropdown.contains(e.target) && e.target !== notifDropdownBtn) {
+      notifDropdown.classList.add('hidden');
+    }
+  });
+
+  function renderNotificationDropdown() {
+    const list = document.getElementById('dropdownNotifList');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    mockNotifications.slice(0, 4).forEach(notif => {
+      const item = document.createElement('div');
+      item.className = `notif-item-quick ${notif.status}`;
+      item.innerHTML = `
+        <div class="notif-icon-small" style="background: rgba(255,255,255,0.1)">${notif.icon}</div>
+        <div class="notif-content-small">
+          <span class="notif-title-small">${notif.title}</span>
+          <span class="notif-msg-small">${notif.msg}</span>
+          <span class="notif-time-small">${notif.time}</span>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  function renderFullNotifications(data) {
+    const list = document.getElementById('notificationsFullList');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    data.forEach(notif => {
+      const card = document.createElement('div');
+      card.className = `notif-card-full ${notif.status} ${notif.priority}`;
+      card.innerHTML = `
+        <div class="notif-icon-full">${notif.icon}</div>
+        <div class="notif-info-full">
+          <div class="notif-header-full">
+            <span class="notif-title-full">${notif.title}</span>
+            <span class="notif-time-full">${notif.time}</span>
+          </div>
+          <div class="notif-msg-full">${notif.msg}</div>
+          <div style="margin-top: 8px;">
+            <span class="notif-badge ${notif.priority}">${notif.priority}</span>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.3); margin-left: 8px;">${notif.type}</span>
+          </div>
+        </div>
+        <div class="notif-actions-full">
+          <button class="btn-action approve" title="Mark as Read">✓</button>
+          <button class="btn-action delete" title="Dismiss">✕</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function renderMessageInbox() {
+    const list = document.getElementById('messageInboxList');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    mockMessages.forEach(msg => {
+      const item = document.createElement('div');
+      item.className = `inbox-item ${msg.status}`;
+      item.dataset.id = msg.id;
+      item.innerHTML = `
+        <img src="${msg.avatar}" class="inbox-avatar" alt="${msg.name}">
+        <div class="inbox-info">
+          <div class="inbox-header">
+            <span class="inbox-name">${msg.name}</span>
+            <span class="inbox-time">${msg.time}</span>
+          </div>
+          <div class="inbox-msg">${msg.msg}</div>
+        </div>
+      `;
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.inbox-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        openMessage(msg);
+      });
+      list.appendChild(item);
+    });
+  }
+
+  function openMessage(msg) {
+    const detailView = document.getElementById('messageDetailView');
+    const emptyState = document.getElementById('noMessageSelected');
+    
+    emptyState.classList.add('hidden');
+    detailView.classList.remove('hidden');
+    
+    document.getElementById('detailSenderImg').src = msg.avatar;
+    document.getElementById('detailSenderName').innerText = msg.name;
+    document.getElementById('detailSenderRole').innerText = msg.role;
+    document.getElementById('detailTimestamp').innerText = `Received ${msg.time}`;
+    document.getElementById('detailBody').innerText = msg.msg;
+  }
+
+  // Initializations
+  renderNotificationDropdown();
+  renderFullNotifications(mockNotifications);
+  renderMessageInbox();
+
+  // Search & Filters
+  const notifSearch = document.getElementById('notifSearch');
+  if (notifSearch) {
+    notifSearch.addEventListener('input', () => {
+      const term = notifSearch.value.toLowerCase();
+      const filtered = mockNotifications.filter(n => 
+        n.title.toLowerCase().includes(term) || n.msg.toLowerCase().includes(term)
+      );
+      renderFullNotifications(filtered);
+    });
+  }
+
+  const messageSearch = document.getElementById('messageSearch');
+  if (messageSearch) {
+    messageSearch.addEventListener('input', () => {
+      const term = messageSearch.value.toLowerCase();
+      const filtered = mockMessages.filter(m => 
+        m.name.toLowerCase().includes(term) || m.msg.toLowerCase().includes(term)
+      );
+      // Re-render inbox with filtered
+      const list = document.getElementById('messageInboxList');
+      list.innerHTML = '';
+      filtered.forEach(msg => {
+        const item = document.createElement('div');
+        item.className = `inbox-item ${msg.status}`;
+        item.innerHTML = `
+          <img src="${msg.avatar}" class="inbox-avatar" alt="${msg.name}">
+          <div class="inbox-info">
+            <div class="inbox-header">
+              <span class="inbox-name">${msg.name}</span>
+              <span class="inbox-time">${msg.time}</span>
+            </div>
+            <div class="inbox-msg">${msg.msg}</div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    });
   }
 });
 
