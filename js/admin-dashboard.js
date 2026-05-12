@@ -318,7 +318,177 @@ document.addEventListener('DOMContentLoaded', () => {
   if (filterTeacherStatus) filterTeacherStatus.addEventListener('change', filterTeacherTable);
   if (filterTeacherPayment) filterTeacherPayment.addEventListener('change', filterTeacherTable);
 
-  // Initial render
-  renderTeachers(mockTeachers);
+  // 7. Pending Approvals Logic
+  const mockPendingUsers = [
+    { id: 'GEO-24-051', name: 'Alice Walker', email: 'alice.w@example.com', role: 'Student', status: 'Pending', regDate: '2024-11-01', avatar: 'https://i.pravatar.cc/150?u=51', phone: '+234 810 123 4567', docs: [{ name: 'Birth Certificate.pdf', size: '1.5 MB' }, { name: 'High School Result.pdf', size: '2.1 MB' }] },
+    { id: 'GEO-24-052', name: 'Robert Fox', email: 'robert.fox@example.com', role: 'Teacher', status: 'Pending', regDate: '2024-11-02', avatar: 'https://i.pravatar.cc/150?u=52', phone: '+234 811 234 5678', docs: [{ name: 'CV_Fox.pdf', size: '0.8 MB' }, { name: 'Teaching License.pdf', size: '1.2 MB' }] },
+    { id: 'GEO-24-053', name: 'Esther Howard', email: 'esther.h@example.com', role: 'Student', status: 'Pending', regDate: '2024-11-03', avatar: 'https://i.pravatar.cc/150?u=53', phone: '+234 812 345 6789', docs: [{ name: 'National ID.jpg', size: '3.4 MB' }] },
+    { id: 'GEO-24-054', name: 'Cody Fisher', email: 'cody.f@example.com', role: 'Student', status: 'Rejected', regDate: '2024-10-28', avatar: 'https://i.pravatar.cc/150?u=54', phone: '+234 813 456 7890', docs: [{ name: 'Incomplete_ID.pdf', size: '0.5 MB' }] },
+    { id: 'GEO-24-055', name: 'Dianne Russell', email: 'dianne.r@example.com', role: 'Teacher', status: 'Pending', regDate: '2024-11-05', avatar: 'https://i.pravatar.cc/150?u=55', phone: '+234 814 567 8901', docs: [{ name: 'Degree Certificate.pdf', size: '2.5 MB' }, { name: 'Portfolio.zip', size: '15.2 MB' }] }
+  ];
+
+  const pendingTableBody = document.getElementById('pendingTableBody');
+  const pendingSearch = document.getElementById('pendingSearch');
+  const filterPendingRole = document.getElementById('filterPendingRole');
+  const filterPendingStatus = document.getElementById('filterPendingStatus');
+  const filterPendingDate = document.getElementById('filterPendingDate');
+  const totalPending = document.getElementById('totalPending');
+  const selectAllPending = document.getElementById('selectAllPending');
+
+  // Modal Elements
+  const reviewModal = document.getElementById('reviewModalOverlay');
+  const closeReviewBtn = document.getElementById('closeReviewBtn');
+  const modalCancelBtn = document.getElementById('modalCancelBtn');
+  
+  function renderPending(data) {
+    if (!pendingTableBody) return;
+    pendingTableBody.innerHTML = '';
+    
+    if (data.length === 0) {
+      document.getElementById('pendingTableEmptyState').classList.remove('hidden');
+      document.getElementById('pendingTable').classList.add('hidden');
+    } else {
+      document.getElementById('pendingTableEmptyState').classList.add('hidden');
+      document.getElementById('pendingTable').classList.remove('hidden');
+      
+      data.forEach(user => {
+        let statusBadge = '';
+        if (user.status === 'Pending') statusBadge = '<span class="admin-badge pending">Pending</span>';
+        else if (user.status === 'Rejected') statusBadge = '<span class="admin-badge rejected">Rejected</span>';
+        else statusBadge = '<span class="admin-badge approved">Approved</span>';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="checkbox" class="admin-checkbox pending-row-check"></td>
+          <td>
+            <div class="student-profile-cell">
+              <img src="${user.avatar}" alt="${user.name}" class="student-avatar" onerror="this.src='../images/avatar-placeholder.png'">
+              <div class="student-name-col">
+                <span class="student-name">${user.name}</span>
+              </div>
+            </div>
+          </td>
+          <td><span style="font-family: monospace; color: rgba(255,255,255,0.7);">${user.id}</span></td>
+          <td>${user.email}</td>
+          <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
+          <td>${user.regDate}</td>
+          <td>${statusBadge}</td>
+          <td>
+            <div style="display: flex; gap: 4px;">
+              <span class="btn-action view" style="padding: 4px 8px; font-size: 10px; border-radius: 4px;" title="View Documents">📄 ${user.docs.length}</span>
+            </div>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-action view review-btn" data-id="${user.id}" data-tooltip="Review Profile">👁️</button>
+              <button class="btn-action approve" data-id="${user.id}" data-tooltip="Approve">✓</button>
+              <button class="btn-action reject" data-id="${user.id}" data-tooltip="Reject">✕</button>
+              <button class="btn-action suspend" data-id="${user.id}" data-tooltip="Suspend">⏸️</button>
+              <button class="btn-action delete" data-id="${user.id}" data-tooltip="Delete">🗑️</button>
+            </div>
+          </td>
+        `;
+        pendingTableBody.appendChild(row);
+      });
+      
+      // Add event listeners to review buttons
+      document.querySelectorAll('.review-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const userId = btn.getAttribute('data-id');
+          openReviewModal(userId);
+        });
+      });
+    }
+    
+    if (totalPending) totalPending.innerText = data.length;
+  }
+
+  function filterPendingTable() {
+    if (!pendingSearch || !filterPendingRole || !filterPendingStatus || !filterPendingDate) return;
+    
+    const searchTerm = pendingSearch.value.toLowerCase();
+    const role = filterPendingRole.value;
+    const status = filterPendingStatus.value;
+    const date = filterPendingDate.value;
+
+    const filtered = mockPendingUsers.filter(user => {
+      const matchSearch = user.name.toLowerCase().includes(searchTerm) || 
+                          user.email.toLowerCase().includes(searchTerm) || 
+                          user.id.toLowerCase().includes(searchTerm);
+      const matchRole = role === '' || user.role === role;
+      const matchStatus = status === '' || user.status === status;
+      const matchDate = date === '' || user.regDate === date;
+      
+      return matchSearch && matchRole && matchStatus && matchDate;
+    });
+
+    renderPending(filtered);
+  }
+
+  if (pendingSearch) pendingSearch.addEventListener('input', filterPendingTable);
+  if (filterPendingRole) filterPendingRole.addEventListener('change', filterPendingTable);
+  if (filterPendingStatus) filterPendingStatus.addEventListener('change', filterPendingTable);
+  if (filterPendingDate) filterPendingDate.addEventListener('input', filterPendingTable);
+
+  if (selectAllPending) {
+    selectAllPending.addEventListener('change', () => {
+      const checks = document.querySelectorAll('.pending-row-check');
+      checks.forEach(check => check.checked = selectAllPending.checked);
+    });
+  }
+
+  function openReviewModal(userId) {
+    const user = mockPendingUsers.find(u => u.id === userId);
+    if (!user) return;
+
+    // Fill modal data
+    document.getElementById('modalUserId').innerText = `ID: ${user.id}`;
+    document.getElementById('modalProfileImg').src = user.avatar;
+    document.getElementById('modalRoleIndicator').innerText = user.role;
+    document.getElementById('modalFullName').innerText = user.name;
+    document.getElementById('modalEmail').innerText = user.email;
+    document.getElementById('modalRegDate').innerText = user.regDate;
+    
+    document.getElementById('detailFullName').innerText = user.name;
+    document.getElementById('detailEmail').innerText = user.email;
+    document.getElementById('detailPhone').innerText = user.phone;
+    document.getElementById('detailRole').innerText = user.role;
+
+    const docsList = document.getElementById('modalDocsList');
+    docsList.innerHTML = '';
+    user.docs.forEach(doc => {
+      const docCard = document.createElement('div');
+      docCard.className = 'doc-card';
+      docCard.innerHTML = `
+        <div class="doc-icon">📄</div>
+        <div class="doc-info">
+          <span class="doc-name">${doc.name}</span>
+          <span class="doc-size">${doc.size}</span>
+        </div>
+        <button class="btn-view-doc">View</button>
+      `;
+      docsList.appendChild(docCard);
+    });
+
+    // Show modal
+    reviewModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeReviewModal() {
+    reviewModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  if (closeReviewBtn) closeReviewBtn.addEventListener('click', closeReviewModal);
+  if (modalCancelBtn) modalCancelBtn.addEventListener('click', closeReviewModal);
+  if (reviewModal) {
+    reviewModal.addEventListener('click', (e) => {
+      if (e.target === reviewModal) closeReviewModal();
+    });
+  }
+
+  // Initial render for pending
+  renderPending(mockPendingUsers);
 });
 

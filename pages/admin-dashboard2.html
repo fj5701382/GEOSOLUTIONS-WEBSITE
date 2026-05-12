@@ -282,10 +282,116 @@
 
       <!-- PENDING SECTION -->
       <div id="pendingSection" class="admin-section">
-        <div class="admin-glass-card" style="padding: 24px; margin-bottom: 20px;">
-          <h2 class="section-title" style="color: white; margin-bottom: 0;">Pending Account Approvals</h2>
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Pending Account Approvals</h2>
+            <p class="section-subtitle">Review and manage new student and teacher registrations</p>
+          </div>
+          <div class="header-right" style="display: flex; gap: 12px;">
+            <button class="admin-btn-primary" id="bulkApproveBtn">
+              <span class="btn-icon">✅</span> Bulk Approve
+            </button>
+            <button class="admin-btn-secondary" id="exportPendingBtn">
+              <span class="btn-icon">📥</span> Export
+            </button>
+          </div>
         </div>
-        <div id="pendingList"></div>
+
+        <!-- Approval Statistics -->
+        <div class="admin-stats-grid" style="margin-bottom: 24px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="admin-stat-card admin-glass-panel gradient-blue">
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="24">0</div>
+              <div class="stat-label">Total Pending</div>
+            </div>
+          </div>
+          <div class="admin-stat-card admin-glass-panel gradient-purple">
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="15">0</div>
+              <div class="stat-label">Pending Students</div>
+            </div>
+          </div>
+          <div class="admin-stat-card admin-glass-panel gradient-orange">
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="9">0</div>
+              <div class="stat-label">Pending Teachers</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="pendingSearch" placeholder="Search by name, ID, or email...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterPendingRole">
+                <option value="">All Roles</option>
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+              </select>
+              
+              <select class="admin-select" id="filterPendingStatus">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+
+              <input type="date" class="admin-select" id="filterPendingDate" placeholder="Reg. Date">
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="pendingTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllPending" class="admin-checkbox"></th>
+                  <th>User Profile</th>
+                  <th>User ID</th>
+                  <th>Email Address</th>
+                  <th>Role</th>
+                  <th>Reg. Date</th>
+                  <th>Status</th>
+                  <th>Documents</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pendingTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Loading Skeleton -->
+            <div id="pendingTableLoader" class="table-loader hidden">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="pendingTableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No pending approvals found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="pendingPageStart">1</span> to <span id="pendingPageEnd">5</span> of <span id="totalPending">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevPendingPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextPendingPage">Next →</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- USERS SECTION -->
@@ -707,6 +813,89 @@
       </div>
       <div id="settingsSection" class="admin-section">
         <div class="admin-glass-card"><h2>Settings</h2><p>Content for this section goes here.</p></div>
+      </div>
+    </div>
+
+    <!-- PROFILE REVIEW MODAL -->
+    <div id="reviewModalOverlay" class="admin-modal-overlay hidden">
+      <div class="admin-modal review-modal glass-panel">
+        <div class="modal-header">
+          <div class="header-left">
+            <h3>Profile Review</h3>
+            <span class="user-id-badge" id="modalUserId">ID: GEO-24-000</span>
+          </div>
+          <button class="close-modal-btn" id="closeReviewBtn">✖</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="review-grid">
+            <div class="review-left">
+              <div class="review-avatar-container">
+                <img src="../images/avatar-placeholder.png" alt="Profile Image" id="modalProfileImg" class="review-avatar">
+                <div class="role-indicator" id="modalRoleIndicator">Student</div>
+              </div>
+              
+              <div class="review-quick-info">
+                <h2 id="modalFullName">John Doe</h2>
+                <p id="modalEmail">john.doe@example.com</p>
+                <div class="reg-date">Registered: <span id="modalRegDate">Oct 12, 2024</span></div>
+              </div>
+            </div>
+            
+            <div class="review-right">
+              <div class="review-section">
+                <h4 class="section-label">Account Details</h4>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <span class="label">Full Name</span>
+                    <span class="value" id="detailFullName">John Doe</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Email Address</span>
+                    <span class="value" id="detailEmail">john.doe@example.com</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Phone Number</span>
+                    <span class="value" id="detailPhone">+234 800 000 0000</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Registration Type</span>
+                    <span class="value" id="detailRole">Student</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="review-section">
+                <h4 class="section-label">Uploaded Documents</h4>
+                <div class="documents-list" id="modalDocsList">
+                  <!-- Documents will be injected here -->
+                  <div class="doc-card">
+                    <div class="doc-icon">📄</div>
+                    <div class="doc-info">
+                      <span class="doc-name">Government ID.pdf</span>
+                      <span class="doc-size">1.2 MB</span>
+                    </div>
+                    <button class="btn-view-doc">View</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <div class="footer-left">
+            <button class="admin-btn-danger" id="modalRejectBtn">
+              <span class="btn-icon">❌</span> Reject Account
+            </button>
+          </div>
+          <div class="footer-right">
+            <button class="admin-btn-secondary" id="modalCancelBtn">Cancel</button>
+            <button class="admin-btn-primary" id="modalApproveBtn">
+              <span class="btn-icon">✅</span> Approve Account
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </main>
