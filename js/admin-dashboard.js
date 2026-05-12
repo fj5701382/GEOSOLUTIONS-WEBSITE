@@ -868,5 +868,205 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+  // 10. Admin Settings Panel Logic
+  const settingsTabBtns = document.querySelectorAll('.settings-tab-btn');
+  const settingsPanes = document.querySelectorAll('.settings-pane');
+
+  if (settingsTabBtns.length > 0) {
+    settingsTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Switch tabs
+        settingsTabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Switch panes
+        const targetPaneId = `pane-${btn.getAttribute('data-pane')}`;
+        settingsPanes.forEach(pane => {
+          pane.classList.remove('active');
+        });
+        const targetPane = document.getElementById(targetPaneId);
+        if (targetPane) targetPane.classList.add('active');
+      });
+    });
+  }
+
+  // File Upload Preview & Animation Logic
+  function setupFileUpload(inputId, areaId, previewId, progressId) {
+    const input = document.getElementById(inputId);
+    const area = document.getElementById(areaId);
+    const preview = document.getElementById(previewId);
+    const progressContainer = document.getElementById(progressId);
+    
+    if (!input || !area) return;
+
+    area.addEventListener('click', () => input.click());
+
+    area.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      area.classList.add('dragover');
+    });
+
+    area.addEventListener('dragleave', () => {
+      area.classList.remove('dragover');
+    });
+
+    area.addEventListener('drop', (e) => {
+      e.preventDefault();
+      area.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) {
+        handleFile(e.dataTransfer.files[0], preview, progressContainer);
+      }
+    });
+
+    input.addEventListener('change', () => {
+      if (input.files.length > 0) {
+        handleFile(input.files[0], preview, progressContainer);
+      }
+    });
+  }
+
+  function handleFile(file, previewEl, progressEl) {
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file.');
+      return;
+    }
+
+    const reader = new FileReader();
+    const progressBar = progressEl.querySelector('.progress-bar');
+    
+    progressEl.style.display = 'block';
+    progressBar.style.width = '0%';
+
+    // Simulate upload progress
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 30;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        reader.onload = (e) => {
+          const img = previewEl.querySelector('img');
+          if (img) img.src = e.target.result;
+          setTimeout(() => {
+            progressEl.style.display = 'none';
+          }, 500);
+        };
+        reader.readAsDataURL(file);
+      }
+      progressBar.style.width = `${progress}%`;
+    }, 200);
+  }
+
+  setupFileUpload('schoolLogoInput', 'schoolLogoUploadArea', 'schoolLogoPreview', 'schoolLogoProgress');
+  setupFileUpload('adminAvatarInput', 'adminAvatarUploadArea', 'adminAvatarPreview', 'adminAvatarProgress');
+
+  // Theme & Accent Color Switching
+  const settingsDarkModeToggle = document.getElementById('settingsDarkModeToggle');
+  if (settingsDarkModeToggle) {
+    // Sync with existing theme if any
+    const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+    settingsDarkModeToggle.checked = currentTheme === 'dark';
+
+    settingsDarkModeToggle.addEventListener('change', () => {
+      const theme = settingsDarkModeToggle.checked ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', theme);
+      // Trigger global theme toggle if it exists
+      const mainThemeToggle = document.getElementById('themeToggle');
+      if (mainThemeToggle && (theme === 'dark' !== mainThemeToggle.classList.contains('active'))) {
+        mainThemeToggle.click();
+      }
+    });
+  }
+
+  const colorOptions = document.querySelectorAll('.color-option');
+  colorOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      colorOptions.forEach(opt => opt.classList.remove('active'));
+      option.classList.add('active');
+      const color = option.getAttribute('data-color');
+      // Set CSS variable for accent color
+      const colors = {
+        blue: '#3b82f6',
+        purple: '#8b5cf6',
+        emerald: '#10b981',
+        orange: '#f59e0b',
+        red: '#ef4444'
+      };
+      document.documentElement.style.setProperty('--accent-color', colors[color]);
+      showToast(`Accent color updated to ${color}`);
+    });
+  });
+
+  // Settings Search Functionality
+  const settingsSearch = document.getElementById('settingsSearch');
+  if (settingsSearch) {
+    settingsSearch.addEventListener('input', () => {
+      const term = settingsSearch.value.toLowerCase();
+      const allFormGroups = document.querySelectorAll('.form-group, .settings-toggle-group');
+      
+      allFormGroups.forEach(group => {
+        const text = group.innerText.toLowerCase();
+        if (text.includes(term)) {
+          group.style.display = '';
+          // Ensure parent card and pane are visible? No, just the items.
+        } else {
+          group.style.display = 'none';
+        }
+      });
+      
+      // If a pane is empty after search, maybe hide its header?
+      settingsPanes.forEach(pane => {
+        const visibleItems = pane.querySelectorAll('.form-group:not([style*="display: none"]), .settings-toggle-group:not([style*="display: none"])');
+        const header = pane.querySelector('.settings-card-header');
+        if (visibleItems.length === 0 && term !== '') {
+          if (header) header.style.display = 'none';
+        } else {
+          if (header) header.style.display = '';
+        }
+      });
+    });
+  }
+
+  // Save / Reset Actions
+  const saveButtons = document.querySelectorAll('.btn-save');
+  saveButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.getAttribute('data-section') || 'Settings';
+      btn.innerHTML = '<span class="spinner">⌛</span> Saving...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = 'Save Changes';
+        btn.disabled = false;
+        showToast(`${section} saved successfully!`);
+      }, 1500);
+    });
+  });
+
+  const resetButtons = document.querySelectorAll('.btn-reset');
+  resetButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to reset these settings to default?')) {
+        showToast('Settings reset to default.');
+      }
+    });
+  });
+
+  // Helper: Toast Notification
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'profile-toast show'; // Reusing existing toast class
+    toast.style.bottom = '30px';
+    toast.style.right = '30px';
+    toast.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+    toast.innerHTML = `<span style="margin-right: 10px;">✅</span> ${message}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
 });
 

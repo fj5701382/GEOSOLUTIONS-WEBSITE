@@ -1059,9 +1059,387 @@
       <div id="coursesSection" class="admin-section">
         <div class="admin-glass-card"><h2>Courses</h2><p>Content for this section goes here.</p></div>
       </div>
+      <!-- SETTINGS SECTION -->
       <div id="settingsSection" class="admin-section">
-        <div class="admin-glass-card"><h2>Settings</h2><p>Content for this section goes here.</p></div>
+        <div class="admin-glass-card section-header-card" style="margin-bottom: 24px;">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Admin Settings Panel</h2>
+            <p class="section-subtitle">Manage school configuration, security, and system preferences</p>
+          </div>
+          <div class="header-right">
+            <div class="settings-search-bar">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="settingsSearch" placeholder="Search settings...">
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-container">
+          <!-- Settings Sidebar Navigation -->
+          <aside class="settings-sidebar">
+            <button class="settings-tab-btn active" data-pane="school-info">
+              <span class="tab-icon">🏫</span>
+              <span class="tab-text">School Information</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="admin-profile">
+              <span class="tab-icon">👤</span>
+              <span class="tab-text">Admin Profile</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="security-settings">
+              <span class="tab-icon">🔒</span>
+              <span class="tab-text">Security Settings</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="theme-settings">
+              <span class="tab-icon">🎨</span>
+              <span class="tab-text">Theme Settings</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="payment-settings">
+              <span class="tab-icon">💳</span>
+              <span class="tab-text">Payment Settings</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="notif-settings">
+              <span class="tab-icon">🔔</span>
+              <span class="tab-text">Notifications</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="system-prefs">
+              <span class="tab-icon">⚙️</span>
+              <span class="tab-text">System Preferences</span>
+            </button>
+          </aside>
+
+          <!-- Settings Content Panes -->
+          <div class="settings-content">
+            
+            <!-- School Information Pane -->
+            <div class="settings-pane active" id="pane-school-info">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🏫 School Details</h3>
+                  <p>Configure the basic information of your educational institution.</p>
+                </div>
+                <div class="settings-form-grid">
+                  <div class="form-group full-width">
+                    <label>School Logo</label>
+                    <div class="upload-container">
+                      <div class="upload-preview" id="schoolLogoPreview">
+                        <img src="../images/logo.jpg" alt="School Logo" onerror="this.src='../images/avatar-placeholder.png'">
+                      </div>
+                      <div class="upload-area" id="schoolLogoUploadArea">
+                        <span class="upload-icon">📤</span>
+                        <span class="upload-text">Drag & drop or click to upload logo</span>
+                        <input type="file" id="schoolLogoInput" hidden accept="image/*">
+                        <div class="upload-progress" id="schoolLogoProgress">
+                          <div class="progress-bar"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolName">School Name</label>
+                    <input type="text" id="schoolName" class="settings-input" value="GEO ACADEMY">
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolEmail">School Email</label>
+                    <input type="email" id="schoolEmail" class="settings-input" value="info@geoacademy.com">
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolPhone">Phone Number</label>
+                    <input type="tel" id="schoolPhone" class="settings-input" value="+234 800 123 4567">
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolWebsite">Website URL</label>
+                    <input type="url" id="schoolWebsite" class="settings-input" value="https://www.geoacademy.com">
+                  </div>
+                  <div class="form-group full-width">
+                    <label for="schoolAddress">Address</label>
+                    <textarea id="schoolAddress" class="settings-textarea" rows="3">123 Education Plaza, Lagos State, Nigeria</textarea>
+                  </div>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-cancel">Cancel</button>
+                  <button class="btn-settings btn-reset">Reset</button>
+                  <button class="btn-settings btn-save" data-section="School Information">Save Changes</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Admin Profile Pane -->
+            <div class="settings-pane" id="pane-admin-profile">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>👤 Admin Profile Settings</h3>
+                  <p>Update your personal information and account security.</p>
+                </div>
+                <div class="settings-form-grid">
+                  <div class="form-group full-width">
+                    <label>Profile Picture</label>
+                    <div class="upload-container">
+                      <div class="upload-preview" id="adminAvatarPreview">
+                        <img src="../images/avatar-placeholder.png" alt="Admin Avatar">
+                      </div>
+                      <div class="upload-area" id="adminAvatarUploadArea">
+                        <span class="upload-icon">👤</span>
+                        <span class="upload-text">Click to change profile picture</span>
+                        <input type="file" id="adminAvatarInput" hidden accept="image/*">
+                        <div class="upload-progress" id="adminAvatarProgress">
+                          <div class="progress-bar"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="adminFullName">Full Name</label>
+                    <input type="text" id="adminFullName" class="settings-input" value="Super Administrator">
+                  </div>
+                  <div class="form-group">
+                    <label for="adminEmail">Email Address</label>
+                    <input type="email" id="adminEmail" class="settings-input" value="admin@geoacademy.com">
+                  </div>
+                  <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" class="settings-input" placeholder="Enter new password">
+                  </div>
+                  <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="settings-input" placeholder="Confirm new password">
+                  </div>
+                  <div class="form-group full-width">
+                    <div class="settings-toggle-group">
+                      <div class="toggle-info">
+                        <h4>Two-Factor Authentication</h4>
+                        <p>Secure your account with an extra layer of security.</p>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="toggle2FA" checked>
+                        <span class="slider-round"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-reset">Reset</button>
+                  <button class="btn-settings btn-save" data-section="Admin Profile">Update Profile</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Security Settings Pane -->
+            <div class="settings-pane" id="pane-security-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🔒 Security & Activity</h3>
+                  <p>Monitor account activity and manage login sessions.</p>
+                </div>
+                <div class="security-activity-list">
+                  <div class="activity-item">
+                    <div class="activity-icon">💻</div>
+                    <div class="activity-details">
+                      <div class="activity-title">Windows 11 • Chrome Browser</div>
+                      <div class="activity-meta">Lagos, Nigeria • IP: 102.164.20.45 • Current Session</div>
+                    </div>
+                    <span class="activity-status">Active</span>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon">📱</div>
+                    <div class="activity-details">
+                      <div class="activity-title">iPhone 15 Pro • Safari</div>
+                      <div class="activity-meta">Lagos, Nigeria • 2 hours ago</div>
+                    </div>
+                    <button class="btn-settings btn-cancel" style="padding: 4px 10px; font-size: 11px;">Logout</button>
+                  </div>
+                </div>
+                <div style="margin-top: 25px;">
+                  <button class="btn-settings btn-reset full-width" style="width: 100%; justify-content: center;">Logout from All Other Devices</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Theme Settings Pane -->
+            <div class="settings-pane" id="pane-theme-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🎨 Dashboard Theme</h3>
+                  <p>Customize the look and feel of your admin workspace.</p>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Dark Mode</h4>
+                    <p>Switch between light and dark interface styles.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="settingsDarkModeToggle">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                  <label>Accent Color</label>
+                  <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 10px;">Choose a primary color for buttons and highlights.</p>
+                  <div class="accent-color-grid">
+                    <div class="color-option active" style="background: #3b82f6;" data-color="blue"></div>
+                    <div class="color-option" style="background: #8b5cf6;" data-color="purple"></div>
+                    <div class="color-option" style="background: #10b981;" data-color="emerald"></div>
+                    <div class="color-option" style="background: #f59e0b;" data-color="orange"></div>
+                    <div class="color-option" style="background: #ef4444;" data-color="red"></div>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-top: 25px;">
+                  <label for="fontSize">Global Font Size</label>
+                  <select id="fontSize" class="settings-select">
+                    <option value="small">Small (13px)</option>
+                    <option value="medium" selected>Medium (14px)</option>
+                    <option value="large">Large (16px)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Settings Pane -->
+            <div class="settings-pane" id="pane-payment-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>💳 Payment Gateway Configuration</h3>
+                  <p>Manage how students pay for courses and handle transactions.</p>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Paystack Integration</h4>
+                    <p>Enable online payments via Paystack gateway.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Flutterwave Integration</h4>
+                    <p>Enable alternative payments via Flutterwave.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-form-grid" style="margin-top: 20px;">
+                  <div class="form-group">
+                    <label for="currency">Platform Currency</label>
+                    <select id="currency" class="settings-select">
+                      <option value="NGN">Nigerian Naira (₦)</option>
+                      <option value="USD">US Dollar ($)</option>
+                      <option value="GBP">British Pound (£)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="reminders">Payment Reminders</label>
+                    <select id="reminders" class="settings-select">
+                      <option value="3">3 days before expiry</option>
+                      <option value="7" selected>7 days before expiry</option>
+                      <option value="14">14 days before expiry</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-save" data-section="Payment Settings">Save Payment Config</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notification Settings Pane -->
+            <div class="settings-pane" id="pane-notif-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🔔 Notification Preferences</h3>
+                  <p>Choose which alerts you want to receive and how.</p>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Email Notifications</h4>
+                    <p>Receive summaries and important alerts via email.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>SMS Alerts</h4>
+                    <p>Get instant text messages for critical system events.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Browser Push Notifications</h4>
+                    <p>Show desktop notifications while the dashboard is open.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Sound Alerts</h4>
+                    <p>Play a notification sound when a new message arrives.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Preferences Pane -->
+            <div class="settings-pane" id="pane-system-prefs">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>⚙️ System Preferences</h3>
+                  <p>Manage general platform settings and data.</p>
+                </div>
+                <div class="settings-form-grid">
+                  <div class="form-group">
+                    <label for="sysLanguage">Platform Language</label>
+                    <select id="sysLanguage" class="settings-select">
+                      <option value="en">English (US)</option>
+                      <option value="en-gb">English (UK)</option>
+                      <option value="fr">French</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="sysTimezone">Timezone</label>
+                    <select id="sysTimezone" class="settings-select">
+                      <option value="WAT">West Africa Time (GMT+1)</option>
+                      <option value="GMT">Greenwich Mean Time (GMT+0)</option>
+                      <option value="EST">Eastern Standard Time (GMT-5)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="settings-toggle-group" style="margin-top: 20px;">
+                  <div class="toggle-info">
+                    <h4>Auto-save Changes</h4>
+                    <p>Automatically save settings changes as you edit.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="autoSaveToggle">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-reset" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">Reset All Settings</button>
+                  <button class="btn-settings btn-save" data-section="System Preferences">Export System Data</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
+
     </div>
 
     <!-- PROFILE REVIEW MODAL -->
