@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="../css/style2.css">
   <link rel="stylesheet" href="../css/animations.css">
   <link rel="stylesheet" href="../css/dashboard.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="../js/theme.js"></script>
+<script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/inline-styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="admin-dash-wrapper">
@@ -803,86 +803,103 @@
           </div>
         </div>
       </div>
+      <!-- ANALYTICS SECTION -->
       <div id="analyticsSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Analytics Dashboard</h2>
-            <p class="section-subtitle">Comprehensive overview of school performance and trends</p>
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Analytics Overview</h2>
+            <p class="section-subtitle">Real-time platform performance and growth metrics</p>
           </div>
-          <div class="header-right" style="display: flex; gap: 12px;">
-            <div class="filter-group">
-              <button class="filter-btn active" data-period="weekly">Weekly</button>
-              <button class="filter-btn" data-period="monthly">Monthly</button>
-              <button class="filter-btn" data-period="yearly">Yearly</button>
+          <div class="header-right">
+            <div class="date-range-picker">
+              <div class="filter-group">
+                <button class="filter-btn active" data-range="weekly">Weekly</button>
+                <button class="filter-btn" data-range="monthly">Monthly</button>
+                <button class="filter-btn" data-range="yearly">Yearly</button>
+              </div>
+              <input type="date" class="admin-select custom-date" id="customDateRange">
+              <button class="admin-btn-primary" id="exportReportBtn">
+                <span class="btn-icon">📊</span> Export Report
+              </button>
             </div>
-            <button class="admin-btn-secondary" id="exportAnalyticsBtn">
-              <span class="btn-icon">📥</span> Export Report
-            </button>
           </div>
         </div>
 
         <!-- Analytics Summary Cards -->
-        <div class="admin-stats-grid" style="margin-bottom: 24px;">
-          <!-- Total Revenue Card -->
-          <div class="admin-stat-card admin-glass-panel gradient-emerald">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">💰</span></div>
-              <div class="stat-trend positive"><span class="trend-icon">↑</span> 22%</div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value-container">
-                <span class="stat-currency">₦</span><span class="stat-value counter" data-target="4500000">0</span>
+        <div class="analytics-summary-grid">
+          <div class="analytics-card admin-glass-panel gradient-blue">
+            <div class="card-icon">💰</div>
+            <div class="card-content">
+              <span class="card-label">Total Revenue</span>
+              <div class="card-value-container">
+                <span class="currency">₦</span>
+                <h3 class="counter" data-target="4500000">0</h3>
               </div>
-              <div class="stat-label">Total Revenue</div>
+              <span class="card-trend positive">↑ 12.5% vs last month</span>
             </div>
+            <div class="card-glow"></div>
           </div>
-          <!-- Monthly Growth Card -->
-          <div class="admin-stat-card admin-glass-panel gradient-blue">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">📈</span></div>
-              <div class="stat-trend positive"><span class="trend-icon">↑</span> 12%</div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value-container">
-                <span class="stat-value counter" data-target="85">0</span><span class="stat-currency">%</span>
+          
+          <div class="analytics-card admin-glass-panel gradient-purple">
+            <div class="card-icon">📈</div>
+            <div class="card-content">
+              <span class="card-label">Monthly Growth</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="24">0</h3>
+                <span class="unit">%</span>
               </div>
-              <div class="stat-label">Monthly Growth</div>
+              <span class="card-trend positive">↑ 3.2% vs last month</span>
             </div>
+            <div class="card-glow"></div>
           </div>
-          <!-- Active Students Card -->
-          <div class="admin-stat-card admin-glass-panel gradient-purple">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">👨‍🎓</span></div>
-              <div class="stat-trend positive"><span class="trend-icon">↑</span> 8%</div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value counter" data-target="1250">0</div>
-              <div class="stat-label">Active Students</div>
-            </div>
-          </div>
-          <!-- Success Rate Card -->
-          <div class="admin-stat-card admin-glass-panel gradient-indigo">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">✅</span></div>
-              <div class="stat-trend positive"><span class="trend-icon">↑</span> 5%</div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value-container">
-                <span class="stat-value counter" data-target="98">0</span><span class="stat-currency">%</span>
+
+          <div class="analytics-card admin-glass-panel gradient-emerald">
+            <div class="card-icon">👨‍🎓</div>
+            <div class="card-content">
+              <span class="card-label">Active Students</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="1250">0</h3>
               </div>
-              <div class="stat-label">Payment Success Rate</div>
+              <span class="card-trend positive">↑ 150 new this week</span>
             </div>
+            <div class="card-glow"></div>
+          </div>
+
+          <div class="analytics-card admin-glass-panel gradient-indigo">
+            <div class="card-icon">👨‍🏫</div>
+            <div class="card-content">
+              <span class="card-label">Active Teachers</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="85">0</h3>
+              </div>
+              <span class="card-trend positive">↑ 5 new this week</span>
+            </div>
+            <div class="card-glow"></div>
+          </div>
+
+          <div class="analytics-card admin-glass-panel gradient-orange">
+            <div class="card-icon">✅</div>
+            <div class="card-content">
+              <span class="card-label">Payment Success Rate</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="98">0</h3>
+                <span class="unit">%</span>
+              </div>
+              <span class="card-trend neutral">Steady this month</span>
+            </div>
+            <div class="card-glow"></div>
           </div>
         </div>
 
         <!-- Charts Grid -->
-        <div class="analytics-charts-grid">
-          <!-- Main Revenue Chart -->
-          <div class="admin-glass-card chart-container-card full-width">
+        <div class="charts-grid">
+          <!-- Revenue & Growth Area Chart -->
+          <div class="chart-container admin-glass-panel span-2">
             <div class="chart-header">
-              <h3>Revenue Analytics & Growth</h3>
+              <h4>Revenue Analytics & Trends</h4>
               <div class="chart-actions">
-                <button class="chart-action-btn" title="Fullscreen">⛶</button>
+                <button class="btn-icon-only" title="Refresh">🔄</button>
+                <button class="btn-icon-only" title="Fullscreen">⛶</button>
               </div>
             </div>
             <div class="chart-wrapper">
@@ -890,40 +907,30 @@
             </div>
           </div>
 
-          <!-- Student & Teacher Registrations -->
-          <div class="admin-glass-card chart-container-card">
+          <!-- Registration Trends Line Chart -->
+          <div class="chart-container admin-glass-panel">
             <div class="chart-header">
-              <h3>User Registrations</h3>
+              <h4>Registration Trends</h4>
             </div>
             <div class="chart-wrapper">
-              <canvas id="registrationsChart"></canvas>
+              <canvas id="registrationChart"></canvas>
             </div>
           </div>
 
-          <!-- Course Activity Doughnut -->
-          <div class="admin-glass-card chart-container-card">
+          <!-- Course Activity Doughnut Chart -->
+          <div class="chart-container admin-glass-panel">
             <div class="chart-header">
-              <h3>Course Distribution</h3>
+              <h4>Course Activity Distribution</h4>
             </div>
-            <div class="chart-wrapper">
+            <div class="chart-wrapper small-chart">
               <canvas id="courseActivityChart"></canvas>
             </div>
           </div>
 
-          <!-- Payment Trends Area Chart -->
-          <div class="admin-glass-card chart-container-card">
+          <!-- Monthly Growth Bar Chart -->
+          <div class="chart-container admin-glass-panel span-2">
             <div class="chart-header">
-              <h3>Payment Trends</h3>
-            </div>
-            <div class="chart-wrapper">
-              <canvas id="paymentTrendsChart"></canvas>
-            </div>
-          </div>
-
-          <!-- Monthly Growth Comparison -->
-          <div class="admin-glass-card chart-container-card">
-            <div class="chart-header">
-              <h3>Monthly Performance</h3>
+              <h4>Monthly User Growth Analytics</h4>
             </div>
             <div class="chart-wrapper">
               <canvas id="growthChart"></canvas>
