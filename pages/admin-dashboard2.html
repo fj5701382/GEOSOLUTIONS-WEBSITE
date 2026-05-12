@@ -146,7 +146,7 @@
     <div class="admin-content-area">
       <!-- OVERVIEW SECTION -->
       <div id="overviewSection" class="admin-section active">
-        <div class="admin-glass-card welcome-banner" style="margin-bottom: 24px;">
+        <div class="admin-glass-card welcome-banner">
           <h2>Welcome back, Administrator! 👋</h2>
           <p>Here's what's happening at GEO ACADEMY today. This dashboard has been completely redesigned with a glassmorphism and modern blue gradient aesthetic.</p>
         </div>
@@ -305,7 +305,7 @@
       <div id="pendingSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Pending Account Approvals</h2>
+            <h2 class="section-title" style="color: white;">Pending Account Approvals</h2>
             <p class="section-subtitle">Review and manage new student and teacher registrations</p>
           </div>
           <div class="header-right" style="display: flex; gap: 12px;">
@@ -319,7 +319,7 @@
         </div>
 
         <!-- Approval Statistics -->
-        <div class="admin-stats-grid" style="margin-bottom: 24px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div class="admin-stats-grid">
           <div class="admin-stat-card admin-glass-panel gradient-blue">
             <div class="stat-card-body">
               <div class="stat-value counter" data-target="24">0</div>
@@ -417,7 +417,7 @@
 
       <!-- USERS SECTION -->
       <div id="usersSection" class="admin-section">
-        <div class="admin-glass-card" style="padding: 24px; margin-bottom: 20px;">
+        <div class="admin-glass-card admin-section-header">
           <h2 class="section-title" style="color: white; margin-bottom: 0;">All Users</h2>
         </div>
         <div class="table-wrap">
@@ -441,7 +441,7 @@
       <div id="studentsSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Student Management</h2>
+            <h2 class="section-title" style="color: white;">Student Management</h2>
             <p class="section-subtitle">View, edit, and manage all registered students</p>
           </div>
           <div class="header-right">
@@ -530,7 +530,7 @@
       <div id="teachersSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Teacher Management</h2>
+            <h2 class="section-title" style="color: white;">Teacher Management</h2>
             <p class="section-subtitle">Manage instructors, view payment requests, and update roles</p>
           </div>
           <div class="header-right" style="display: flex; gap: 12px;">
@@ -627,7 +627,7 @@
       <!-- PAYMENTS SECTION -->
       <div id="paymentsSection" class="admin-section">
         <!-- Payment Summary Cards -->
-        <div class="admin-stats-grid" style="margin-bottom: 24px;">
+        <div class="admin-stats-grid">
           <!-- Total Revenue -->
           <div class="admin-stat-card admin-glass-panel gradient-emerald">
             <div class="stat-card-header">
@@ -674,7 +674,7 @@
 
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Payment Management</h2>
+            <h2 class="section-title" style="color: white;">Payment Management</h2>
             <p class="section-subtitle">Monitor transactions, approve payments, and manage receipts</p>
           </div>
           <div class="header-right">
@@ -1526,16 +1526,37 @@
     </div>
     <!-- MESSAGE VIEW MODAL -->
     <div id="messageModalOverlay" class="admin-modal-overlay hidden">
-      <div class="admin-modal glass-panel">
+      <div class="admin-modal glass-panel" style="max-width: 600px;">
         <div class="modal-header">
-          <h3>Message Details</h3>
+          <h3>Compose Message</h3>
           <button class="close-modal-btn" id="closeMessageBtn">✖</button>
         </div>
-        <div class="modal-body" id="modalMessageBody">
-          <!-- Content similar to detail view but for mobile/modal focus -->
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Recipient</label>
+            <select class="admin-select" style="width: 100%;">
+              <option value="">Select Recipient...</option>
+              <option value="all">All Students</option>
+              <option value="teachers">All Teachers</option>
+              <option value="student1">John Doe (Student)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Subject</label>
+            <input type="text" class="admin-input" placeholder="Enter message subject..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white;">
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea class="admin-textarea" rows="6" placeholder="Type your message here..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="admin-btn-secondary" id="cancelComposeBtn">Cancel</button>
+          <button class="admin-btn-primary">Send Message</button>
         </div>
       </div>
     </div>
+
   </main>
 </div>
 

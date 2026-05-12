@@ -702,22 +702,200 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 9. Notification & Message Center Logic
   const mockNotifications = [
-    { id: 1, type: 'Registration', title: 'New Student Joined', msg: 'Alice Walker registered for Frontend Development.', time: '5 mins ago', status: 'unread', icon: '👨‍🎓', priority: 'new' },
-    { id: 2, type: 'Payment', title: 'Payment Received', msg: 'Payment of ₦45,000 confirmed for John Doe.', time: '20 mins ago', status: 'unread', icon: '💳', priority: 'info' },
-    { id: 3, type: 'Approval', title: 'Pending Teacher Approval', msg: 'Robert Fox is waiting for document verification.', time: '1 hour ago', status: 'unread', icon: '⏳', priority: 'urgent' },
-    { id: 4, type: 'System', title: 'System Update', msg: 'The dashboard will undergo maintenance at 2 AM.', time: '3 hours ago', status: 'read', icon: '⚙️', priority: 'warning' },
-    { id: 5, type: 'Registration', title: 'New Teacher Application', msg: 'Dianne Russell applied for UI/UX Design.', time: '5 hours ago', status: 'read', icon: '👨‍🏫', priority: 'new' }
+    { id: 1, type: 'Registration', title: 'New Student Joined', msg: 'Alice Walker registered for Frontend Development.', time: '5 mins ago', status: 'unread', icon: '👨‍🎓', priority: 'new', date: '2024-11-06' },
+    { id: 2, type: 'Payment', title: 'Payment Confirmed', msg: 'Payment of ₦45,000 confirmed for John Doe.', time: '20 mins ago', status: 'unread', icon: '💳', priority: 'info', date: '2024-11-06' },
+    { id: 3, type: 'Approval', title: 'Pending Approval', msg: 'Robert Fox is waiting for document verification.', time: '1 hour ago', status: 'unread', icon: '⏳', priority: 'urgent', date: '2024-11-06' },
+    { id: 4, type: 'System', title: 'System Update', msg: 'The dashboard will undergo maintenance at 2 AM.', time: '3 hours ago', status: 'read', icon: '⚙️', priority: 'warning', date: '2024-11-06' },
+    { id: 5, type: 'Message', title: 'New Message', msg: 'Esther Howard sent a message regarding bulk enrollment.', time: '5 hours ago', status: 'read', icon: '💬', priority: 'info', date: '2024-11-05' },
+    { id: 6, type: 'Warning', title: 'Storage Almost Full', msg: 'Your system storage is at 92%. Consider cleaning up.', time: 'Yesterday', status: 'read', icon: '⚠️', priority: 'warning', date: '2024-11-05' }
   ];
 
   const mockMessages = [
-    { id: 101, name: 'Alice Walker', role: 'Student', msg: 'Hello Admin, I am having trouble accessing my course content.', time: '10:45 AM', status: 'unread', avatar: 'https://i.pravatar.cc/150?u=51' },
-    { id: 102, name: 'Robert Fox', role: 'Teacher', msg: 'I have uploaded the new curriculum for Backend Development.', time: 'Yesterday', status: 'read', avatar: 'https://i.pravatar.cc/150?u=52' },
-    { id: 103, name: 'Esther Howard', role: 'Student', msg: 'Is there a discount for bulk enrollment?', time: '2 days ago', status: 'read', avatar: 'https://i.pravatar.cc/150?u=53' }
+    { id: 101, name: 'Alice Walker', role: 'Student', msg: 'Hello Admin, I am having trouble accessing my course content. Can you please help check my subscription status?', time: '10:45 AM', status: 'unread', avatar: 'https://i.pravatar.cc/150?u=51', date: '2024-11-06' },
+    { id: 102, name: 'Robert Fox', role: 'Teacher', msg: 'I have uploaded the new curriculum for Backend Development. Please review and approve so I can start the class.', time: 'Yesterday', status: 'read', avatar: 'https://i.pravatar.cc/150?u=52', date: '2024-11-05' },
+    { id: 103, name: 'Esther Howard', role: 'Student', msg: 'Is there a discount for bulk enrollment for my team? We are looking to enroll 15 people.', time: '2 days ago', status: 'read', avatar: 'https://i.pravatar.cc/150?u=53', date: '2024-11-04' }
   ];
 
-  // Dropdown Toggle
+  // DOM Elements
   const notifDropdownBtn = document.getElementById('notifDropdownBtn');
   const notifDropdown = document.getElementById('notifDropdown');
+  const topbarNotifBadge = document.getElementById('topbarNotifBadge');
+  const notifSearch = document.getElementById('notifSearch');
+  const filterNotifType = document.getElementById('filterNotifType');
+  const filterNotifStatus = document.getElementById('filterNotifStatus');
+  const markAllReadBtn = document.getElementById('markAllReadBtn');
+  
+  const messageSearch = document.getElementById('messageSearch');
+  const messageInboxList = document.getElementById('messageInboxList');
+  const messageDetailView = document.getElementById('messageDetailView');
+  const noMessageSelected = document.getElementById('noMessageSelected');
+
+  // --- NOTIFICATIONS ---
+
+  function updateNotifBadge() {
+    const unreadCount = mockNotifications.filter(n => n.status === 'unread').length;
+    if (topbarNotifBadge) {
+      topbarNotifBadge.innerText = unreadCount;
+      topbarNotifBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+  }
+
+  function renderNotificationDropdown() {
+    const list = document.getElementById('dropdownNotifList');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    mockNotifications.filter(n => n.status === 'unread').slice(0, 5).forEach(notif => {
+      const item = document.createElement('div');
+      item.className = 'notif-item-quick unread';
+      item.innerHTML = `
+        <div class="notif-icon-small" style="background: rgba(255,255,255,0.1)">${notif.icon}</div>
+        <div class="notif-content-small">
+          <span class="notif-title-small">${notif.title}</span>
+          <span class="notif-msg-small">${notif.msg}</span>
+          <span class="notif-time-small">${notif.time}</span>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+    updateNotifBadge();
+  }
+
+  function renderFullNotifications(data) {
+    const list = document.getElementById('notificationsFullList');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    if (data.length === 0) {
+      list.innerHTML = '<div style="text-align:center; padding:40px; color:rgba(255,255,255,0.3)">No notifications found matching your filters.</div>';
+      return;
+    }
+
+    data.forEach(notif => {
+      const card = document.createElement('div');
+      card.className = `notif-card-full ${notif.status}`;
+      card.innerHTML = `
+        <div class="notif-icon-full">${notif.icon}</div>
+        <div class="notif-info-full">
+          <div class="notif-header-full">
+            <span class="notif-title-full">${notif.title}</span>
+            <span class="notif-time-full">${notif.time}</span>
+          </div>
+          <div class="notif-msg-full">${notif.msg}</div>
+          <div style="margin-top: 12px; display:flex; align-items:center; gap:10px;">
+            <span class="notif-badge ${notif.priority}">${notif.priority}</span>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.3);">${notif.type}</span>
+          </div>
+        </div>
+        <div class="notif-actions-full">
+          ${notif.status === 'unread' ? '<button class="btn-action approve mark-read-btn" title="Mark as Read">✓</button>' : ''}
+          <button class="btn-action delete dismiss-btn" title="Dismiss">✕</button>
+        </div>
+      `;
+
+      // Event Listeners
+      const markBtn = card.querySelector('.mark-read-btn');
+      if (markBtn) {
+        markBtn.addEventListener('click', () => {
+          notif.status = 'read';
+          notif.priority = 'read';
+          renderFullNotifications(filterNotifs());
+          renderNotificationDropdown();
+        });
+      }
+
+      card.querySelector('.dismiss-btn').addEventListener('click', () => {
+        const index = mockNotifications.indexOf(notif);
+        if (index > -1) mockNotifications.splice(index, 1);
+        renderFullNotifications(filterNotifs());
+        renderNotificationDropdown();
+      });
+
+      list.appendChild(card);
+    });
+  }
+
+  function filterNotifs() {
+    const term = notifSearch ? notifSearch.value.toLowerCase() : '';
+    const type = filterNotifType ? filterNotifType.value : '';
+    const status = filterNotifStatus ? filterNotifStatus.value.toLowerCase() : '';
+
+    return mockNotifications.filter(n => {
+      const matchSearch = n.title.toLowerCase().includes(term) || n.msg.toLowerCase().includes(term);
+      const matchType = type === '' || n.type === type;
+      const matchStatus = status === '' || n.status === status;
+      return matchSearch && matchType && matchStatus;
+    });
+  }
+
+  // --- MESSAGES ---
+
+  function renderMessageInbox(data) {
+    if (!messageInboxList) return;
+    messageInboxList.innerHTML = '';
+    
+    data.forEach(msg => {
+      const item = document.createElement('div');
+      item.className = `inbox-item ${msg.status}`;
+      item.dataset.id = msg.id;
+      item.innerHTML = `
+        <img src="${msg.avatar}" class="inbox-avatar" alt="${msg.name}">
+        <div class="inbox-info">
+          <div class="inbox-header">
+            <span class="inbox-name">${msg.name}</span>
+            <span class="inbox-time">${msg.time}</span>
+          </div>
+          <div class="inbox-msg">${msg.msg}</div>
+        </div>
+      `;
+
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.inbox-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        item.classList.remove('unread');
+        msg.status = 'read';
+        openMessage(msg);
+      });
+
+      messageInboxList.appendChild(item);
+    });
+  }
+
+  function openMessage(msg) {
+    if (!messageDetailView || !noMessageSelected) return;
+    
+    noMessageSelected.classList.add('hidden');
+    messageDetailView.classList.remove('hidden');
+    
+    document.getElementById('detailSenderImg').src = msg.avatar;
+    document.getElementById('detailSenderName').innerText = msg.name;
+    document.getElementById('detailSenderRole').innerText = msg.role;
+    document.getElementById('detailTimestamp').innerText = `Sent ${msg.time}`;
+    document.getElementById('detailBody').innerText = msg.msg;
+
+    // Scroll to bottom of message body if needed
+    const body = messageDetailView.querySelector('.detail-body');
+    body.scrollTop = body.scrollHeight;
+
+    // Mobile logic: If width is small, show as modal or full screen
+    if (window.innerWidth <= 768) {
+      document.querySelector('.message-content-view').classList.add('active-mobile');
+      // Add a back button if it doesn't exist
+      if (!document.getElementById('mobileBackBtn')) {
+        const backBtn = document.createElement('button');
+        backBtn.id = 'mobileBackBtn';
+        backBtn.className = 'admin-btn-secondary';
+        backBtn.style.margin = '10px';
+        backBtn.innerText = '← Back to Inbox';
+        backBtn.onclick = () => {
+          document.querySelector('.message-content-view').classList.remove('active-mobile');
+        };
+        messageDetailView.prepend(backBtn);
+      }
+    }
+  }
+
+  // --- EVENT LISTENERS ---
 
   if (notifDropdownBtn) {
     notifDropdownBtn.addEventListener('click', (e) => {
@@ -732,142 +910,87 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function renderNotificationDropdown() {
-    const list = document.getElementById('dropdownNotifList');
-    if (!list) return;
-    list.innerHTML = '';
-    
-    mockNotifications.slice(0, 4).forEach(notif => {
-      const item = document.createElement('div');
-      item.className = `notif-item-quick ${notif.status}`;
-      item.innerHTML = `
-        <div class="notif-icon-small" style="background: rgba(255,255,255,0.1)">${notif.icon}</div>
-        <div class="notif-content-small">
-          <span class="notif-title-small">${notif.title}</span>
-          <span class="notif-msg-small">${notif.msg}</span>
-          <span class="notif-time-small">${notif.time}</span>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-  }
-
-  function renderFullNotifications(data) {
-    const list = document.getElementById('notificationsFullList');
-    if (!list) return;
-    list.innerHTML = '';
-    
-    data.forEach(notif => {
-      const card = document.createElement('div');
-      card.className = `notif-card-full ${notif.status} ${notif.priority}`;
-      card.innerHTML = `
-        <div class="notif-icon-full">${notif.icon}</div>
-        <div class="notif-info-full">
-          <div class="notif-header-full">
-            <span class="notif-title-full">${notif.title}</span>
-            <span class="notif-time-full">${notif.time}</span>
-          </div>
-          <div class="notif-msg-full">${notif.msg}</div>
-          <div style="margin-top: 8px;">
-            <span class="notif-badge ${notif.priority}">${notif.priority}</span>
-            <span style="font-size: 11px; color: rgba(255,255,255,0.3); margin-left: 8px;">${notif.type}</span>
-          </div>
-        </div>
-        <div class="notif-actions-full">
-          <button class="btn-action approve" title="Mark as Read">✓</button>
-          <button class="btn-action delete" title="Dismiss">✕</button>
-        </div>
-      `;
-      list.appendChild(card);
-    });
-  }
-
-  function renderMessageInbox() {
-    const list = document.getElementById('messageInboxList');
-    if (!list) return;
-    list.innerHTML = '';
-    
-    mockMessages.forEach(msg => {
-      const item = document.createElement('div');
-      item.className = `inbox-item ${msg.status}`;
-      item.dataset.id = msg.id;
-      item.innerHTML = `
-        <img src="${msg.avatar}" class="inbox-avatar" alt="${msg.name}">
-        <div class="inbox-info">
-          <div class="inbox-header">
-            <span class="inbox-name">${msg.name}</span>
-            <span class="inbox-time">${msg.time}</span>
-          </div>
-          <div class="inbox-msg">${msg.msg}</div>
-        </div>
-      `;
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.inbox-item').forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-        openMessage(msg);
+  if (markAllReadBtn) {
+    markAllReadBtn.addEventListener('click', () => {
+      mockNotifications.forEach(n => {
+        n.status = 'read';
+        n.priority = 'read';
       });
-      list.appendChild(item);
+      renderFullNotifications(filterNotifs());
+      renderNotificationDropdown();
     });
   }
 
-  function openMessage(msg) {
-    const detailView = document.getElementById('messageDetailView');
-    const emptyState = document.getElementById('noMessageSelected');
-    
-    emptyState.classList.add('hidden');
-    detailView.classList.remove('hidden');
-    
-    document.getElementById('detailSenderImg').src = msg.avatar;
-    document.getElementById('detailSenderName').innerText = msg.name;
-    document.getElementById('detailSenderRole').innerText = msg.role;
-    document.getElementById('detailTimestamp').innerText = `Received ${msg.time}`;
-    document.getElementById('detailBody').innerText = msg.msg;
-  }
+  if (notifSearch) notifSearch.addEventListener('input', () => renderFullNotifications(filterNotifs()));
+  if (filterNotifType) filterNotifType.addEventListener('change', () => renderFullNotifications(filterNotifs()));
+  if (filterNotifStatus) filterNotifStatus.addEventListener('change', () => renderFullNotifications(filterNotifs()));
 
-  // Initializations
-  renderNotificationDropdown();
-  renderFullNotifications(mockNotifications);
-  renderMessageInbox();
-
-  // Search & Filters
-  const notifSearch = document.getElementById('notifSearch');
-  if (notifSearch) {
-    notifSearch.addEventListener('input', () => {
-      const term = notifSearch.value.toLowerCase();
-      const filtered = mockNotifications.filter(n => 
-        n.title.toLowerCase().includes(term) || n.msg.toLowerCase().includes(term)
-      );
-      renderFullNotifications(filtered);
-    });
-  }
-
-  const messageSearch = document.getElementById('messageSearch');
   if (messageSearch) {
     messageSearch.addEventListener('input', () => {
       const term = messageSearch.value.toLowerCase();
-      const filtered = mockMessages.filter(m => 
-        m.name.toLowerCase().includes(term) || m.msg.toLowerCase().includes(term)
-      );
-      // Re-render inbox with filtered
-      const list = document.getElementById('messageInboxList');
-      list.innerHTML = '';
-      filtered.forEach(msg => {
-        const item = document.createElement('div');
-        item.className = `inbox-item ${msg.status}`;
-        item.innerHTML = `
-          <img src="${msg.avatar}" class="inbox-avatar" alt="${msg.name}">
-          <div class="inbox-info">
-            <div class="inbox-header">
-              <span class="inbox-name">${msg.name}</span>
-              <span class="inbox-time">${msg.time}</span>
-            </div>
-            <div class="inbox-msg">${msg.msg}</div>
-          </div>
-        `;
-        list.appendChild(item);
-      });
+      const filtered = mockMessages.filter(m => m.name.toLowerCase().includes(term) || m.msg.toLowerCase().includes(term));
+      renderMessageInbox(filtered);
     });
   }
+
+  const sendReplyBtn = document.getElementById('sendReplyBtn');
+  if (sendReplyBtn) {
+    sendReplyBtn.addEventListener('click', () => {
+      const replyText = document.getElementById('replyText');
+      if (replyText.value.trim() === '') return;
+
+      // Add dummy reply bubble
+      const bubble = document.createElement('div');
+      bubble.className = 'message-text';
+      bubble.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+      bubble.style.color = 'white';
+      bubble.style.alignSelf = 'flex-end';
+      bubble.style.marginTop = '15px';
+      bubble.innerText = replyText.value;
+      
+      document.querySelector('.detail-body').appendChild(bubble);
+      replyText.value = '';
+      
+      // Auto-scroll
+      const body = document.querySelector('.detail-body');
+      body.scrollTop = body.scrollHeight;
+
+      // Show toast
+      if (typeof showToast === 'function') showToast('Reply sent successfully!');
+    });
+  }
+
+  // Initial Initialization
+  renderNotificationDropdown();
+  renderFullNotifications(mockNotifications);
+  renderMessageInbox(mockMessages);
+
+  // Compose Message Logic
+  const composeMessageBtn = document.getElementById('composeMessageBtn');
+  const messageModalOverlay = document.getElementById('messageModalOverlay');
+  const closeMessageBtn = document.getElementById('closeMessageBtn');
+  const cancelComposeBtn = document.getElementById('cancelComposeBtn');
+
+  if (composeMessageBtn) {
+    composeMessageBtn.addEventListener('click', () => {
+      messageModalOverlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  const closeComposeModal = () => {
+    messageModalOverlay.classList.add('hidden');
+    document.body.style.overflow = '';
+  };
+
+  if (closeMessageBtn) closeMessageBtn.addEventListener('click', closeComposeModal);
+  if (cancelComposeBtn) cancelComposeBtn.addEventListener('click', closeComposeModal);
+  if (messageModalOverlay) {
+    messageModalOverlay.addEventListener('click', (e) => {
+      if (e.target === messageModalOverlay) closeComposeModal();
+    });
+  }
+
   // 10. Admin Settings Panel Logic
   const settingsTabBtns = document.querySelectorAll('.settings-tab-btn');
   const settingsPanes = document.querySelectorAll('.settings-pane');
