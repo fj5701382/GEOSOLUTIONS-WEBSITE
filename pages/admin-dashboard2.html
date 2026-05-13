@@ -10,9 +10,16 @@
   <link rel="stylesheet" href="../css/style2.css">
   <link rel="stylesheet" href="../css/animations.css">
   <link rel="stylesheet" href="../css/dashboard.css">
-<script src="../js/theme.js"></script>
-  <link rel="stylesheet" href="../css/inline-styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    // Immediate Session Check
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = GeoAuth.getCurrentUser();
+      if (!user || user.role !== 'admin') {
+        window.location.href = 'login2.html';
+      }
+    });
+  </script>
 </head>
 <body>
 <div class="admin-dash-wrapper">
@@ -1560,7 +1567,40 @@
   </main>
 </div>
 
-<script src="../js/mockUsers.js"></script>
+    <!-- LOGOUT CONFIRMATION MODAL -->
+    <div id="logoutModalOverlay" class="admin-modal-overlay hidden">
+      <div class="admin-modal glass-panel" style="max-width: 450px; position: relative; overflow: hidden;">
+        <!-- Loading Overlay for transition -->
+        <div class="logout-loading-overlay" id="logoutLoading">
+          <div class="logout-spinner"></div>
+          <span style="color: white; font-weight: 600; letter-spacing: 0.5px;">Signing out...</span>
+        </div>
+
+        <div class="modal-body logout-modal-content">
+          <div class="logout-warning-icon">🚪</div>
+          
+          <div class="logout-admin-preview">
+            <div class="logout-avatar-wrap">
+              <img src="../images/avatar-placeholder.png" alt="Admin" id="logoutModalAvatar">
+            </div>
+            <span class="logout-admin-name">Administrator</span>
+            <span class="logout-admin-role">Super Admin</span>
+          </div>
+
+          <h3 style="color: white; margin-bottom: 10px; font-size: 22px;">Confirm Logout</h3>
+          <p class="logout-message">Are you sure you want to logout? You will need to login again to access the dashboard.</p>
+
+          <div class="logout-modal-actions">
+            <button class="btn-logout-cancel" id="cancelLogoutBtn">Cancel</button>
+            <button class="btn-logout-confirm" id="confirmLogoutBtn">
+              Confirm Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/mockUsers.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/admin.js"></script>
 <script src="../js/admin-dashboard.js"></script>

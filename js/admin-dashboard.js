@@ -1334,5 +1334,76 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => toast.remove(), 300);
     }, 3000);
   }
+
+  // 10. Logout Functionality
+  const logoutBtn = document.getElementById('logoutBtn');
+  const logoutModal = document.getElementById('logoutModalOverlay');
+  const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+  const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+  const logoutLoading = document.getElementById('logoutLoading');
+
+  if (logoutBtn && logoutModal) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Sync modal profile image with topbar avatar
+      const topbarAvatar = document.querySelector('.admin-avatar img');
+      const modalAvatar = document.getElementById('logoutModalAvatar');
+      if (topbarAvatar && modalAvatar) {
+        modalAvatar.src = topbarAvatar.src;
+      }
+
+      // Sync name and role if available
+      const adminNameTxt = document.getElementById('adminName');
+      const modalName = logoutModal.querySelector('.logout-admin-name');
+      if (adminNameTxt && modalName) {
+        modalName.innerText = adminNameTxt.innerText;
+      }
+
+      logoutModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  if (cancelLogoutBtn) {
+    cancelLogoutBtn.addEventListener('click', () => {
+      logoutModal.classList.add('hidden');
+      document.body.style.overflow = '';
+    });
+  }
+
+  if (logoutModal) {
+    logoutModal.addEventListener('click', (e) => {
+      if (e.target === logoutModal) {
+        logoutModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+
+  if (confirmLogoutBtn) {
+    confirmLogoutBtn.addEventListener('click', () => {
+      // Show loading spinner
+      if (logoutLoading) {
+        logoutLoading.classList.add('active');
+      }
+
+      // 1. Clear Local Authentication Data
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminData');
+      localStorage.removeItem('geo_session');
+      sessionStorage.clear();
+
+      // 2. Prevent back button access (history manipulation)
+      window.history.pushState(null, '', window.location.href);
+      window.onpopstate = function() {
+        window.history.pushState(null, '', window.location.href);
+      };
+
+      // 3. Redirect to login page
+      setTimeout(() => {
+        window.location.href = 'login2.html';
+      }, 1500); // 1.5s delay to show the nice animation
+    });
+  }
 });
 
