@@ -4,12 +4,20 @@
   /* Global Scaling System */
   --dash-scale: 0.85;
   --sidebar-w: 240px;
-  --topbar-h: 64px;
-  --card-pad: 24px;
-  --section-gap: 20px;
+  --sidebar-w-collapsed: 70px;
+  --topbar-h: 60px;
+  --card-pad: clamp(16px, 3vw, 24px);
+  --section-gap: clamp(16px, 4vw, 24px);
   --font-base: 14px;
   --radius-lg: 16px;
   --radius-xl: 20px;
+  
+  /* Responsive Font Sizes */
+  --fs-h1: clamp(1.5rem, 5vw, 2.2rem);
+  --fs-h2: clamp(1.25rem, 4vw, 1.75rem);
+  --fs-h3: clamp(1.1rem, 3vw, 1.4rem);
+  --fs-body: clamp(0.875rem, 2vw, 1rem);
+  --fs-small: clamp(0.75rem, 1.5vw, 0.875rem);
 }
 
 /* Dashboard Consolidated Styles */
@@ -1723,6 +1731,7 @@ body { background: var(--gray-100); min-height: 100vh; }
   font-family: var(--font-body), sans-serif;
   overflow-x: hidden;
   color: white;
+  position: relative;
 }
 
 @keyframes gradientFlow {
@@ -1883,7 +1892,8 @@ body { background: var(--gray-100); min-height: 100vh; }
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  transition: margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  width: calc(100% - var(--sidebar-w));
 }
 
 .admin-topbar {
@@ -2156,7 +2166,7 @@ body { background: var(--gray-100); min-height: 100vh; }
 }
 
 .welcome-banner p {
-  font-size: 14px;
+  font-size: var(--fs-small);
   color: rgba(255, 255, 255, 0.8);
   max-width: 600px;
   line-height: 1.6;
@@ -2194,6 +2204,7 @@ body { background: var(--gray-100); min-height: 100vh; }
   }
   .admin-main-content {
     margin-left: 0;
+    width: 100%;
   }
   .admin-menu-toggle {
     display: flex;
@@ -2203,8 +2214,12 @@ body { background: var(--gray-100); min-height: 100vh; }
   .mobile-close-btn {
     display: flex;
   }
-  .admin-topbar { padding: 0 24px; }
-  .admin-content-area { padding: 0 24px 24px; }
+  .admin-topbar { padding: 0 16px; }
+  .admin-content-area { padding: 0 16px 16px; }
+  
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -2220,9 +2235,111 @@ body { background: var(--gray-100); min-height: 100vh; }
     border: none;
   }
   .admin-profile-menu:hover { background: rgba(255,255,255,0.1); }
-  .welcome-banner { padding: 30px 24px; }
-  .welcome-banner h2 { font-size: 24px; }
-  .welcome-banner::after { font-size: 80px; right: 20px; }
+  .welcome-banner { padding: 24px; }
+  .welcome-banner h2 { font-size: var(--fs-h2); }
+  .welcome-banner::after { font-size: 60px; right: 10px; opacity: 0.05; }
+  
+  /* Mobile Table to Card Conversion */
+  .admin-table-responsive {
+    overflow-x: visible;
+  }
+  
+  .admin-modern-table {
+    min-width: 100% !important;
+  }
+  
+  .admin-modern-table thead {
+    display: none; /* Hide table headers on mobile */
+  }
+  
+  .admin-modern-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 16px;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+  }
+  
+  .admin-modern-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    text-align: right;
+  }
+  
+  .admin-modern-table td:last-child {
+    border-bottom: none !important;
+  }
+  
+  .admin-modern-table td::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: left;
+    flex: 1;
+  }
+  
+  .admin-modern-table td.text-right {
+    text-align: center !important;
+    justify-content: center;
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 12px 0 !important;
+  }
+  
+  .admin-modern-table td.text-right::before {
+    display: none;
+  }
+  
+  .action-buttons {
+    width: 100%;
+    justify-content: center;
+    gap: 12px;
+  }
+  
+  .btn-action {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  
+  /* Specific cell adjustments */
+  .student-profile-cell {
+    justify-content: flex-end;
+    width: auto;
+    text-align: right;
+  }
+  
+  .student-name-col {
+    align-items: flex-end;
+  }
+  
+  .admin-modern-table td > div {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-pagination {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
 }
 
 @keyframes adminFadeIn {
@@ -4130,6 +4247,7 @@ input:checked + .slider-round:before {
 @media (max-width: 1024px) {
     .settings-container {
         flex-direction: column;
+        gap: 20px;
     }
     
     .settings-sidebar {
@@ -4137,17 +4255,23 @@ input:checked + .slider-round:before {
         flex-direction: row;
         overflow-x: auto;
         padding-bottom: 10px;
+        gap: 10px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        margin-bottom: 10px;
     }
     
     .settings-tab-btn {
         white-space: nowrap;
         flex-shrink: 0;
+        padding: 10px 16px;
     }
 }
 
 @media (max-width: 640px) {
     .settings-form-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
     
     .form-group.full-width {
@@ -4155,16 +4279,26 @@ input:checked + .slider-round:before {
     }
     
     .settings-card {
-        padding: 20px;
+        padding: 16px;
     }
     
     .settings-actions {
         flex-direction: column-reverse;
+        gap: 10px;
     }
     
     .btn-settings {
         width: 100%;
         justify-content: center;
+        padding: 10px 16px;
+    }
+
+    .upload-container {
+        flex-direction: column;
+    }
+
+    .upload-area {
+        height: 120px;
     }
 }
 
@@ -4223,4 +4357,111 @@ input:checked + .slider-round:before {
     border-radius: 10px;
     background: rgba(16, 185, 129, 0.1);
     color: #10b981;
+}
+/* --- RESPONSIVE MODAL SYSTEM --- */
+.admin-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.admin-modal-overlay.hidden {
+  display: none !important;
+}
+
+.admin-modal {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: modalScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 10;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  position: sticky;
+  bottom: 0;
+  background: inherit;
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  .admin-modal {
+    max-height: 95vh;
+    border-radius: 20px;
+  }
+  
+  .modal-header, .modal-body, .modal-footer {
+    padding: 16px;
+  }
+  
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+  
+  .modal-footer button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Common Responsive Utilities */
+.touch-friendly {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.flex-wrap-mobile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .flex-wrap-mobile {
+    flex-direction: column;
+  }
+  
+  .flex-wrap-mobile > * {
+    width: 100%;
+  }
 }

@@ -64,8 +64,32 @@ document.addEventListener('DOMContentLoaded', () => {
       if (window.innerWidth <= 1024) {
         closeSidebarMenu();
       }
+      
+      // Inject data-labels for mobile table conversion
+      setTimeout(injectTableLabels, 100);
     });
   });
+
+  // Function to inject data-labels for mobile table cards
+  function injectTableLabels() {
+    const tables = document.querySelectorAll('.admin-modern-table');
+    tables.forEach(table => {
+      const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
+      const rows = table.querySelectorAll('tbody tr');
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        cells.forEach((cell, index) => {
+          if (headers[index] && headers[index] !== '' && !cell.hasAttribute('data-label')) {
+            cell.setAttribute('data-label', headers[index]);
+          }
+        });
+      });
+    });
+  }
+  
+  // Initial injection
+  setTimeout(injectTableLabels, 1000);
 
   // 3. Search Bar Interaction (Optional enhancement)
   const searchInput = document.querySelector('.admin-search-bar input');
@@ -178,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (totalStudents) totalStudents.innerText = data.length;
+    injectTableLabels();
   }
 
   function filterTable() {
@@ -289,6 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (totalTeachers) totalTeachers.innerText = data.length;
+    injectTableLabels();
   }
 
   function filterTeacherTable() {
@@ -401,6 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (totalPending) totalPending.innerText = data.length;
+    injectTableLabels();
   }
 
   function filterPendingTable() {
@@ -1175,6 +1202,122 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // 11. Payments Management Logic
+  const mockPayments = [
+    { id: 'TXN-901', name: 'John Doe', studentId: 'GEO-24-001', method: 'Paystack', amount: 45000, status: 'Paid', date: '2024-10-12', expiry: '2025-01-12' },
+    { id: 'TXN-902', name: 'Jane Smith', studentId: 'GEO-24-002', method: 'Flutterwave', amount: 35000, status: 'Pending', date: '2024-10-15', expiry: '2025-01-15' },
+    { id: 'TXN-903', name: 'Michael Johnson', studentId: 'GEO-24-003', method: 'Bank Transfer', amount: 45000, status: 'Paid', date: '2024-10-18', expiry: '2025-01-18' },
+    { id: 'TXN-904', name: 'Sarah Williams', studentId: 'GEO-24-004', method: 'Paystack', amount: 50000, status: 'Failed', date: '2024-10-20', expiry: '-' }
+  ];
+
+  const paymentsTableBody = document.getElementById('paymentsTableBody');
+  const paymentSearch = document.getElementById('paymentSearch');
+  const filterPaymentMethod = document.getElementById('filterPaymentMethod');
+  const filterPaymentStatus = document.getElementById('filterPaymentStatus');
+  const totalPayments = document.getElementById('totalPayments');
+
+  function renderPayments(data) {
+    if (!paymentsTableBody) return;
+    paymentsTableBody.innerHTML = '';
+    
+    if (data.length === 0) {
+      if (document.getElementById('paymentTableEmptyState')) document.getElementById('paymentTableEmptyState').classList.remove('hidden');
+    } else {
+      if (document.getElementById('paymentTableEmptyState')) document.getElementById('paymentTableEmptyState').classList.add('hidden');
+      
+      data.forEach(pay => {
+        let statusBadge = '';
+        if (pay.status === 'Paid') statusBadge = '<span class="admin-badge success">Paid</span>';
+        else if (pay.status === 'Pending') statusBadge = '<span class="admin-badge warning">Pending</span>';
+        else statusBadge = '<span class="admin-badge danger">Failed</span>';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="checkbox" class="admin-checkbox"></td>
+          <td>
+            <div class="student-name-col">
+              <span class="student-name">${pay.name}</span>
+              <span class="student-role-text">${pay.studentId}</span>
+            </div>
+          </td>
+          <td><span style="font-family: monospace; opacity: 0.8;">${pay.id}</span></td>
+          <td>${pay.method}</td>
+          <td>₦${pay.amount.toLocaleString()}</td>
+          <td>${statusBadge}</td>
+          <td>${pay.date}</td>
+          <td>${pay.expiry}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-action view" onclick="showReceipt('${pay.id}')" data-tooltip="View Receipt">📄</button>
+              <button class="btn-action approve" data-tooltip="Verify">✓</button>
+            </div>
+          </td>
+        `;
+        paymentsTableBody.appendChild(row);
+      });
+    }
+    if (totalPayments) totalPayments.innerText = data.length;
+    injectTableLabels();
+  }
+
+  // 12. All Users Management Logic
+  const mockUsers = [
+    { name: 'Admin User', role: 'Admin', id: 'ADM-001', email: 'admin@geo.edu', status: 'Active', registered: '2024-01-01' },
+    { name: 'John Doe', role: 'Student', id: 'GEO-24-001', email: 'john@example.com', status: 'Active', registered: '2024-10-12' },
+    { name: 'Alan Turing', role: 'Teacher', id: 'TCH-24-101', email: 'alan@geo.edu', status: 'Active', registered: '2024-01-10' }
+  ];
+
+  const usersTableBody = document.getElementById('usersTableBody');
+
+  function renderUsers(data) {
+    if (!usersTableBody) return;
+    usersTableBody.innerHTML = '';
+    
+    data.forEach(user => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>
+          <div class="student-profile-cell">
+            <div class="t-avatar">${user.name.split(' ').map(n => n[0]).join('')}</div>
+            <span class="student-name">${user.name}</span>
+          </div>
+        </td>
+        <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
+        <td>${user.id}</td>
+        <td>${user.email}</td>
+        <td><span class="admin-badge success">${user.status}</span></td>
+        <td>${user.registered}</td>
+      `;
+      usersTableBody.appendChild(row);
+    });
+    injectTableLabels();
+  }
+
+  // Final Inits
+  renderPayments(mockPayments);
+  renderUsers(mockUsers);
+
+  // Global Receipts Logic (placeholder)
+  window.showReceipt = (ref) => {
+    const modal = document.getElementById('receiptModalOverlay');
+    if (modal) {
+      document.getElementById('modalRef').innerText = ref;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const closeReceiptBtn = document.getElementById('closeReceiptBtn');
+  if (closeReceiptBtn) {
+    closeReceiptBtn.onclick = () => {
+      document.getElementById('receiptModalOverlay').classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+  }
+
+  // Initial table label injection for all sections
+  setTimeout(injectTableLabels, 1500);
 
   // Helper: Toast Notification
   function showToast(message) {
