@@ -10,7 +10,7 @@
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-  const themeToggles = document.querySelectorAll('.theme-toggle');
+  const themeToggles = document.querySelectorAll('.theme-toggle, .admin-theme-toggle');
   
   // Set initial state for all toggle buttons based on saved theme
   const savedTheme = localStorage.getItem('geosolution-theme') || 'light';
