@@ -183,9 +183,37 @@
     /* Render editable profile */
     card.innerHTML = buildEditableProfile(user);
 
+    /* ── Restore saved profile image from localStorage ── */
+    const savedImage = user.profileImage || (() => {
+      try {
+        const s = JSON.parse(localStorage.getItem("geoCurrentUser") || "{}");
+        return s.profileImage || null;
+      } catch(_) { return null; }
+    })();
+    if (savedImage) {
+      const wrapper = card.querySelector(".profile-image-wrapper");
+      if (wrapper) {
+        wrapper.innerHTML = `<img src="${savedImage}" alt="Profile photo" class="profile-image" id="profileImage" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.3);">`;
+      }
+      const sidebarAv = document.getElementById("sidebarAvatar");
+      if (sidebarAv) {
+        sidebarAv.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = savedImage;
+        img.alt = "Avatar";
+        img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover;";
+        sidebarAv.appendChild(img);
+      }
+      const topbarContainer = document.getElementById("topbarAvatarContainer");
+      if (topbarContainer) {
+        topbarContainer.innerHTML = `<img src="${savedImage}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+      }
+    }
+
     const btnEdit   = document.getElementById("btnEditProfile");
     const btnSave   = document.getElementById("btnSaveProfile");
     const btnCancel = document.getElementById("btnCancelProfile");
+
 
     /* Snapshot of original values for cancel */
     let snapshot = {};
@@ -283,6 +311,73 @@
       if (e.key === "Enter" && e.target.tagName === "INPUT") saveEdit();
       if (e.key === "Escape") cancelEdit();
     });
+
+    /* ── Photo upload ── */
+    const changePhotoBtn = document.getElementById("changePhotoBtn");
+    const imageUpload    = document.getElementById("imageUpload");
+
+    if (changePhotoBtn && imageUpload) {
+      changePhotoBtn.addEventListener("click", () => imageUpload.click());
+
+      imageUpload.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        /* Validate type & size (max 2 MB) */
+        if (!file.type.startsWith("image/")) {
+          showToast("Please select an image file.", true);
+          return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+          showToast("Image must be smaller than 2 MB.", true);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const dataUrl = ev.target.result;
+
+          /* Replace avatar display in profile header */
+          const wrapper = card.querySelector(".profile-image-wrapper");
+          if (wrapper) {
+            wrapper.innerHTML = `<img src="${dataUrl}" alt="Profile photo" class="profile-image" id="profileImage" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.3);">`;
+          }
+
+          /* Sync sidebar avatar */
+          const sidebarAv = document.getElementById("sidebarAvatar");
+          if (sidebarAv) {
+            sidebarAv.innerHTML = "";
+            const img = document.createElement("img");
+            img.src = dataUrl;
+            img.alt = "Avatar";
+            img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover;";
+            sidebarAv.appendChild(img);
+          }
+
+          /* Sync topbar avatar */
+          const topbarContainer = document.getElementById("topbarAvatarContainer");
+          if (topbarContainer) {
+            topbarContainer.innerHTML = `<img src="${dataUrl}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+          }
+
+          /* Persist to localStorage */
+          try {
+            const stored = JSON.parse(localStorage.getItem("geoCurrentUser") || "{}");
+            stored.profileImage = dataUrl;
+            localStorage.setItem("geoCurrentUser", JSON.stringify(stored));
+            Object.assign(user, { profileImage: dataUrl });
+          } catch (err) {
+            console.warn("Could not save profile image:", err);
+          }
+
+          showToast("✓ Profile photo updated!");
+        };
+        reader.readAsDataURL(file);
+
+        /* Reset input so same file can be re-selected */
+        imageUpload.value = "";
+      });
+    }
   }
 
   /* ── Expose to global scope so inline init script can call it ── */
