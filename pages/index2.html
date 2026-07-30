@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>GEO Solution | Student Portal Login</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Existing CSS -->
+    <link rel="stylesheet" href="../css/style2.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/inline-styles.css">
+    
+    <!-- Custom Login CSS -->
+    <link rel="stylesheet" href="../css/login-custom.css">
+    
+    <script src="../js/theme.js"></script>
+</head>
+<body>
+
+<div class="auth-page">
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle-wrap">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+            <span class="material-symbols-outlined" id="themeIcon">wb_sunny</span>
+        </button>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="mobile-menu-wrap">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="mobile-menu-dropdown" id="mobileMenuDropdown">
+            <a href="index.html" class="active">
+                <span class="material-symbols-outlined">home</span>
+                Home
+            </a>
+            <a href="index2.html">
+                <span class="material-symbols-outlined">login</span>
+                Login
+            </a>
+            <a href="register2.html">
+                <span class="material-symbols-outlined">app_registration</span>
+                Register
+            </a>
+            <a href="contact.html">
+                <span class="material-symbols-outlined">contact_support</span>
+                Contact
+            </a>
+        </div>
+    </div>
+
+    <!-- ===== LEFT PANEL ===== -->
+    <div class="auth-left">
+        <div class="deco-circle-1"></div>
+        <div class="deco-circle-2"></div>
+        <div class="deco-blur"></div>
+
+        <div class="auth-left-content">
+            <div class="auth-logo">
+                <span class="material-symbols-outlined icon">school</span>
+                <h1>GEO Solution</h1>
+            </div>
+
+            <h2 class="auth-heading">Welcome <span>Back!</span></h2>
+            <p class="auth-subheading">Log in to your account to continue.</p>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="roleSelect">Select Role</label>
+                    <select id="roleSelect" class="form-control" required>
+                        <option value="student">🎓 Student</option>
+                        <option value="teacher">📚 Teacher</option>
+                        <option value="computer">💻 Computer</option>
+                        <option value="admin">🛡️ Administrator</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="identifier">Identifier</label>
+                    <input
+                        type="text"
+                        id="identifier"
+                        class="form-control"
+                        placeholder="Enter REG NUMBER (e.g. GEO/2024/001)"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="remember-row">
+                    <input type="checkbox" id="rememberPassword">
+                    <label for="rememberPassword">Remember my credentials</label>
+                </div>
+
+                <button type="submit" id="loginBtn" class="btn-login">
+                    Login to Portal
+                </button>
+
+                <div class="auth-footer">
+                    <a href="register2.html">Create Account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== RIGHT PANEL ===== -->
+    <div class="auth-right">
+        <div class="grid-pattern-overlay"></div>
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="blur-circle-1"></div>
+        <div class="blur-circle-2"></div>
+
+        <div class="float-icon">🎓</div>
+        <div class="float-icon">📊</div>
+        <div class="float-icon">📐</div>
+        <div class="float-icon">🔬</div>
+        <div class="float-icon">📖</div>
+        <div class="float-icon">⚡</div>
+        <div class="float-icon">🌍</div>
+
+        <div class="central-content">
+            <div class="icon-wrapper">
+                <div class="icon-circle">
+                    <div class="ring-1"></div>
+                    <div class="ring-2"></div>
+                    <div class="ring-3"></div>
+                    <span class="material-symbols-outlined academic-icon">school</span>
+                </div>
+            </div>
+
+            <h3 class="central-title">Academic Excellence</h3>
+            <p class="central-sub">Track your results, monitor progress, and achieve your academic goals with GEO Solution.</p>
+
+            <div class="testimonial-card">
+                <p class="testimonial-quote">
+                    <span class="material-symbols-outlined quote-icon">format_quote</span>
+                    GEO ACADEMY's portal transformed how I track my academic progress. Everything I need is in one place — results, announcements, and feedback from teachers.
+                </p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">TN</div>
+                    <div>
+                        <div class="testimonial-name">Tunde Nwachukwu</div>
+                        <div class="testimonial-role">Senior Student • GEO/2023/015</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-chips">
+                <div class="feature-chip">
+                    <span class="material-symbols-outlined chip-icon">analytics</span>
+                    Real-time Results
+                </div>
+                <div class="feature-chip">
+                    <span class="material-symbols-outlined chip-icon">enhanced_encryption</span>
+                    Secure Access
+                </div>
+                <div class="feature-chip">
+                    <span class="material-symbols-outlined chip-icon">smartphone</span>
+                    Mobile Friendly
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script src="../js/mockUsers.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/login.js"></script>
+
+</body>
+</html>

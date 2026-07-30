@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#065f46">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Teacher Dashboard — GEO ACADEMY</title>
+  <link rel="stylesheet" href="../css/style2.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+<script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/inline-styles.css">
+</head>
+<body>
+<div class="admin-dash-wrapper">
+  <aside class="admin-sidebar admin-glass-panel" id="sidebar">
+    <div class="admin-sidebar-header">
+      <div class="geo-logo sidebar-logo">
+        <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
+      </div>
+      <button class="mobile-close-btn" id="closeSidebar">✕</button>
+    </div>
+    <div class="sidebar-user" style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px;">
+      <div class="sidebar-avatar" id="sidebarAvatar" style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: white;">SJ</div>
+      <div class="sidebar-user-info">
+        <div class="user-name" id="sidebarName" style="font-weight: 600; font-size: 16px; color: white;">Teacher</div>
+        <div class="user-role" style="font-size: 13px; color: rgba(255,255,255,0.6);">Teacher</div>
+      </div>
+    </div>
+    <div class="admin-sidebar-nav">
+      <div class="admin-nav-item active" data-target="overviewSection">
+        <span class="admin-nav-icon">📊</span><span class="admin-nav-text">Overview</span>
+      </div>
+      <div class="admin-nav-item" data-target="studentsSection">
+        <span class="admin-nav-icon">🎓</span><span class="admin-nav-text">My Students</span>
+      </div>
+      <div class="admin-nav-item" data-target="profileSection">
+        <span class="admin-nav-icon">👤</span><span class="admin-nav-text">My Profile</span>
+      </div>
+      <div class="admin-nav-item" id="paymentBtnNav">
+        <span class="admin-nav-icon">💳</span><span class="admin-nav-text">Payment Details</span>
+      </div>
+    </div>
+    <div class="admin-sidebar-footer">
+      <button class="admin-btn-logout" id="logoutBtn">
+        <span class="admin-nav-icon">🚪</span><span class="admin-nav-text">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-sidebar-overlay" id="sidebarOverlay"></div>
+
+  <main class="admin-main-content">
+    <header class="admin-topbar admin-glass-panel">
+      <div class="admin-topbar-left">
+        <button class="admin-menu-toggle" id="menuToggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1 class="page-title" style="margin: 0; font-size: 20px;">Teacher Dashboard</h1>
+      </div>
+      <div class="admin-topbar-right">
+        <button class="admin-theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
+          <span class="slider">
+            <span class="slider-icon sun">☀️</span>
+            <span class="slider-icon moon">🌙</span>
+          </span>
+        </button>
+        <div class="admin-profile-menu">
+          <div class="admin-profile-info">
+            <span class="admin-name" id="topbarName">Teacher</span>
+            <span class="admin-role">Teacher</span>
+          </div>
+          <div class="admin-avatar" id="topbarAvatarContainer" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: white; border: 2px solid rgba(255,255,255,0.2);">
+            <span id="topbarAvatar">SJ</span>
+          </div>
+        </div>
+        <button class="btn-logout-mobile" id="logoutBtnMobile" style="display: none;">Logout</button>
+      </div>
+    </header>
+
+    <div class="admin-content-area">
+      <div id="overviewSection" class="admin-section active">
+        <div class="admin-glass-card welcome-banner">
+          <h2 id="welcomeMsg">Welcome, Teacher! 📚</h2>
+          <p id="welcomeSub">Manage your classes and track student performance.</p>
+        </div>
+        
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card admin-glass-panel gradient-blue">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">🎓</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter">34</div>
+              <div class="stat-label">My Students</div>
+            </div>
+          </div>
+          <div class="admin-stat-card admin-glass-panel gradient-purple">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">📋</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter">5</div>
+              <div class="stat-label">Classes</div>
+            </div>
+          </div>
+          <div class="admin-stat-card admin-glass-panel gradient-orange">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">📝</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter">12</div>
+              <div class="stat-label">Pending Marks</div>
+            </div>
+          </div>
+          <div class="admin-stat-card admin-glass-panel gradient-emerald">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">📈</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter">74%</div>
+              <div class="stat-label">Class Average</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="studentsSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title">My Students</h2>
+            <p class="section-subtitle">Manage student results and grades</p>
+          </div>
+          <div class="header-right">
+            <button class="admin-btn-primary" id="saveGradesBtn">
+              <span class="btn-icon">💾</span> Save All Marks
+            </button>
+          </div>
+        </div>
+        
+        <div class="admin-glass-card table-container-card">
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="studentsTable">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>REG Number</th>
+                  <th>Subject</th>
+                  <th>Score</th>
+                  <th>Grade</th>
+                  <th>Term</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><div class="table-student" style="display:flex; align-items:center; gap:10px;"><div class="t-avatar" style="width:32px; height:32px; border-radius:50%; background:#3b82f6; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:white;">AI</div>Adaeze Iroha</div></td><td>GEO/2024/010</td><td id="subjectCol1">Mathematics</td><td><input type="number" class="admin-input score-input" value="85" style="width: 80px;"></td><td><span class="grade-pill" style="padding:4px 8px; border-radius:12px; background:rgba(16,185,129,0.2); color:#10b981; font-weight:600;">A2</span></td><td>1st Term</td></tr>
+                <tr><td><div class="table-student" style="display:flex; align-items:center; gap:10px;"><div class="t-avatar" style="width:32px; height:32px; border-radius:50%; background:#f59e0b; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:white;">KA</div>Kelechi Amadi</div></td><td>GEO/2024/011</td><td id="subjectCol2">Mathematics</td><td><input type="number" class="admin-input score-input" value="72" style="width: 80px;"></td><td><span class="grade-pill" style="padding:4px 8px; border-radius:12px; background:rgba(59,130,246,0.2); color:#3b82f6; font-weight:600;">B2</span></td><td>1st Term</td></tr>
+                <tr><td><div class="table-student" style="display:flex; align-items:center; gap:10px;"><div class="t-avatar" style="width:32px; height:32px; border-radius:50%; background:#10b981; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:white;">BN</div>Blessing Nwosu</div></td><td>GEO/2024/012</td><td id="subjectCol3">Mathematics</td><td><input type="number" class="admin-input score-input" value="91" style="width: 80px;"></td><td><span class="grade-pill" style="padding:4px 8px; border-radius:12px; background:rgba(16,185,129,0.2); color:#10b981; font-weight:600;">A1</span></td><td>1st Term</td></tr>
+                <tr><td><div class="table-student" style="display:flex; align-items:center; gap:10px;"><div class="t-avatar" style="width:32px; height:32px; border-radius:50%; background:#ef4444; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:white;">EO</div>Emeka Obi</div></td><td>GEO/2024/013</td><td id="subjectCol4">Mathematics</td><td><input type="number" class="admin-input score-input" value="68" style="width: 80px;"></td><td><span class="grade-pill" style="padding:4px 8px; border-radius:12px; background:rgba(245,158,11,0.2); color:#f59e0b; font-weight:600;">C3</span></td><td>1st Term</td></tr>
+                <tr><td><div class="table-student" style="display:flex; align-items:center; gap:10px;"><div class="t-avatar" style="width:32px; height:32px; border-radius:50%; background:#8b5cf6; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:white;">FE</div>Fatima Eze</div></td><td>GEO/2024/014</td><td id="subjectCol5">Mathematics</td><td><input type="number" class="admin-input score-input" value="78" style="width: 80px;"></td><td><span class="grade-pill" style="padding:4px 8px; border-radius:12px; background:rgba(59,130,246,0.2); color:#3b82f6; font-weight:600;">B2</span></td><td>1st Term</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="profileSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <h2 class="section-title" style="margin: 0;">My Profile</h2>
+        </div>
+        <div class="info-card profile-card-container admin-glass-panel" id="profileCard" style="padding: 20px; border-radius: 16px;"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Payment Form Modal -->
+<div class="modal-overlay" id="paymentModalOverlay">
+  <div class="admin-modal glass-panel" style="max-width: 500px; margin: auto;">
+    <div class="modal-header">
+      <h3 class="modal-title" style="margin: 0; color: inherit;">💳 Payment Details</h3>
+      <button class="mobile-close-btn" id="closePaymentModal" style="display: flex;">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="paymentForm" class="modern-form">
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="payFullName" class="admin-label" style="display: block; margin-bottom: 8px;">Full Name <span class="required" style="color: #ef4444;">*</span></label>
+          <div style="position: relative; display: flex; align-items: center; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 12px 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+            <span style="font-size: 20px; margin-right: 12px; opacity: 0.9;">👤</span>
+            <input type="text" id="payFullName" placeholder="e.g. John Doe" required style="width: 100%; background: transparent; border: none; color: inherit; font-size: 15px; font-weight: 500; outline: none;">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="payEmail" class="admin-label" style="display: block; margin-bottom: 8px;">Email Address <span class="required" style="color: #ef4444;">*</span></label>
+          <div style="position: relative; display: flex; align-items: center; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 12px 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+            <span style="font-size: 20px; margin-right: 12px; opacity: 0.9;">✉️</span>
+            <input type="email" id="payEmail" placeholder="e.g. teacher@geoacademy.edu" required style="width: 100%; background: transparent; border: none; color: inherit; font-size: 15px; font-weight: 500; outline: none;">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="payBankName" class="admin-label" style="display: block; margin-bottom: 8px;">Bank Name <span class="required" style="color: #ef4444;">*</span></label>
+          <div style="position: relative; display: flex; align-items: center; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 12px 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+            <span style="font-size: 20px; margin-right: 12px; opacity: 0.9;">🏦</span>
+            <select id="payBankName" required style="width: 100%; background: transparent; border: none; color: inherit; font-size: 15px; font-weight: 500; outline: none; appearance: none; -webkit-appearance: none; cursor: pointer;">
+              <option value="" disabled selected>Select a bank</option>
+              <option value="Access Bank">Access Bank</option>
+              <option value="GTBank">GTBank</option>
+              <option value="Zenith Bank">Zenith Bank</option>
+              <option value="UBA">UBA</option>
+              <option value="First Bank">First Bank</option>
+              <option value="Fidelity Bank">Fidelity Bank</option>
+              <option value="Union Bank">Union Bank</option>
+              <option value="FCMB">FCMB</option>
+              <option value="Sterling Bank">Sterling Bank</option>
+              <option value="Polaris Bank">Polaris Bank</option>
+              <option value="Ecobank">Ecobank</option>
+              <option value="Wema Bank">Wema Bank</option>
+              <option value="Keystone Bank">Keystone Bank</option>
+              <option value="Stanbic IBTC">Stanbic IBTC</option>
+              <option value="Providus Bank">Providus Bank</option>
+              <option value="Opay">Opay</option>
+              <option value="PalmPay">PalmPay</option>
+              <option value="Moniepoint">Moniepoint</option>
+              <option value="Kuda Bank">Kuda Bank</option>
+              <option value="Jaiz Bank">Jaiz Bank</option>
+            </select>
+            <span style="font-size: 14px; opacity: 0.7; pointer-events: none;">▼</span>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="payAccountNumber" class="admin-label" style="display: block; margin-bottom: 8px;">Account Number <span class="required" style="color: #ef4444;">*</span></label>
+          <div style="position: relative; display: flex; align-items: center; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 12px 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+            <span style="font-size: 20px; margin-right: 12px; opacity: 0.9;">🔢</span>
+            <input type="text" id="payAccountNumber" placeholder="10-digit account number" pattern="\d{10}" title="Account number must be exactly 10 digits" required maxlength="10" style="width: 100%; background: transparent; border: none; color: inherit; font-size: 15px; font-weight: 500; outline: none; letter-spacing: 2px;">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="payAmount" class="admin-label" style="display: block; margin-bottom: 8px;">Amount Expected (₦) <span class="required" style="color: #ef4444;">*</span></label>
+          <div style="position: relative; display: flex; align-items: center; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 12px 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+            <span style="font-size: 20px; margin-right: 12px; font-weight: bold; color: #10b981;">₦</span>
+            <input type="number" id="payAmount" placeholder="e.g. 50000" min="0" required style="width: 100%; background: transparent; border: none; color: #10b981; font-size: 16px; font-weight: 600; outline: none;">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="payNotes" class="admin-label" style="display: block; margin-bottom: 8px;">Additional Notes</label>
+          <div style="position: relative; display: flex; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 12px 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+            <span style="font-size: 20px; margin-right: 12px; opacity: 0.9; margin-top: 2px;">📝</span>
+            <textarea id="payNotes" rows="3" placeholder="Any extra information..." style="width: 100%; background: transparent; border: none; color: inherit; font-size: 15px; font-weight: 500; outline: none; resize: vertical;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-logout-cancel" id="cancelPaymentBtn">Cancel</button>
+          <button type="submit" class="admin-btn-primary" id="submitPaymentBtn" style="min-width: 140px;">Submit Details</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="../js/mockUsers.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/teacher-dashboard.js"></script>
+<script src="../js/dashboard.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const user = GeoAuth.requireAuth("teacher");
+  if (!user) return;
+
+  const initials = user.avatar || GeoAuth.getInitials(user.fullName);
+  document.getElementById("sidebarAvatar").textContent = initials;
+  document.getElementById("sidebarName").textContent = user.fullName.split(" ")[0];
+  document.getElementById("topbarAvatar").textContent = initials;
+  document.getElementById("topbarName").textContent = user.fullName;
+  document.getElementById("welcomeMsg").textContent = `Welcome, ${user.fullName.split(" ")[0]}! 📚`;
+  document.getElementById("welcomeSub").textContent = `Subject: ${user.subject || "N/A"} · Manage your students and track their progress.`;
+
+  // Update subject columns
+  const subject = user.subject || "Subject";
+  ["subjectCol1","subjectCol2","subjectCol3","subjectCol4","subjectCol5"].forEach(id => {
+    document.getElementById(id).textContent = subject;
+  });
+
+  /* Profile section — built and wired by external teacher-dashboard.js */
+  GeoTeacherDashboard.initProfileEdit(user);
+
+  document.getElementById("logoutBtn").addEventListener("click", () => GeoAuth.logout());
+  document.getElementById("logoutBtnMobile").addEventListener("click", () => GeoAuth.logout());
+
+  // Sidebar + overlay helpers
+  const sidebar = document.querySelector(".admin-sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  function openSidebar() { sidebar.classList.add("open"); overlay.classList.add("active"); }
+  function closeSidebar() { sidebar.classList.remove("open"); overlay.classList.remove("active"); }
+
+  document.getElementById("menuToggle").addEventListener("click", () => {
+    sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
+  });
+  overlay.addEventListener("click", closeSidebar);
+
+  document.querySelectorAll(".admin-nav-item").forEach(item => {
+    item.addEventListener("click", () => {
+      document.querySelectorAll(".admin-nav-item").forEach(n => n.classList.remove("active"));
+      item.classList.add("active");
+      const target = item.dataset.target;
+      if (target) {
+        document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
+        const targetEl = document.getElementById(target);
+        if (targetEl) targetEl.classList.add("active");
+      }
+      if (window.innerWidth <= 768) closeSidebar();
+    });
+  });
+});
+</script>
+</body>
+</html>

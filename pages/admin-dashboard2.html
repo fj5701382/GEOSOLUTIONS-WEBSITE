@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1e3a8a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Admin Dashboard — GEO ACADEMY</title>
+  <link rel="stylesheet" href="../css/style2.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <script src="../js/auth.js"></script>
+  <script>
+    // Immediate Session Check
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = GeoAuth.getCurrentUser();
+      if (!user || user.role !== 'admin') {
+        window.location.href = 'login2.html';
+      }
+    });
+  </script>
+</head>
+<body>
+<div class="admin-dash-wrapper">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar admin-glass-panel" id="sidebar">
+    <div class="admin-sidebar-header">
+      <div class="geo-logo sidebar-logo">
+        <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
+      </div>
+      <button class="mobile-close-btn" id="closeSidebar">✕</button>
+    </div>
+
+    <div class="admin-sidebar-nav">
+      <div class="admin-nav-item active" data-target="overviewSection">
+        <span class="admin-nav-icon">📊</span>
+        <span class="admin-nav-text">Dashboard Overview</span>
+      </div>
+      <div class="admin-nav-item" data-target="studentsSection">
+        <span class="admin-nav-icon">👨‍🎓</span>
+        <span class="admin-nav-text">Students</span>
+      </div>
+      <div class="admin-nav-item" data-target="teachersSection">
+        <span class="admin-nav-icon">👨‍🏫</span>
+        <span class="admin-nav-text">Teachers</span>
+      </div>
+      <div class="admin-nav-item" data-target="paymentsSection">
+        <span class="admin-nav-icon">💳</span>
+        <span class="admin-nav-text">Payments</span>
+      </div>
+      <div class="admin-nav-item" data-target="analyticsSection">
+        <span class="admin-nav-icon">📈</span>
+        <span class="admin-nav-text">Analytics</span>
+      </div>
+      <div class="admin-nav-item" data-target="pendingSection">
+        <span class="admin-nav-icon">⏳</span>
+        <span class="admin-nav-text">Pending Approvals</span>
+      </div>
+      <div class="admin-nav-item" data-target="usersSection">
+        <span class="admin-nav-icon">👥</span>
+        <span class="admin-nav-text">All Users</span>
+      </div>
+      <div class="admin-nav-item" data-target="messagesSection">
+        <span class="admin-nav-icon">💬</span>
+        <span class="admin-nav-text">Messages</span>
+      </div>
+      <div class="admin-nav-item" data-target="coursesSection">
+        <span class="admin-nav-icon">📚</span>
+        <span class="admin-nav-text">Courses</span>
+      </div>
+      <div class="admin-nav-item" data-target="notificationsSection">
+        <span class="admin-nav-icon">🔔</span>
+        <span class="admin-nav-text">Notifications</span>
+      </div>
+      <div class="admin-nav-item" data-target="settingsSection">
+        <span class="admin-nav-icon">⚙️</span>
+        <span class="admin-nav-text">Settings</span>
+      </div>
+    </div>
+
+    <div class="admin-sidebar-footer">
+      <button class="admin-btn-logout" id="logoutBtn">
+        <span class="admin-nav-icon">🚪</span>
+        <span class="admin-nav-text">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- OVERLAY FOR MOBILE -->
+  <div class="admin-sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-main-content">
+    <!-- TOP NAVBAR -->
+    <header class="admin-topbar admin-glass-panel">
+      <div class="admin-topbar-left">
+        <button class="admin-menu-toggle" id="menuToggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="admin-search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search dashboard...">
+        </div>
+      </div>
+
+      <div class="admin-topbar-right">
+        <button class="admin-theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
+          <span class="slider">
+            <span class="slider-icon sun">☀️</span>
+            <span class="slider-icon moon">🌙</span>
+          </span>
+        </button>
+        
+        <div class="admin-notification-container">
+          <button class="admin-notification-btn" id="notifDropdownBtn">
+            <span class="bell-icon">🔔</span>
+            <span class="notification-badge" id="topbarNotifBadge">5</span>
+          </button>
+          
+          <!-- Dropdown Panel -->
+          <div class="notification-dropdown-panel admin-glass-panel hidden" id="notifDropdown">
+            <div class="dropdown-header">
+              <h3>Recent Notifications</h3>
+              <button class="mark-all-read" id="markAllReadBtn">Mark all as read</button>
+            </div>
+            <div class="dropdown-body" id="dropdownNotifList">
+              <!-- Quick notifications injected here -->
+            </div>
+            <div class="dropdown-footer">
+              <button class="view-all-notifs" onclick="document.querySelector('[data-target=\'notificationsSection\']').click()">View All Notifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-profile-menu">
+          <div class="admin-profile-info">
+            <span class="admin-name" id="adminName">Administrator</span>
+            <span class="admin-role">Super Admin</span>
+          </div>
+          <div class="admin-avatar" id="adminAvatarContainer">
+            <img src="../images/avatar-placeholder.png" alt="Admin" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%233b82f6\'/><text x=\'50%\' y=\'50%\' fill=\'white\' font-size=\'18\' font-family=\'sans-serif\' font-weight=\'bold\' text-anchor=\'middle\' dy=\'.35em\'>AD</text></svg>'">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT SECTIONS -->
+    <div class="admin-content-area">
+      <!-- OVERVIEW SECTION -->
+      <div id="overviewSection" class="admin-section active">
+        <div class="admin-glass-card welcome-banner">
+          <h2>Welcome back, Administrator! 👋</h2>
+          <p>Here's what's happening at GEO ACADEMY today. This dashboard has been completely redesigned with a glassmorphism and modern blue gradient aesthetic.</p>
+        </div>
+
+        <div class="admin-stats-grid">
+          <!-- Total Students -->
+          <div class="admin-stat-card admin-glass-panel gradient-blue">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">🎓</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">12%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="1250">0</div>
+              <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Total Teachers -->
+          <div class="admin-stat-card admin-glass-panel gradient-purple">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">👨‍🏫</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">5%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="85">0</div>
+              <div class="stat-label">Total Teachers</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Pending Approvals -->
+          <div class="admin-stat-card admin-glass-panel gradient-orange">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">⏳</span>
+              </div>
+              <div class="stat-trend negative">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">3%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="24">0</div>
+              <div class="stat-label">Pending Approvals</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Active Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-green">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">💳</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">18%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="980">0</div>
+              <div class="stat-label">Active Payments</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Expired Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-red">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">⚠️</span>
+              </div>
+              <div class="stat-trend negative">
+                <span class="trend-icon">↓</span>
+                <span class="trend-value">2%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="45">0</div>
+              <div class="stat-label">Expired Payments</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Total Revenue -->
+          <div class="admin-stat-card admin-glass-panel gradient-emerald">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">💰</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">22%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value-container">
+                <span class="stat-currency">₦</span>
+                <span class="stat-value counter" data-target="4500000">0</span>
+              </div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Courses -->
+          <div class="admin-stat-card admin-glass-panel gradient-indigo">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">📚</span>
+              </div>
+              <div class="stat-trend positive">
+                <span class="trend-icon">↑</span>
+                <span class="trend-value">8%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="120">0</div>
+              <div class="stat-label">Total Courses</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+
+          <!-- Messages -->
+          <div class="admin-stat-card admin-glass-panel gradient-pink">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <span class="stat-icon">💬</span>
+              </div>
+              <div class="stat-trend neutral">
+                <span class="trend-icon">-</span>
+                <span class="trend-value">0%</span>
+              </div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="38">0</div>
+              <div class="stat-label">Unread Messages</div>
+            </div>
+            <div class="stat-pulse"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDING SECTION -->
+      <div id="pendingSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="color: white;">Pending Account Approvals</h2>
+            <p class="section-subtitle">Review and manage new student and teacher registrations</p>
+          </div>
+          <div class="header-right" style="display: flex; gap: 12px;">
+            <button class="admin-btn-primary" id="bulkApproveBtn">
+              <span class="btn-icon">✅</span> Bulk Approve
+            </button>
+            <button class="admin-btn-secondary" id="exportPendingBtn">
+              <span class="btn-icon">📥</span> Export
+            </button>
+          </div>
+        </div>
+
+        <!-- Approval Statistics -->
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card admin-glass-panel gradient-blue">
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="24">0</div>
+              <div class="stat-label">Total Pending</div>
+            </div>
+          </div>
+          <div class="admin-stat-card admin-glass-panel gradient-purple">
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="15">0</div>
+              <div class="stat-label">Pending Students</div>
+            </div>
+          </div>
+          <div class="admin-stat-card admin-glass-panel gradient-orange">
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="9">0</div>
+              <div class="stat-label">Pending Teachers</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="pendingSearch" placeholder="Search by name, ID, or email...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterPendingRole">
+                <option value="">All Roles</option>
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+              </select>
+              
+              <select class="admin-select" id="filterPendingStatus">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+
+              <input type="date" class="admin-select" id="filterPendingDate" placeholder="Reg. Date">
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="pendingTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllPending" class="admin-checkbox"></th>
+                  <th>User Profile</th>
+                  <th>User ID</th>
+                  <th>Email Address</th>
+                  <th>Role</th>
+                  <th>Reg. Date</th>
+                  <th>Status</th>
+                  <th>Documents</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pendingTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Loading Skeleton -->
+            <div id="pendingTableLoader" class="table-loader hidden">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="pendingTableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No pending approvals found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="pendingPageStart">1</span> to <span id="pendingPageEnd">5</span> of <span id="totalPending">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevPendingPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextPendingPage">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS SECTION -->
+      <div id="usersSection" class="admin-section">
+        <div class="admin-glass-card admin-section-header">
+          <h2 class="section-title" style="color: white; margin-bottom: 0;">All Users</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Identifier</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Registered</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PLACEHOLDER SECTIONS -->
+      <div id="studentsSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="color: white;">Student Management</h2>
+            <p class="section-subtitle">View, edit, and manage all registered students</p>
+          </div>
+          <div class="header-right">
+            <button class="admin-btn-primary" id="exportStudentsBtn">
+              <span class="btn-icon">📥</span> Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="studentSearch" placeholder="Search by name, ID, or email...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterCourse">
+                <option value="">All Courses</option>
+                <option value="Frontend Development">Frontend Development</option>
+                <option value="Backend Development">Backend Development</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Data Science">Data Science</option>
+              </select>
+              
+              <select class="admin-select" id="filterStatus">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Pending">Pending</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="studentsTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllStudents" class="admin-checkbox"></th>
+                  <th>Student Name</th>
+                  <th>Student ID</th>
+                  <th>Email Address</th>
+                  <th>Course enrolled</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Reg. Date</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Loading Skeleton -->
+            <div id="tableLoader" class="table-loader hidden">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="tableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No students found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="pageStart">1</span> to <span id="pageEnd">5</span> of <span id="totalStudents">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextPage">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="teachersSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="color: white;">Teacher Management</h2>
+            <p class="section-subtitle">Manage instructors, view payment requests, and update roles</p>
+          </div>
+          <div class="header-right" style="display: flex; gap: 12px;">
+            <button class="admin-btn-primary" id="exportTeachersBtn">
+              <span class="btn-icon">📥</span> Export CSV
+            </button>
+            <button class="admin-btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+              <span class="btn-icon">➕</span> Add Teacher
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="teacherSearch" placeholder="Search by name, ID, or email...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterTeacherCourse">
+                <option value="">All Courses</option>
+                <option value="Frontend Development">Frontend Development</option>
+                <option value="Backend Development">Backend Development</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Data Science">Data Science</option>
+              </select>
+              
+              <select class="admin-select" id="filterTeacherPayment">
+                <option value="">All Payments</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Requested">Requested</option>
+              </select>
+
+              <select class="admin-select" id="filterTeacherStatus">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Pending">Pending</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="teachersTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllTeachers" class="admin-checkbox"></th>
+                  <th>Teacher Info</th>
+                  <th>Contact Info</th>
+                  <th>Assigned Course</th>
+                  <th>Payment Info & Bank</th>
+                  <th>Account Status</th>
+                  <th>Reg. Date</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teachersTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Loading Skeleton -->
+            <div id="teacherTableLoader" class="table-loader hidden">
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="teacherTableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No teachers found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="teacherPageStart">1</span> to <span id="teacherPageEnd">5</span> of <span id="totalTeachers">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevTeacherPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextTeacherPage">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- PAYMENTS SECTION -->
+      <div id="paymentsSection" class="admin-section">
+        <!-- Payment Summary Cards -->
+        <div class="admin-stats-grid">
+          <!-- Total Revenue -->
+          <div class="admin-stat-card admin-glass-panel gradient-emerald">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">💰</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value-container">
+                <span class="stat-currency">₦</span><span class="stat-value counter" data-target="4500000">0</span>
+              </div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+          </div>
+          <!-- Active Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-blue">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">✅</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="980">0</div>
+              <div class="stat-label">Active Payments</div>
+            </div>
+          </div>
+          <!-- Pending Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-orange">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">⏳</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="45">0</div>
+              <div class="stat-label">Pending Payments</div>
+            </div>
+          </div>
+          <!-- Failed Payments -->
+          <div class="admin-stat-card admin-glass-panel gradient-red">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper"><span class="stat-icon">❌</span></div>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-value counter" data-target="12">0</div>
+              <div class="stat-label">Failed Payments</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="color: white;">Payment Management</h2>
+            <p class="section-subtitle">Monitor transactions, approve payments, and manage receipts</p>
+          </div>
+          <div class="header-right">
+            <button class="admin-btn-primary" id="exportPaymentsBtn">
+              <span class="btn-icon">📥</span> Export History
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-glass-card table-container-card">
+          <!-- Filters & Search -->
+          <div class="table-controls">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="paymentSearch" placeholder="Search by name, ID, or reference...">
+            </div>
+            
+            <div class="filter-group">
+              <select class="admin-select" id="filterPaymentMethod">
+                <option value="">All Methods</option>
+                <option value="Paystack">Paystack</option>
+                <option value="Flutterwave">Flutterwave</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+              </select>
+              
+              <select class="admin-select" id="filterPaymentStatus">
+                <option value="">All Statuses</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Failed">Failed</option>
+                <option value="Expired">Expired</option>
+                <option value="Refunded">Refunded</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="paymentsTable">
+              <thead>
+                <tr>
+                  <th width="40"><input type="checkbox" id="selectAllPayments" class="admin-checkbox"></th>
+                  <th>Student Info</th>
+                  <th>Transaction Ref</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Payment Date</th>
+                  <th>Expiry Date</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+            
+            <!-- Empty State -->
+            <div id="paymentTableEmptyState" class="table-empty-state hidden">
+              <div class="empty-icon">📭</div>
+              <h3>No payments found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="admin-pagination">
+            <div class="pagination-info">Showing <span id="paymentPageStart">1</span> to <span id="paymentPageEnd">5</span> of <span id="totalPayments">0</span> entries</div>
+            <div class="pagination-controls">
+              <button class="page-btn disabled" id="prevPaymentPage">← Prev</button>
+              <div class="page-numbers">
+                <button class="page-num active">1</button>
+              </div>
+              <button class="page-btn disabled" id="nextPaymentPage">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Receipt Modal Overlay -->
+      <div id="receiptModalOverlay" class="admin-modal-overlay hidden">
+        <div class="admin-receipt-modal glass-panel">
+          <div class="receipt-header">
+            <div class="school-logo-area">
+              <span class="logo-icon">🌍</span>
+              <span class="logo-text">GEO ACADEMY</span>
+            </div>
+            <button class="close-modal-btn" id="closeReceiptBtn">✖</button>
+          </div>
+          
+          <div class="receipt-body" id="printableReceipt">
+            <div class="receipt-title-area">
+              <h2>PAYMENT RECEIPT</h2>
+              <p class="receipt-ref">Ref: <span id="modalRef">TXN-000000</span></p>
+            </div>
+            
+            <div class="receipt-details-grid">
+              <div class="receipt-box">
+                <p class="receipt-label">Billed To</p>
+                <h4 id="modalStudentName">Student Name</h4>
+                <p id="modalStudentId">ID: GEO-000</p>
+              </div>
+              <div class="receipt-box">
+                <p class="receipt-label">Payment Date</p>
+                <h4 id="modalDate">Oct 12, 2024</h4>
+              </div>
+              <div class="receipt-box">
+                <p class="receipt-label">Payment Method</p>
+                <h4 id="modalMethod">Paystack</h4>
+              </div>
+              <div class="receipt-box">
+                <p class="receipt-label">Status</p>
+                <h4 id="modalStatus" style="color: #10b981;">Paid</h4>
+              </div>
+            </div>
+            
+            <table class="receipt-items-table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th style="text-align: right;">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Course Enrollment Fee</td>
+                  <td style="text-align: right;">₦<span id="modalAmount">0</span></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td><strong>Total Paid</strong></td>
+                  <td style="text-align: right;"><strong>₦<span id="modalTotal">0</span></strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          
+          <div class="receipt-footer-actions">
+            <button class="admin-btn-secondary" id="printReceiptBtn">
+              <span class="btn-icon">🖨️</span> Print
+            </button>
+            <button class="admin-btn-primary" id="downloadReceiptBtn">
+              <span class="btn-icon">⬇️</span> Download PDF
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- ANALYTICS SECTION -->
+      <div id="analyticsSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Analytics Overview</h2>
+            <p class="section-subtitle">Real-time platform performance and growth metrics</p>
+          </div>
+          <div class="header-right">
+            <div class="date-range-picker">
+              <div class="filter-group">
+                <button class="filter-btn active" data-range="weekly">Weekly</button>
+                <button class="filter-btn" data-range="monthly">Monthly</button>
+                <button class="filter-btn" data-range="yearly">Yearly</button>
+              </div>
+              <input type="date" class="admin-select custom-date" id="customDateRange">
+              <button class="admin-btn-primary" id="exportReportBtn">
+                <span class="btn-icon">📊</span> Export Report
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Summary Cards -->
+        <div class="analytics-summary-grid">
+          <div class="analytics-card admin-glass-panel gradient-blue">
+            <div class="card-icon">💰</div>
+            <div class="card-content">
+              <span class="card-label">Total Revenue</span>
+              <div class="card-value-container">
+                <span class="currency">₦</span>
+                <h3 class="counter" data-target="4500000">0</h3>
+              </div>
+              <span class="card-trend positive">↑ 12.5% vs last month</span>
+            </div>
+            <div class="card-glow"></div>
+          </div>
+          
+          <div class="analytics-card admin-glass-panel gradient-purple">
+            <div class="card-icon">📈</div>
+            <div class="card-content">
+              <span class="card-label">Monthly Growth</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="24">0</h3>
+                <span class="unit">%</span>
+              </div>
+              <span class="card-trend positive">↑ 3.2% vs last month</span>
+            </div>
+            <div class="card-glow"></div>
+          </div>
+
+          <div class="analytics-card admin-glass-panel gradient-emerald">
+            <div class="card-icon">👨‍🎓</div>
+            <div class="card-content">
+              <span class="card-label">Active Students</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="1250">0</h3>
+              </div>
+              <span class="card-trend positive">↑ 150 new this week</span>
+            </div>
+            <div class="card-glow"></div>
+          </div>
+
+          <div class="analytics-card admin-glass-panel gradient-indigo">
+            <div class="card-icon">👨‍🏫</div>
+            <div class="card-content">
+              <span class="card-label">Active Teachers</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="85">0</h3>
+              </div>
+              <span class="card-trend positive">↑ 5 new this week</span>
+            </div>
+            <div class="card-glow"></div>
+          </div>
+
+          <div class="analytics-card admin-glass-panel gradient-orange">
+            <div class="card-icon">✅</div>
+            <div class="card-content">
+              <span class="card-label">Payment Success Rate</span>
+              <div class="card-value-container">
+                <h3 class="counter" data-target="98">0</h3>
+                <span class="unit">%</span>
+              </div>
+              <span class="card-trend neutral">Steady this month</span>
+            </div>
+            <div class="card-glow"></div>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+          <!-- Revenue & Growth Area Chart -->
+          <div class="chart-container admin-glass-panel span-2">
+            <div class="chart-header">
+              <h4>Revenue Analytics & Trends</h4>
+              <div class="chart-actions">
+                <button class="btn-icon-only" title="Refresh">🔄</button>
+                <button class="btn-icon-only" title="Fullscreen">⛶</button>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Registration Trends Line Chart -->
+          <div class="chart-container admin-glass-panel">
+            <div class="chart-header">
+              <h4>Registration Trends</h4>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="registrationChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Course Activity Doughnut Chart -->
+          <div class="chart-container admin-glass-panel">
+            <div class="chart-header">
+              <h4>Course Activity Distribution</h4>
+            </div>
+            <div class="chart-wrapper small-chart">
+              <canvas id="courseActivityChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Monthly Growth Bar Chart -->
+          <div class="chart-container admin-glass-panel span-2">
+            <div class="chart-header">
+              <h4>Monthly User Growth Analytics</h4>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="growthChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- NOTIFICATIONS SECTION -->
+      <div id="notificationsSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Notification Center</h2>
+            <p class="section-subtitle">Manage system alerts, registrations, and updates</p>
+          </div>
+          <div class="header-right">
+            <div class="table-controls">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="notifSearch" placeholder="Search notifications...">
+              </div>
+              <div class="filter-group">
+                <select class="admin-select" id="filterNotifType">
+                  <option value="">All Types</option>
+                  <option value="Registration">Registrations</option>
+                  <option value="Payment">Payments</option>
+                  <option value="System">System</option>
+                  <option value="Approval">Approvals</option>
+                </select>
+                <select class="admin-select" id="filterNotifStatus">
+                  <option value="">All Status</option>
+                  <option value="Unread">Unread</option>
+                  <option value="Read">Read</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="notifications-list-container" id="notificationsFullList">
+          <!-- Notification cards injected here -->
+        </div>
+      </div>
+
+      <!-- MESSAGES SECTION -->
+      <div id="messagesSection" class="admin-section">
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Message Center</h2>
+            <p class="section-subtitle">Communication hub for students and teachers</p>
+          </div>
+          <div class="header-right">
+            <button class="admin-btn-primary" id="composeMessageBtn">
+              <span class="btn-icon">✉️</span> Compose Message
+            </button>
+          </div>
+        </div>
+
+        <div class="message-center-layout">
+          <div class="message-sidebar admin-glass-panel">
+            <div class="sidebar-search">
+              <input type="text" id="messageSearch" placeholder="Search messages...">
+            </div>
+            <div class="message-inbox" id="messageInboxList">
+              <!-- Inbox items injected here -->
+            </div>
+          </div>
+          
+          <div class="message-content-view admin-glass-panel">
+            <div id="noMessageSelected" class="empty-message-state">
+              <div class="empty-icon">💬</div>
+              <h3>Select a message to read</h3>
+              <p>Choose a conversation from the left to view details</p>
+            </div>
+            
+            <div id="messageDetailView" class="message-detail-container hidden">
+              <div class="detail-header">
+                <div class="sender-profile">
+                  <img src="" id="detailSenderImg" alt="">
+                  <div class="sender-info">
+                    <h4 id="detailSenderName">Sender Name</h4>
+                    <span id="detailSenderRole">Student</span>
+                  </div>
+                </div>
+                <div class="detail-actions">
+                  <button class="btn-icon-only" title="Delete">🗑️</button>
+                  <button class="btn-icon-only" title="Archive">📦</button>
+                </div>
+              </div>
+              <div class="detail-body">
+                <div class="message-timestamp" id="detailTimestamp">Today, 10:45 AM</div>
+                <div class="message-text" id="detailBody">
+                  Message content goes here...
+                </div>
+              </div>
+              <div class="detail-footer">
+                <textarea id="replyText" placeholder="Write your reply..."></textarea>
+                <div class="footer-buttons">
+                  <button class="admin-btn-secondary">Attach File</button>
+                  <button class="admin-btn-primary" id="sendReplyBtn">Send Reply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="coursesSection" class="admin-section">
+        <div class="admin-glass-card"><h2>Courses</h2><p>Content for this section goes here.</p></div>
+      </div>
+      <!-- SETTINGS SECTION -->
+      <div id="settingsSection" class="admin-section">
+        <div class="admin-glass-card section-header-card" style="margin-bottom: 24px;">
+          <div class="header-left">
+            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Admin Settings Panel</h2>
+            <p class="section-subtitle">Manage school configuration, security, and system preferences</p>
+          </div>
+          <div class="header-right">
+            <div class="settings-search-bar">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="settingsSearch" placeholder="Search settings...">
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-container">
+          <!-- Settings Sidebar Navigation -->
+          <aside class="settings-sidebar">
+            <button class="settings-tab-btn active" data-pane="school-info">
+              <span class="tab-icon">🏫</span>
+              <span class="tab-text">School Information</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="admin-profile">
+              <span class="tab-icon">👤</span>
+              <span class="tab-text">Admin Profile</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="security-settings">
+              <span class="tab-icon">🔒</span>
+              <span class="tab-text">Security Settings</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="theme-settings">
+              <span class="tab-icon">🎨</span>
+              <span class="tab-text">Theme Settings</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="payment-settings">
+              <span class="tab-icon">💳</span>
+              <span class="tab-text">Payment Settings</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="notif-settings">
+              <span class="tab-icon">🔔</span>
+              <span class="tab-text">Notifications</span>
+            </button>
+            <button class="settings-tab-btn" data-pane="system-prefs">
+              <span class="tab-icon">⚙️</span>
+              <span class="tab-text">System Preferences</span>
+            </button>
+          </aside>
+
+          <!-- Settings Content Panes -->
+          <div class="settings-content">
+            
+            <!-- School Information Pane -->
+            <div class="settings-pane active" id="pane-school-info">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🏫 School Details</h3>
+                  <p>Configure the basic information of your educational institution.</p>
+                </div>
+                <div class="settings-form-grid">
+                  <div class="form-group full-width">
+                    <label>School Logo</label>
+                    <div class="upload-container">
+                      <div class="upload-preview" id="schoolLogoPreview">
+                        <img src="../images/logo.jpg" alt="School Logo" onerror="this.src='../images/avatar-placeholder.png'">
+                      </div>
+                      <div class="upload-area" id="schoolLogoUploadArea">
+                        <span class="upload-icon">📤</span>
+                        <span class="upload-text">Drag & drop or click to upload logo</span>
+                        <input type="file" id="schoolLogoInput" hidden accept="image/*">
+                        <div class="upload-progress" id="schoolLogoProgress">
+                          <div class="progress-bar"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolName">School Name</label>
+                    <input type="text" id="schoolName" class="settings-input" value="GEO ACADEMY">
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolEmail">School Email</label>
+                    <input type="email" id="schoolEmail" class="settings-input" value="info@geoacademy.com">
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolPhone">Phone Number</label>
+                    <input type="tel" id="schoolPhone" class="settings-input" value="+234 800 123 4567">
+                  </div>
+                  <div class="form-group">
+                    <label for="schoolWebsite">Website URL</label>
+                    <input type="url" id="schoolWebsite" class="settings-input" value="https://www.geoacademy.com">
+                  </div>
+                  <div class="form-group full-width">
+                    <label for="schoolAddress">Address</label>
+                    <textarea id="schoolAddress" class="settings-textarea" rows="3">123 Education Plaza, Lagos State, Nigeria</textarea>
+                  </div>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-cancel">Cancel</button>
+                  <button class="btn-settings btn-reset">Reset</button>
+                  <button class="btn-settings btn-save" data-section="School Information">Save Changes</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Admin Profile Pane -->
+            <div class="settings-pane" id="pane-admin-profile">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>👤 Admin Profile Settings</h3>
+                  <p>Update your personal information and account security.</p>
+                </div>
+                <div class="settings-form-grid">
+                  <div class="form-group full-width">
+                    <label>Profile Picture</label>
+                    <div class="upload-container">
+                      <div class="upload-preview" id="adminAvatarPreview">
+                        <img src="../images/avatar-placeholder.png" alt="Admin Avatar">
+                      </div>
+                      <div class="upload-area" id="adminAvatarUploadArea">
+                        <span class="upload-icon">👤</span>
+                        <span class="upload-text">Click to change profile picture</span>
+                        <input type="file" id="adminAvatarInput" hidden accept="image/*">
+                        <div class="upload-progress" id="adminAvatarProgress">
+                          <div class="progress-bar"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="adminFullName">Full Name</label>
+                    <input type="text" id="adminFullName" class="settings-input" value="Super Administrator">
+                  </div>
+                  <div class="form-group">
+                    <label for="adminEmail">Email Address</label>
+                    <input type="email" id="adminEmail" class="settings-input" value="admin@geoacademy.com">
+                  </div>
+                  <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" class="settings-input" placeholder="Enter new password">
+                  </div>
+                  <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="settings-input" placeholder="Confirm new password">
+                  </div>
+                  <div class="form-group full-width">
+                    <div class="settings-toggle-group">
+                      <div class="toggle-info">
+                        <h4>Two-Factor Authentication</h4>
+                        <p>Secure your account with an extra layer of security.</p>
+                      </div>
+                      <label class="switch">
+                        <input type="checkbox" id="toggle2FA" checked>
+                        <span class="slider-round"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-reset">Reset</button>
+                  <button class="btn-settings btn-save" data-section="Admin Profile">Update Profile</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Security Settings Pane -->
+            <div class="settings-pane" id="pane-security-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🔒 Security & Activity</h3>
+                  <p>Monitor account activity and manage login sessions.</p>
+                </div>
+                <div class="security-activity-list">
+                  <div class="activity-item">
+                    <div class="activity-icon">💻</div>
+                    <div class="activity-details">
+                      <div class="activity-title">Windows 11 • Chrome Browser</div>
+                      <div class="activity-meta">Lagos, Nigeria • IP: 102.164.20.45 • Current Session</div>
+                    </div>
+                    <span class="activity-status">Active</span>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon">📱</div>
+                    <div class="activity-details">
+                      <div class="activity-title">iPhone 15 Pro • Safari</div>
+                      <div class="activity-meta">Lagos, Nigeria • 2 hours ago</div>
+                    </div>
+                    <button class="btn-settings btn-cancel" style="padding: 4px 10px; font-size: 11px;">Logout</button>
+                  </div>
+                </div>
+                <div style="margin-top: 25px;">
+                  <button class="btn-settings btn-reset full-width" style="width: 100%; justify-content: center;">Logout from All Other Devices</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Theme Settings Pane -->
+            <div class="settings-pane" id="pane-theme-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🎨 Dashboard Theme</h3>
+                  <p>Customize the look and feel of your admin workspace.</p>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Dark Mode</h4>
+                    <p>Switch between light and dark interface styles.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="settingsDarkModeToggle">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                  <label>Accent Color</label>
+                  <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 10px;">Choose a primary color for buttons and highlights.</p>
+                  <div class="accent-color-grid">
+                    <div class="color-option active" style="background: #3b82f6;" data-color="blue"></div>
+                    <div class="color-option" style="background: #8b5cf6;" data-color="purple"></div>
+                    <div class="color-option" style="background: #10b981;" data-color="emerald"></div>
+                    <div class="color-option" style="background: #f59e0b;" data-color="orange"></div>
+                    <div class="color-option" style="background: #ef4444;" data-color="red"></div>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-top: 25px;">
+                  <label for="fontSize">Global Font Size</label>
+                  <select id="fontSize" class="settings-select">
+                    <option value="small">Small (13px)</option>
+                    <option value="medium" selected>Medium (14px)</option>
+                    <option value="large">Large (16px)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Settings Pane -->
+            <div class="settings-pane" id="pane-payment-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>💳 Payment Gateway Configuration</h3>
+                  <p>Manage how students pay for courses and handle transactions.</p>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Paystack Integration</h4>
+                    <p>Enable online payments via Paystack gateway.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Flutterwave Integration</h4>
+                    <p>Enable alternative payments via Flutterwave.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-form-grid" style="margin-top: 20px;">
+                  <div class="form-group">
+                    <label for="currency">Platform Currency</label>
+                    <select id="currency" class="settings-select">
+                      <option value="NGN">Nigerian Naira (₦)</option>
+                      <option value="USD">US Dollar ($)</option>
+                      <option value="GBP">British Pound (£)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="reminders">Payment Reminders</label>
+                    <select id="reminders" class="settings-select">
+                      <option value="3">3 days before expiry</option>
+                      <option value="7" selected>7 days before expiry</option>
+                      <option value="14">14 days before expiry</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-save" data-section="Payment Settings">Save Payment Config</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notification Settings Pane -->
+            <div class="settings-pane" id="pane-notif-settings">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>🔔 Notification Preferences</h3>
+                  <p>Choose which alerts you want to receive and how.</p>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Email Notifications</h4>
+                    <p>Receive summaries and important alerts via email.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>SMS Alerts</h4>
+                    <p>Get instant text messages for critical system events.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Browser Push Notifications</h4>
+                    <p>Show desktop notifications while the dashboard is open.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-toggle-group">
+                  <div class="toggle-info">
+                    <h4>Sound Alerts</h4>
+                    <p>Play a notification sound when a new message arrives.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Preferences Pane -->
+            <div class="settings-pane" id="pane-system-prefs">
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <h3>⚙️ System Preferences</h3>
+                  <p>Manage general platform settings and data.</p>
+                </div>
+                <div class="settings-form-grid">
+                  <div class="form-group">
+                    <label for="sysLanguage">Platform Language</label>
+                    <select id="sysLanguage" class="settings-select">
+                      <option value="en">English (US)</option>
+                      <option value="en-gb">English (UK)</option>
+                      <option value="fr">French</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="sysTimezone">Timezone</label>
+                    <select id="sysTimezone" class="settings-select">
+                      <option value="WAT">West Africa Time (GMT+1)</option>
+                      <option value="GMT">Greenwich Mean Time (GMT+0)</option>
+                      <option value="EST">Eastern Standard Time (GMT-5)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="settings-toggle-group" style="margin-top: 20px;">
+                  <div class="toggle-info">
+                    <h4>Auto-save Changes</h4>
+                    <p>Automatically save settings changes as you edit.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="autoSaveToggle">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+                <div class="settings-actions">
+                  <button class="btn-settings btn-reset" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">Reset All Settings</button>
+                  <button class="btn-settings btn-save" data-section="System Preferences">Export System Data</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PROFILE REVIEW MODAL -->
+    <div id="reviewModalOverlay" class="admin-modal-overlay hidden">
+      <div class="admin-modal review-modal glass-panel">
+        <div class="modal-header">
+          <div class="header-left">
+            <h3>Profile Review</h3>
+            <span class="user-id-badge" id="modalUserId">ID: GEO-24-000</span>
+          </div>
+          <button class="close-modal-btn" id="closeReviewBtn">✖</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="review-grid">
+            <div class="review-left">
+              <div class="review-avatar-container">
+                <img src="../images/avatar-placeholder.png" alt="Profile Image" id="modalProfileImg" class="review-avatar">
+                <div class="role-indicator" id="modalRoleIndicator">Student</div>
+              </div>
+              
+              <div class="review-quick-info">
+                <h2 id="modalFullName">John Doe</h2>
+                <p id="modalEmail">john.doe@example.com</p>
+                <div class="reg-date">Registered: <span id="modalRegDate">Oct 12, 2024</span></div>
+              </div>
+            </div>
+            
+            <div class="review-right">
+              <div class="review-section">
+                <h4 class="section-label">Account Details</h4>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <span class="label">Full Name</span>
+                    <span class="value" id="detailFullName">John Doe</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Email Address</span>
+                    <span class="value" id="detailEmail">john.doe@example.com</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Phone Number</span>
+                    <span class="value" id="detailPhone">+234 800 000 0000</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Registration Type</span>
+                    <span class="value" id="detailRole">Student</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="review-section">
+                <h4 class="section-label">Uploaded Documents</h4>
+                <div class="documents-list" id="modalDocsList">
+                  <!-- Documents will be injected here -->
+                  <div class="doc-card">
+                    <div class="doc-icon">📄</div>
+                    <div class="doc-info">
+                      <span class="doc-name">Government ID.pdf</span>
+                      <span class="doc-size">1.2 MB</span>
+                    </div>
+                    <button class="btn-view-doc">View</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <div class="footer-left">
+            <button class="admin-btn-danger" id="modalRejectBtn">
+              <span class="btn-icon">❌</span> Reject Account
+            </button>
+          </div>
+          <div class="footer-right">
+            <button class="admin-btn-secondary" id="modalCancelBtn">Cancel</button>
+            <button class="admin-btn-primary" id="modalApproveBtn">
+              <span class="btn-icon">✅</span> Approve Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- MESSAGE VIEW MODAL -->
+    <div id="messageModalOverlay" class="admin-modal-overlay hidden">
+      <div class="admin-modal glass-panel" style="max-width: 600px;">
+        <div class="modal-header">
+          <h3>Compose Message</h3>
+          <button class="close-modal-btn" id="closeMessageBtn">✖</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Recipient</label>
+            <select class="admin-select" style="width: 100%;">
+              <option value="">Select Recipient...</option>
+              <option value="all">All Students</option>
+              <option value="teachers">All Teachers</option>
+              <option value="student1">John Doe (Student)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Subject</label>
+            <input type="text" class="admin-input" placeholder="Enter message subject..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white;">
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea class="admin-textarea" rows="6" placeholder="Type your message here..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="admin-btn-secondary" id="cancelComposeBtn">Cancel</button>
+          <button class="admin-btn-primary">Send Message</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+    <!-- LOGOUT CONFIRMATION MODAL -->
+    <div id="logoutModalOverlay" class="admin-modal-overlay hidden">
+      <div class="admin-modal glass-panel" style="max-width: 450px; position: relative; overflow: hidden;">
+        <!-- Loading Overlay for transition -->
+        <div class="logout-loading-overlay" id="logoutLoading">
+          <div class="logout-spinner"></div>
+          <span style="color: white; font-weight: 600; letter-spacing: 0.5px;">Signing out...</span>
+        </div>
+
+        <div class="modal-body logout-modal-content">
+          <div class="logout-warning-icon">🚪</div>
+          
+          <div class="logout-admin-preview">
+            <div class="logout-avatar-wrap">
+              <img src="../images/avatar-placeholder.png" alt="Admin" id="logoutModalAvatar">
+            </div>
+            <span class="logout-admin-name">Administrator</span>
+            <span class="logout-admin-role">Super Admin</span>
+          </div>
+
+          <h3 style="color: white; margin-bottom: 10px; font-size: 22px;">Confirm Logout</h3>
+          <p class="logout-message">Are you sure you want to logout? You will need to login again to access the dashboard.</p>
+
+          <div class="logout-modal-actions">
+            <button class="btn-logout-cancel" id="cancelLogoutBtn">Cancel</button>
+            <button class="btn-logout-confirm" id="confirmLogoutBtn">
+              Confirm Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/mockUsers.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/admin.js"></script>
+<script src="../js/admin-dashboard.js"></script>
+<script src="../js/theme.js"></script>
+</body>
+</html>

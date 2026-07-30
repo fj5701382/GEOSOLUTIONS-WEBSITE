@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>GEO ACADEMY — Create Account</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Existing CSS -->
+    <link rel="stylesheet" href="../css/style2.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/inline-styles.css">
+    
+    <!-- Custom Login CSS (now includes registration styles) -->
+    <link rel="stylesheet" href="../css/login-custom.css">
+    
+    <script src="../js/theme.js"></script>
+</head>
+<body>
+
+<div class="register-page">
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle-wrap">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+            <span class="material-symbols-outlined" id="themeIcon">wb_sunny</span>
+        </button>
+    </div>
+
+    <!-- ===== LEFT PANEL - REGISTRATION FORM ===== -->
+    <div class="register-left">
+        <!-- ✅ DECORATIVE CIRCLES - Same as Login -->
+        <div class="deco-circle-1"></div>
+        <div class="deco-circle-2"></div>
+        <div class="deco-circle-3"></div>
+        <div class="deco-blur"></div>
+
+        <div class="register-left-content">
+
+            <!-- Logo -->
+            <div class="register-logo">
+                <span class="material-symbols-outlined icon">school</span>
+                <h1>GEO Solution</h1>
+            </div>
+
+            <!-- Heading -->
+            <h2 class="register-heading">Create <span>Account</span></h2>
+            <p class="register-subheading">Register to access the student results portal.</p>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message"></div>
+
+            <!-- Registration Form -->
+            <form id="registerForm" novalidate>
+
+                <!-- Role Selector -->
+                <div class="form-group">
+                    <label class="form-label" for="roleSelect">I am a</label>
+                    <select id="roleSelect" class="form-control" required>
+                        <option value="student">🎓 Student</option>
+                        <option value="teacher">📚 Teacher</option>
+                        <option value="computer">💻 Computer</option>
+                        <option value="admin">🛡️ Administrator</option>
+                    </select>
+                </div>
+
+                <!-- Full Name & Email -->
+                <div class="register-cols">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="e.g. Amara Okafor" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <!-- Phone & Registration Date -->
+                <div class="register-cols">
+                    <div class="form-group">
+                        <label class="form-label" for="phoneNumber">Phone Number</label>
+                        <input type="tel" id="phoneNumber" class="form-control" placeholder="e.g. +2347014673935" required>
+                    </div>
+                    <div class="form-group" id="regDateGroup">
+                        <label class="form-label" for="regDate">Date of Registration</label>
+                        <input type="date" id="regDate" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Computer Fields -->
+                <div id="computerFields" class="role-extra-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="program">Program</label>
+                        <input type="text" id="program" class="form-control" placeholder="e.g. Web Design">
+                    </div>
+                </div>
+
+                <!-- Student Fields -->
+                <div id="studentFields" class="role-extra-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="regNumber">REG NUMBER</label>
+                        <input type="text" id="regNumber" class="form-control" placeholder="e.g. GEO/2024/001">
+                    </div>
+                </div>
+
+                <!-- Teacher Fields -->
+                <div id="teacherFields" class="role-extra-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="subject">Subject Taught</label>
+                        <input type="text" id="subject" class="form-control" placeholder="e.g. Mathematics">
+                    </div>
+                </div>
+
+                <!-- Admin Fields -->
+                <div id="adminFields" class="role-extra-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="adminCode">Admin Code</label>
+                        <input type="text" id="adminCode" class="form-control" placeholder="Enter your admin code">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-control"
+                            placeholder="Minimum 6 characters"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Image -->
+                <div class="form-group">
+                    <label class="form-label">Profile Photo</label>
+                    <div class="image-upload-wrapper">
+                        <input type="file" id="profileImage" class="image-input" accept="image/*">
+                        <label for="profileImage" class="image-upload-label">
+                            <span class="material-symbols-outlined upload-icon">photo_camera</span>
+                            <span class="upload-text">Click to upload photo</span>
+                            <span class="upload-hint">PNG, JPG up to 5MB</span>
+                        </label>
+                        <div id="imagePreview" class="image-preview">
+                            <img id="previewImg" src="" alt="Preview">
+                            <button type="button" id="removeImage" class="remove-image-btn">✕</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="checkbox-row">
+                    <input type="checkbox" id="terms">
+                    <label for="terms" class="checkbox-label">I agree to the Terms &amp; Conditions</label>
+                </div>
+
+                <!-- Register Button -->
+                <button type="submit" id="registerBtn" class="btn-register">
+                    Create Account
+                </button>
+
+                <!-- Footer -->
+                <div class="register-footer">
+                    Already have an account? <a href="index2.html">Login here</a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- ===== RIGHT PANEL - BRAND EXPERIENCE ===== -->
+    <div class="register-right">
+        <div class="grid-pattern-overlay"></div>
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="blur-circle-1"></div>
+        <div class="blur-circle-2"></div>
+
+        <div class="float-icon">🎓</div>
+        <div class="float-icon">📊</div>
+        <div class="float-icon">📐</div>
+        <div class="float-icon">🔬</div>
+        <div class="float-icon">📖</div>
+        <div class="float-icon">⚡</div>
+        <div class="float-icon">🌍</div>
+
+        <div class="central-content">
+            <div class="icon-wrapper">
+                <div class="icon-circle">
+                    <div class="ring-1"></div>
+                    <div class="ring-2"></div>
+                    <div class="ring-3"></div>
+                    <span class="material-symbols-outlined academic-icon">school</span>
+                </div>
+            </div>
+
+            <h3 class="central-title">Join GEO ACADEMY</h3>
+            <p class="central-sub">Create your account and begin your academic journey with us.</p>
+
+            <div class="testimonial-card">
+                <p class="testimonial-quote">
+                    <span class="material-symbols-outlined quote-icon">format_quote</span>
+                    The registration was seamless. Once approved by the admin, I had full access to all my academic records and could see my progress in real time.
+                </p>
+                <div class="testi-author">
+                    <div class="testi-avatar">CI</div>
+                    <div>
+                        <div class="testi-name">Chisom Ibe</div>
+                        <div class="testi-role">Year 3 Student · GEO/2022/044</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-chips">
+                <div class="feature-chip">
+                    <span class="material-symbols-outlined chip-icon">bolt</span>
+                    Quick Setup
+                </div>
+                <div class="feature-chip">
+                    <span class="material-symbols-outlined chip-icon">verified</span>
+                    Admin Verified
+                </div>
+                <div class="feature-chip">
+                    <span class="material-symbols-outlined chip-icon">target</span>
+                    Role Based
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== SUCCESS OVERLAY ===== -->
+<div id="successOverlay" class="success-overlay">
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">Account Created!</h2>
+        <p class="success-body">
+            Welcome, <strong class="success-name"></strong>!<br><br>
+            Your account is currently <strong>pending admin approval</strong>. You will be able to login once an administrator approves your account.
+        </p>
+        <div class="success-actions">
+            <a href="index2.html" style="text-decoration:none;">
+                <button class="btn-success">Go to Login Page</button>
+            </a>
+            <button class="btn-secondary" id="registerAnotherBtn">Register Another</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script src="../js/mockUsers.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/register.js"></script>
+<script src="../js/theme.js"></script>
+
+</body>
+</html>
