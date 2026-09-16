@@ -69,13 +69,13 @@
       <!-- Action buttons -->
       <div class="profile-actions">
         <button class="btn-edit-profile" id="btnEditProfile" aria-label="Edit profile">
-          ✏️ Edit Profile
+          <i class="fas fa-pen" aria-hidden="true"></i> Edit Profile
         </button>
         <button class="btn-save-profile" id="btnSaveProfile" aria-label="Save profile changes">
-          💾 Save
+          <i class="fas fa-floppy-disk" aria-hidden="true"></i> Save
         </button>
         <button class="btn-cancel-profile" id="btnCancelProfile" aria-label="Cancel editing">
-          ✕ Cancel
+          <i class="fas fa-xmark" aria-hidden="true"></i> Cancel
         </button>
       </div>
 
@@ -87,14 +87,14 @@
         <div class="profile-header-info">
           <h3 class="profile-name" id="profileDisplayName">${user.fullName || "Student"}</h3>
           <p class="profile-identifier">${user.identifier || ""}</p>
-          <span class="profile-status">Approved ✓</span>
+          <span class="profile-status">${user.status === "pending" ? "Pending approval" : "Approved ✓"}</span>
         </div>
       </div>
       
       <!-- Profile picture upload section -->
       <div class="profile-image-container">
-        <input type="file" id="imageUpload" accept="image/*">
-        <button class="btn-change-photo" id="changePhotoBtn">📷 Change Photo</button>
+        <input type="file" id="imageUpload" accept="image/*" class="visually-hidden" aria-label="Upload a new profile photo">
+        <button type="button" class="btn-change-photo" id="changePhotoBtn"><i class="fas fa-camera" aria-hidden="true"></i> Change Photo</button>
       </div>
       
       <div class="profile-divider"></div>
@@ -161,7 +161,7 @@
         <div class="info-icon">✅</div>
         <div class="profile-field-group">
           <div class="profile-field-label">Account Status</div>
-          <input class="profile-field-input" id="pf-status" type="text" value="Approved" readonly aria-label="Account status">
+          <input class="profile-field-input" id="pf-status" type="text" value="${user.status === "pending" ? "Pending approval" : "Approved"}" readonly aria-label="Account status">
         </div>
       </div>
 
@@ -193,20 +193,20 @@
     if (savedImage) {
       const wrapper = card.querySelector(".profile-image-wrapper");
       if (wrapper) {
-        wrapper.innerHTML = `<img src="${savedImage}" alt="Profile photo" class="profile-image" id="profileImage" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.3);">`;
+        wrapper.innerHTML = `<img src="${savedImage}" alt="Profile photo" class="profile-image" id="profileImage">`;
       }
       const sidebarAv = document.getElementById("sidebarAvatar");
       if (sidebarAv) {
         sidebarAv.innerHTML = "";
         const img = document.createElement("img");
         img.src = savedImage;
-        img.alt = "Avatar";
-        img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover;";
+        img.alt = "";
+        img.className = "avatar-img";
         sidebarAv.appendChild(img);
       }
       const topbarContainer = document.getElementById("topbarAvatarContainer");
       if (topbarContainer) {
-        topbarContainer.innerHTML = `<img src="${savedImage}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        topbarContainer.innerHTML = `<img src="${savedImage}" alt="" class="avatar-img">`;
       }
     }
 
@@ -290,11 +290,14 @@
       const nameDisplay = document.getElementById("profileDisplayName");
       if (nameDisplay) nameDisplay.textContent = updated.fullName || user.fullName;
       const sidebarName = document.getElementById("sidebarName");
-      if (sidebarName) sidebarName.textContent = (updated.fullName || user.fullName).split(" ")[0];
+      if (sidebarName) sidebarName.textContent = updated.fullName || user.fullName;
       const topbarName = document.getElementById("topbarName");
       if (topbarName) topbarName.textContent = updated.fullName || user.fullName;
+      const studentName = document.getElementById("studentName");
       const welcomeMsg = document.getElementById("welcomeMsg");
-      if (welcomeMsg) welcomeMsg.textContent = `Welcome back, ${(updated.fullName || user.fullName).split(" ")[0]}! 🎓`;
+      const first = (updated.fullName || user.fullName).split(" ")[0];
+      if (studentName) studentName.textContent = first;
+      else if (welcomeMsg) welcomeMsg.textContent = `Welcome back, ${first}! 🎓`;
 
       exitEditMode();
       showToast("✓ Profile updated successfully!");
@@ -340,7 +343,7 @@
           /* Replace avatar display in profile header */
           const wrapper = card.querySelector(".profile-image-wrapper");
           if (wrapper) {
-            wrapper.innerHTML = `<img src="${dataUrl}" alt="Profile photo" class="profile-image" id="profileImage" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.3);">`;
+            wrapper.innerHTML = `<img src="${dataUrl}" alt="Profile photo" class="profile-image" id="profileImage">`;
           }
 
           /* Sync sidebar avatar */
@@ -349,15 +352,15 @@
             sidebarAv.innerHTML = "";
             const img = document.createElement("img");
             img.src = dataUrl;
-            img.alt = "Avatar";
-            img.style.cssText = "width:100%;height:100%;border-radius:50%;object-fit:cover;";
+            img.alt = "";
+            img.className = "avatar-img";
             sidebarAv.appendChild(img);
           }
 
           /* Sync topbar avatar */
           const topbarContainer = document.getElementById("topbarAvatarContainer");
           if (topbarContainer) {
-            topbarContainer.innerHTML = `<img src="${dataUrl}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+            topbarContainer.innerHTML = `<img src="${dataUrl}" alt="" class="avatar-img">`;
           }
 
           /* Persist to localStorage */

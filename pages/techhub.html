@@ -1,360 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tech Hub — Geosolution GeoTech Academy</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<script src="../js/theme.js"></script>
-  <link rel="stylesheet" href="../css/inline-styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GeoTech Academy — Tech Courses in Lagos | Geosolution</title>
+  <meta name="description" content="Learn web development, data analytics, UI/UX, cybersecurity and digital marketing at GeoTech Academy, Lagos. Project-based classes and certificates.">
+  <link rel="canonical" href="https://www.geoeduservices.com/pages/techhub.html">
+  <meta name="theme-color" content="#1668c4">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Geosolution Educational Services">
+  <meta property="og:title" content="GeoTech Academy — Tech Courses in Lagos | Geosolution">
+  <meta property="og:description" content="Learn web development, data analytics, UI/UX, cybersecurity and digital marketing at GeoTech Academy, Lagos. Project-based classes and certificates.">
+  <meta property="og:image" content="https://www.geoeduservices.com/images/og-image.jpg">
+  <meta property="og:url" content="https://www.geoeduservices.com/pages/techhub.html">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
+  <header class="navbar">
     <div class="container nav-inner">
-      <a href="../index.html" class="nav-logo">
-          <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
-
+      <a href="index.html" class="nav-logo" aria-label="Geosolution Educational Services — Home">
+        <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services"></picture><picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture>
       </a>
-      <ul class="nav-menu">
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="../index.html#services">Services</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="services.html">Courses</a></li>
-        <li><a href="techhub.html" class="active">Tech Hub</a></li>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li class="nav-dropdown">
+            <button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-controls="programs-menu">
+              Programs <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <ul class="dropdown-menu" id="programs-menu">
+            <li><a href="courses/jamb-preparation.html"><i class="fas fa-book-open" aria-hidden="true"></i> JAMB / UTME Preparation</a></li>
+            <li><a href="courses/waec-neco.html"><i class="fas fa-pen-to-square" aria-hidden="true"></i> WAEC / NECO Coaching</a></li>
+            <li><a href="courses/ielts-training.html"><i class="fas fa-earth-africa" aria-hidden="true"></i> IELTS Training</a></li>
+            <li><a href="courses/cbt-training.html"><i class="fas fa-computer" aria-hidden="true"></i> CBT Training</a></li>
+            <li><a href="courses/admission-processing.html"><i class="fas fa-building-columns" aria-hidden="true"></i> Admission Processing</a></li>
+            <li class="dropdown-divider" role="separator"></li>
+            <li><a href="programs.html"><i class="fas fa-chess-knight" aria-hidden="true"></i> Special Programs (NSCC &amp; JOT)</a></li>
+            <li><a href="services.html" class="dropdown-all"><i class="fas fa-arrow-right" aria-hidden="true"></i> All Programs &amp; Courses</a></li>
+            </ul>
+          </li>
+          <li><a href="techhub.html" class="active" aria-current="page">GeoTech Academy</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+          <span class="slider"><span class="slider-icon sun" aria-hidden="true">☀️</span><span class="slider-icon moon" aria-hidden="true">🌙</span></span>
+        </button>
+        <a href="register2.html" class="btn btn-primary btn-sm">Register Now</a>
+        <a href="login2.html" class="btn btn-accent btn-sm"><i class="fas fa-user-graduate" aria-hidden="true"></i> Student Portal</a>
+        <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav-backdrop" id="navBackdrop"></div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <div class="mobile-nav-header">
+      <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture><picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture>
+      <button class="mobile-nav-close" id="mobileNavClose" type="button" aria-label="Close menu"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <div class="mobile-nav-body">
+      <div class="mobile-nav-ctas">
+        <a href="register2.html" class="btn btn-primary"><i class="fas fa-user-plus" aria-hidden="true"></i> Register Now</a>
+        <a href="login2.html" class="btn btn-accent"><i class="fas fa-user-graduate" aria-hidden="true"></i> Student Portal</a>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li>
+          <details>
+            <summary>Programs <i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+            <div class="mobile-subnav">
+              <a href="courses/jamb-preparation.html"><i class="fas fa-book-open" aria-hidden="true"></i> JAMB / UTME Preparation</a>
+              <a href="courses/waec-neco.html"><i class="fas fa-pen-to-square" aria-hidden="true"></i> WAEC / NECO Coaching</a>
+              <a href="courses/ielts-training.html"><i class="fas fa-earth-africa" aria-hidden="true"></i> IELTS Training</a>
+              <a href="courses/cbt-training.html"><i class="fas fa-computer" aria-hidden="true"></i> CBT Training</a>
+              <a href="courses/admission-processing.html"><i class="fas fa-building-columns" aria-hidden="true"></i> Admission Processing</a>
+              <a href="programs.html"><i class="fas fa-chess-knight" aria-hidden="true"></i> Special Programs (NSCC &amp; JOT)</a>
+              <a href="services.html"><i class="fas fa-arrow-right" aria-hidden="true"></i> All Programs &amp; Courses</a>
+            </div>
+          </details>
+        </li>
+        <li><a href="techhub.html" class="active" aria-current="page">GeoTech Academy</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="payment.html">Make a Payment</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
-          <span class="slider">
-            <span class="slider-icon sun">☀️</span>
-            <span class="slider-icon moon">🌙</span>
-          </span>
-        </button>
-        <a href="contact.html" class="btn btn-outline geo-inline-4">Sign In</a>
-        <a href="contact.html" class="btn btn-primary geo-inline-4">Sign Up</a>
-      </div>
-      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
-  </nav>
-
-  <!-- Mobile Nav Overlay -->
-  <nav class="mobile-nav">
-    <a href="../index.html" class="nav-link">Home</a>
-    <a href="../index.html#services" class="nav-link">Services</a>
-    <a href="about.html" class="nav-link">About</a>
-    <a href="services.html" class="nav-link">Courses</a>
-    <a href="techhub.html" class="nav-link">Tech Hub</a>
-    <a href="contact.html" class="nav-link">Contact</a>
     <div class="mobile-nav-footer">
-      <a href="contact.html" class="btn btn-outline w-full geo-inline-2">Sign In</a>
-      <a href="contact.html" class="btn btn-primary w-full geo-inline-3">Sign Up</a>
+      <a href="tel:+2347014673935"><i class="fas fa-phone" aria-hidden="true"></i> Call us</a>
+      <a href="https://wa.me/2347014673935" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp</a>
     </div>
   </nav>
 
-  <!-- PAGE HERO - Dark version for Tech Hub -->
-<section class="geo-inline-52">
-    <div class="geo-inline-53"></div>
-    <div class="geo-inline-54"></div>
-    <div class="container geo-inline-38">
-      <div class="breadcrumb geo-inline-55">
-        <a href="../index.html" class="geo-inline-20">Home</a><span>/</span><span class="geo-inline-55">Tech Hub</span>
-      </div>
-      <h1 class="geo-inline-56">GeoTech Academy</h1>
-      <p class="geo-inline-57">
-        Industry-relevant digital skills training that launches your tech career — 
-        300+ graduates already working in global companies.
-      </p>
-      <a href="contact.html" class="btn btn-primary">Enrol Now <i class="fas fa-arrow-right"></i></a>
-    </div>
-  </section>
-
-  <!-- TECH STATS -->
-  <section class="geo-inline-58">
-    <div class="container">
-      <div class="achievements-inner">
-        <div class="ach-item reveal">
-          <strong><span data-count="300" data-suffix="+">0+</span></strong>
-          <span>Tech Graduates</span>
-        </div>
-        <div class="ach-item reveal">
-          <strong><span data-count="8">0</span></strong>
-          <span>Tech Programs</span>
-        </div>
-        <div class="ach-item reveal">
-          <strong><span data-count="90" data-suffix="%">0%</span></strong>
-          <span>Job Placement Rate</span>
-        </div>
-        <div class="ach-item reveal">
-          <strong><span data-count="6">0</span></strong>
-          <span>Months to Job-Ready</span>
+  <main id="main-content" tabindex="-1">
+    <section class="page-hero band-dark">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">GeoTech Academy</li></ol></nav>
+        <h1>GeoTech Academy</h1>
+        <p>Industry-relevant digital skills training that launches your tech career — <span data-stat="techGraduatesCount" data-suffix="+">300+</span> graduates and counting.</p>
+        <div class="hero-ctas">
+          <a href="register2.html" class="btn btn-accent btn-lg">Enrol Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          <a href="#programs" class="btn btn-ghost-light btn-lg">View Programs</a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TECH PROGRAMS -->
-  <section class="tech-programs geo-inline-59">
-    <div class="container">
-      <div class="reveal geo-inline-8">
-        <span class="section-label">Our Programs</span>
-        <h2 class="section-title">Tech Training Programs</h2>
-        <p class="section-subtitle">Practical, project-based learning designed for real-world employment.</p>
+    <section class="band-dark" aria-label="GeoTech Academy in numbers">
+      <div class="container">
+        <ul class="achievements-inner">
+          <li class="ach-item"><strong><span data-stat="techGraduatesCount" data-suffix="+">300+</span></strong><span>Tech Graduates</span></li>
+          <li class="ach-item"><strong><span data-stat="techProgramsCount" data-suffix="">11</span></strong><span>Tech Programs</span></li>
+          <li class="ach-item"><strong><span data-stat="techJobPlacementRate" data-suffix="%">90%</span></strong><span>Job Placement Rate</span></li>
+          <li class="ach-item"><strong><span data-stat="monthsToJobReady" data-suffix="">6</span></strong><span>Months to Job-Ready</span></li>
+        </ul>
       </div>
-      <div class="tech-programs-grid">
+    </section>
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-code"></i></div>
-            <div>
-              <h3>Web Development</h3>
-              <small>6 Months • Beginner to Pro</small>
-            </div>
-          </div>
-          <div class="tp-body">
-            <p>Build modern, responsive websites and web applications from scratch. From HTML/CSS basics to React and Node.js backends.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">HTML & CSS</span>
-              <span class="tp-tag">JavaScript</span>
-              <span class="tp-tag">React</span>
-              <span class="tp-tag">Node.js</span>
-              <span class="tp-tag">MongoDB</span>
-            </div>
-          </div>
+    <section class="section section-muted" id="programs" aria-labelledby="programs-title">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-label">Our Programs</span>
+          <h2 class="section-title" id="programs-title">Tech Training Programs</h2>
+          <p class="section-subtitle">Practical, project-based learning designed for real-world employment.</p>
         </div>
+        <div class="detail-grid">
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-mobile-alt"></i></div>
-            <div>
-              <h3>Mobile App Development</h3>
-              <small>6 Months • All Levels</small>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-code"></i></div><div><h3>Web Development</h3><small>6 Months • Beginner to Pro</small></div></div>
+            <div class="tp-body">
+              <p>Build modern, responsive websites and web applications from scratch — from HTML/CSS basics to React and Node.js backends.</p>
+              <div class="tp-tags"><span class="tp-tag">HTML &amp; CSS</span><span class="tp-tag">JavaScript</span><span class="tp-tag">React</span><span class="tp-tag">Node.js</span><span class="tp-tag">MongoDB</span></div>
+              <a href="courses/web-development.html" class="link-arrow">Course details <span class="visually-hidden">for Web Development</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-          <div class="tp-body">
-            <p>Create professional mobile applications for both Android and iOS platforms. Learn React Native or Flutter for cross-platform development.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">React Native</span>
-              <span class="tp-tag">Flutter</span>
-              <span class="tp-tag">Firebase</span>
-              <span class="tp-tag">App Store</span>
-            </div>
-          </div>
-        </div>
+          </article>
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-shield-halved"></i></div>
-            <div>
-              <h3>Cybersecurity</h3>
-              <small>4 Months • Intermediate</small>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></div><div><h3>Data Analytics</h3><small>4 Months • All Levels</small></div></div>
+            <div class="tp-body">
+              <p>Turn raw data into actionable business insights using Excel, Python, SQL, Power BI and Tableau. A high-demand career path.</p>
+              <div class="tp-tags"><span class="tp-tag">Excel</span><span class="tp-tag">Python</span><span class="tp-tag">SQL</span><span class="tp-tag">Power BI</span><span class="tp-tag">Tableau</span></div>
+              <a href="courses/data-analytics.html" class="link-arrow">Course details <span class="visually-hidden">for Data Analytics</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-          <div class="tp-body">
-            <p>Ethical hacking, network security, penetration testing, and digital forensics. Prepare for globally recognized certifications.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">Ethical Hacking</span>
-              <span class="tp-tag">Network Security</span>
-              <span class="tp-tag">Forensics</span>
-              <span class="tp-tag">CompTIA</span>
-            </div>
-          </div>
-        </div>
+          </article>
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-chart-bar"></i></div>
-            <div>
-              <h3>Data Analysis</h3>
-              <small>4 Months • All Levels</small>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-shield-halved"></i></div><div><h3>Cybersecurity</h3><small>4 Months • Intermediate</small></div></div>
+            <div class="tp-body">
+              <p>Ethical hacking, network security, penetration testing and digital forensics. Prepare for globally recognised certifications.</p>
+              <div class="tp-tags"><span class="tp-tag">Ethical Hacking</span><span class="tp-tag">Network Security</span><span class="tp-tag">Forensics</span><span class="tp-tag">CompTIA</span></div>
+              <a href="courses/cybersecurity.html" class="link-arrow">Course details <span class="visually-hidden">for Cybersecurity</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-          <div class="tp-body">
-            <p>Turn raw data into actionable business insights using Excel, Python, SQL, Power BI, and Tableau. High-demand career path.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">Excel</span>
-              <span class="tp-tag">Python</span>
-              <span class="tp-tag">SQL</span>
-              <span class="tp-tag">Power BI</span>
-              <span class="tp-tag">Tableau</span>
-            </div>
-          </div>
-        </div>
+          </article>
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-palette"></i></div>
-            <div>
-              <h3>UI/UX Design</h3>
-              <small>3 Months • Beginner</small>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-pen-ruler"></i></div><div><h3>UI/UX Design</h3><small>3 Months • Beginner</small></div></div>
+            <div class="tp-body">
+              <p>Design beautiful, user-friendly digital products. Learn Figma, wireframing, prototyping and user research techniques.</p>
+              <div class="tp-tags"><span class="tp-tag">Figma</span><span class="tp-tag">Wireframing</span><span class="tp-tag">Prototyping</span><span class="tp-tag">User Research</span></div>
+              <a href="courses/ui-ux-design.html" class="link-arrow">Course details <span class="visually-hidden">for UI/UX Design</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-          <div class="tp-body">
-            <p>Design beautiful, user-friendly digital products. Learn Figma, wireframing, prototyping, and user research techniques.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">Figma</span>
-              <span class="tp-tag">Wireframing</span>
-              <span class="tp-tag">Prototyping</span>
-              <span class="tp-tag">User Research</span>
-            </div>
-          </div>
-        </div>
+          </article>
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-brain"></i></div>
-            <div>
-              <h3>Digital Marketing</h3>
-              <small>3 Months • All Levels</small>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-bullhorn"></i></div><div><h3>Digital Marketing</h3><small>3 Months • All Levels</small></div></div>
+            <div class="tp-body">
+              <p>Master social media marketing, SEO, content strategy, Google Ads, email and affiliate marketing to grow businesses online.</p>
+              <div class="tp-tags"><span class="tp-tag">SEO</span><span class="tp-tag">Google Ads</span><span class="tp-tag">Social Media</span><span class="tp-tag">Affiliate</span></div>
+              <a href="courses/digital-marketing.html" class="link-arrow">Course details <span class="visually-hidden">for Digital Marketing</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-          <div class="tp-body">
-            <p>Master social media marketing, SEO, content strategy, Google Ads, and email marketing to grow businesses online.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">SEO</span>
-              <span class="tp-tag">Google Ads</span>
-              <span class="tp-tag">Social Media</span>
-              <span class="tp-tag">Content</span>
-            </div>
-          </div>
-        </div>
+          </article>
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-network-wired"></i></div>
-            <div>
-              <h3>Networking & IT Support</h3>
-              <small>3 Months • Beginner</small>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-palette"></i></div><div><h3>Graphics Design</h3><small>Basic &amp; Advanced</small></div></div>
+            <div class="tp-body">
+              <p>Create professional graphics for brands, events and social media — from design fundamentals to advanced projects, including Canva.</p>
+              <div class="tp-tags"><span class="tp-tag">Design Principles</span><span class="tp-tag">Canva</span><span class="tp-tag">Branding</span><span class="tp-tag">Social Media</span></div>
+              <a href="courses/graphics-design.html" class="link-arrow">Course details <span class="visually-hidden">for Graphics Design</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-          <div class="tp-body">
-            <p>Learn computer hardware, networking fundamentals, system administration, and IT support. Prepare for CompTIA A+ and Network+ exams.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">CompTIA A+</span>
-              <span class="tp-tag">Networking</span>
-              <span class="tp-tag">Windows Server</span>
-            </div>
-          </div>
-        </div>
+          </article>
 
-        <div class="tech-prog-card reveal">
-          <div class="tp-header">
-            <div class="tp-icon"><i class="fas fa-video"></i></div>
-            <div>
-              <h3>Video Production & Editing</h3>
-              <small>2 Months • All Levels</small>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-mobile-screen"></i></div><div><h3>Mobile App Development</h3><small>6 Months • All Levels</small></div></div>
+            <div class="tp-body">
+              <p>Create professional mobile applications for Android and iOS. Learn React Native or Flutter for cross-platform development.</p>
+              <div class="tp-tags"><span class="tp-tag">React Native</span><span class="tp-tag">Flutter</span><span class="tp-tag">Firebase</span><span class="tp-tag">App Store</span></div>
+              <a href="register2.html?course=mobile-apps" class="link-arrow">Register <span class="visually-hidden">for Mobile App Development</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-          <div class="tp-body">
-            <p>Professional video editing, colour grading, animation, and content creation for YouTube, TikTok, and commercial clients.</p>
-            <div class="tp-tags">
-              <span class="tp-tag">Premiere Pro</span>
-              <span class="tp-tag">After Effects</span>
-              <span class="tp-tag">DaVinci</span>
+          </article>
+
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-network-wired"></i></div><div><h3>Networking &amp; IT Support</h3><small>3 Months • Beginner</small></div></div>
+            <div class="tp-body">
+              <p>Learn computer hardware, networking fundamentals, system administration and IT support. Prepare for CompTIA A+ and Network+.</p>
+              <div class="tp-tags"><span class="tp-tag">CompTIA A+</span><span class="tp-tag">Networking</span><span class="tp-tag">Windows Server</span></div>
+              <a href="register2.html?course=networking" class="link-arrow">Register <span class="visually-hidden">for Networking &amp; IT Support</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
-          </div>
-        </div>
+          </article>
 
-      </div>
-    </div>
-  </section>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-video"></i></div><div><h3>Video Production &amp; Editing</h3><small>2 Months • All Levels</small></div></div>
+            <div class="tp-body">
+              <p>Professional video editing, colour grading, animation and content creation for YouTube, TikTok and commercial clients.</p>
+              <div class="tp-tags"><span class="tp-tag">Premiere Pro</span><span class="tp-tag">After Effects</span><span class="tp-tag">DaVinci</span></div>
+              <a href="register2.html?course=video-production" class="link-arrow">Register <span class="visually-hidden">for Video Production &amp; Editing</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </article>
 
-  <!-- HOW IT WORKS -->
-  <section class="geo-inline-60">
-    <div class="container">
-      <div class="reveal geo-inline-8">
-        <span class="section-label">The Process</span>
-        <h2 class="section-title">How GeoTech Academy Works</h2>
-      </div>
-      <div class="services-grid">
-        <div class="service-card reveal geo-inline-5">
-          <div class="service-icon geo-inline-61">01</div>
-          <h3>Choose a Program</h3>
-          <p>Select from 8+ in-demand tech courses that match your goals</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">02</div>
-          <h3>Enrol & Pay</h3>
-          <p>Flexible payment plans to make quality tech education accessible</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">03</div>
-          <h3>Learn & Build</h3>
-          <p>Hands-on projects with expert instructors and peer support</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">04</div>
-          <h3>Get Certified</h3>
-          <p>Graduate with a portfolio and certificate employers recognise</p>
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-keyboard"></i></div><div><h3>Computer Foundation Class</h3><small>Beginner</small></div></div>
+            <div class="tp-body">
+              <p>Build confidence with computers — typing, files and folders, everyday software and using the internet safely.</p>
+              <div class="tp-tags"><span class="tp-tag">Typing</span><span class="tp-tag">Files &amp; Folders</span><span class="tp-tag">Internet</span></div>
+              <a href="register2.html?course=computer-foundation" class="link-arrow">Register <span class="visually-hidden">for Computer Foundation Class</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </article>
+
+          <article class="card tech-prog-card reveal">
+            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-bitcoin-sign"></i></div><div><h3>Cryptocurrency Trading</h3><small>All Levels</small></div></div>
+            <div class="tp-body">
+              <p>Understand digital assets, how exchanges and wallets work, and how to manage risk when trading.</p>
+              <div class="tp-tags"><span class="tp-tag">Exchanges</span><span class="tp-tag">Wallets</span><span class="tp-tag">Risk Management</span></div>
+              <a href="register2.html?course=crypto" class="link-arrow">Register <span class="visually-hidden">for Cryptocurrency Trading</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA -->
-  <section class="geo-inline-62">
-    <div class="container geo-inline-5">
-      <h2 class="reveal geo-inline-63">
-        Ready to Launch Your Tech Career?
-      </h2>
-      <p class="reveal geo-inline-64">
-        Join 300+ graduates who have transformed their lives through the GeoTech Academy.
-      </p>
-      <div class="reveal">
-        <a href="contact.html" class="btn btn-primary geo-inline-65">Apply Now <i class="fas fa-arrow-right"></i></a>
-        <a href="tel:+2347061054873" class="btn btn-outline geo-inline-66">
-          <i class="fas fa-phone"></i> +2347061054873
-        </a>
+    <section class="section" aria-labelledby="process-title">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-label">The Process</span>
+          <h2 class="section-title" id="process-title">How GeoTech Academy Works</h2>
+        </div>
+        <ol class="steps-grid">
+          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">01</span><h3>Choose a Program</h3><p>Select an in-demand tech course that matches your goals.</p></li>
+          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">02</span><h3>Enrol &amp; Pay</h3><p>Flexible payment plans make quality tech education accessible.</p></li>
+          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">03</span><h3>Learn &amp; Build</h3><p>Hands-on projects with expert instructors and peer support.</p></li>
+          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">04</span><h3>Get Certified</h3><p>Graduate with a portfolio and certificate employers recognise.</p></li>
+        </ol>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER -->
+    <section class="cta-banner" aria-labelledby="cta-title">
+      <div class="container">
+        <h2 id="cta-title">Ready to Launch Your Tech Career?</h2>
+        <p>Join 300+ graduates who have transformed their lives through GeoTech Academy.</p>
+        <div class="cta-buttons">
+          <a href="register2.html" class="btn btn-accent btn-lg">Apply Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp" aria-hidden="true"></i> Chat With Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-logo">
-            <div class="nav-logo-icon"><i class="fas fa-graduation-cap"></i></div>
-            <span>GEO<em>SOLUTION</em></span>
-          </div>
-          <p class="footer-desc">Empowering students since 2012 with quality education and tech skills in Lagos, Nigeria.</p>
+          <a href="index.html" class="footer-logo" aria-label="Geosolution Educational Services — Home"><picture><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture></a>
+          <p class="footer-desc">A modern education, technology and consultancy company empowering students in Lagos, Nigeria since 2012.</p>
           <div class="footer-socials">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <!-- Add Facebook / Instagram / YouTube links here once official page URLs are confirmed -->
+            <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+            <a href="tel:+2347014673935" aria-label="Call Geosolution"><i class="fas fa-phone" aria-hidden="true"></i></a>
+            <a href="mailto:Geoslutions360@gmail.com" aria-label="Email Geosolution"><i class="fas fa-envelope" aria-hidden="true"></i></a>
           </div>
         </div>
-        <div class="footer-col"><h4>Quick Links</h4><ul>
-          <li><a href="../index.html">Home</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="techhub.html">Tech Hub</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul></div>
-        <div class="footer-col"><h4>Tech Programs</h4><ul>
-          <li><a href="#">Web Development</a></li>
-          <li><a href="#">Mobile Apps</a></li>
-          <li><a href="#">Cybersecurity</a></li>
-          <li><a href="#">Data Analysis</a></li>
-          <li><a href="#">UI/UX Design</a></li>
-        </ul></div>
-        <div class="footer-col"><h4>Contact Us</h4>
-          <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>12, Abayomi Street, Ikorodu Road, Lagos</span></div>
-          <div class="footer-contact-item"><i class="fas fa-phone"></i><span>+2347061054873</span></div>
-          <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>Geotechacademy@gmail.com</span></div>
+        <div class="footer-col">
+          <h2>Explore</h2>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="techhub.html">GeoTech Academy</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Programs</h2>
+          <ul>
+            <li><a href="courses/jamb-preparation.html">JAMB / UTME Prep</a></li>
+            <li><a href="courses/waec-neco.html">WAEC / NECO</a></li>
+            <li><a href="courses/ielts-training.html">IELTS Training</a></li>
+            <li><a href="courses/cbt-training.html">CBT Training</a></li>
+            <li><a href="courses/admission-processing.html">Admission Processing</a></li>
+            <li><a href="programs.html">Special Programs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Students</h2>
+          <ul>
+            <li><a href="register2.html">Register Now</a></li>
+            <li><a href="login2.html">Student Portal</a></li>
+            <li><a href="payment.html">Make a Payment</a></li>
+            <li><a href="register-staff.html">Staff Registration</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Contact Us</h2>
+          <div class="footer-contact-item"><i class="fas fa-location-dot" aria-hidden="true"></i><span>12, Abayomi Street, Opposite Abeokuta Mosques, Irawo Ajegunle, Ikorodu Road, Lagos</span></div>
+          <div class="footer-contact-item"><i class="fas fa-phone" aria-hidden="true"></i><span><a href="tel:+2347014673935">+234 701 467 3935</a><br><a href="tel:+2347061054873">+234 706 105 4873</a></span></div>
+          <div class="footer-contact-item"><i class="fas fa-envelope" aria-hidden="true"></i><span><a href="mailto:Geoslutions360@gmail.com">Geoslutions360@gmail.com</a><br><a href="mailto:Geotechacademy@gmail.com">Geotechacademy@gmail.com</a></span></div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2024 <span>Geosolution Educational Services</span>. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> Geosolution Educational Services. All rights reserved.</p>
+        <p>Designed with ❤️ in Lagos</p>
       </div>
     </div>
   </footer>
 
-  <div id="scroll-top"><i class="fas fa-chevron-up"></i></div>
-  <script src="../js/script.js"></script>
+  <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat with Geosolution on WhatsApp">
+    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+  </a>
+  <button type="button" id="scroll-top" aria-label="Back to top"><i class="fas fa-chevron-up" aria-hidden="true"></i></button>
+
+  <script src="../js/site-config.js" defer></script>
+  <script src="../js/script.js" defer></script>
 </body>
 </html>

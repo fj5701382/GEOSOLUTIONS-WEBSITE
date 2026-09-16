@@ -7,6 +7,8 @@
   // Prevent flash of unstyled content by setting theme early
   const saved = localStorage.getItem('geosolution-theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
+  // Lets CSS apply JS-dependent effects (e.g. scroll reveal) only when JS is running
+  document.documentElement.classList.add('js');
 })();
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,1409 +1,1034 @@
 /**
- * Admin Dashboard UI Logic
- * Handles sidebar toggling, mobile responsiveness, and active menu states.
+ * GEOSOLUTION — Admin Dashboard (pages/admin-dashboard2.html)
+ *
+ * All tables, counters and charts are built from the real data the site
+ * stores: accounts in the GeoAuth user store (auth.js) and payments in
+ * `geoPaymentHistory` (written by payment.html). Approving a registration
+ * here is what lets a new student log in to the Student Portal.
+ *
+ * Requires: site-config.js, mockUsers.js, auth.js, Chart.js (optional)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Elements
-  const sidebar = document.getElementById('sidebar');
-  const menuToggle = document.getElementById('menuToggle');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const sidebarOverlay = document.getElementById('sidebarOverlay');
-  const navItems = document.querySelectorAll('.admin-nav-item');
-  const sections = document.querySelectorAll('.admin-section');
+  const admin = GeoAuth.requireAuth('admin');
+  if (!admin) return;
 
-  // 1. Mobile Sidebar Toggle
-  function openSidebar() {
-    sidebar.classList.add('open');
-    sidebarOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
-  }
+  const $ = id => document.getElementById(id);
+  const PAGE_SIZE = 10;
+  const READ_NOTIFS_KEY = 'geo_admin_read_notifications';
 
-  function closeSidebarMenu() {
-    sidebar.classList.remove('open');
-    sidebarOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  if (menuToggle) {
-    menuToggle.addEventListener('click', openSidebar);
-  }
-
-  if (closeSidebar) {
-    closeSidebar.addEventListener('click', closeSidebarMenu);
-  }
-
-  if (sidebarOverlay) {
-    sidebarOverlay.addEventListener('click', closeSidebarMenu);
-  }
-
-  // 2. Active Menu Highlight & Section Switching
-  navItems.forEach(item => {
-    item.addEventListener('click', () => {
-      // Remove active class from all items
-      navItems.forEach(nav => nav.classList.remove('active'));
-      
-      // Add active class to clicked item
-      item.classList.add('active');
-
-      // Get target section id
-      const targetId = item.getAttribute('data-target');
-      
-      // Hide all sections
-      sections.forEach(section => {
-        section.classList.remove('active');
-      });
-
-      // Show target section
-      const targetSection = document.getElementById(targetId);
-      if (targetSection) {
-        targetSection.classList.add('active');
-      }
-
-      // Close sidebar on mobile after selection
-      if (window.innerWidth <= 1024) {
-        closeSidebarMenu();
-      }
-      
-      // Inject data-labels for mobile table conversion
-      setTimeout(injectTableLabels, 100);
-    });
-  });
-
-  // Function to inject data-labels for mobile table cards
-  function injectTableLabels() {
-    const tables = document.querySelectorAll('.admin-modern-table');
-    tables.forEach(table => {
-      const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
-      const rows = table.querySelectorAll('tbody tr');
-      
-      rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        cells.forEach((cell, index) => {
-          if (headers[index] && headers[index] !== '' && !cell.hasAttribute('data-label')) {
-            cell.setAttribute('data-label', headers[index]);
-          }
-        });
-      });
-    });
-  }
-  
-  // Initial injection
-  setTimeout(injectTableLabels, 1000);
-
-  // 3. Search Bar Interaction (Optional enhancement)
-  const searchInput = document.querySelector('.admin-search-bar input');
-  if (searchInput) {
-    searchInput.addEventListener('focus', () => {
-      document.querySelector('.admin-search-bar').style.background = 'rgba(255, 255, 255, 0.1)';
-    });
-    searchInput.addEventListener('blur', () => {
-      document.querySelector('.admin-search-bar').style.background = 'rgba(0, 0, 0, 0.2)';
-    });
-  }
-
-  // 4. Counter Animation for Stat Cards
-  const counters = document.querySelectorAll('.counter');
-  const speed = 200; // The lower the slower
-
-  const animateCounters = () => {
-    counters.forEach(counter => {
-      const updateCount = () => {
-        const target = +counter.getAttribute('data-target');
-        const count = +counter.innerText.replace(/,/g, '');
-
-        // Lower inc to slow and higher to fast
-        const inc = target / speed;
-
-        // Check if target is reached
-        if (count < target) {
-          // Add inc to count and output in counter
-          counter.innerText = Math.ceil(count + inc).toLocaleString();
-          // Call function every ms
-          setTimeout(updateCount, 15);
-        } else {
-          counter.innerText = target.toLocaleString();
-        }
-      };
-
-      updateCount();
-    });
+  /* ───────────────────────── Helpers ───────────────────────── */
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
+  const fmtDate = iso => {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return Number.isNaN(d.getTime()) ? esc(iso) : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+  const isoDay = iso => (iso ? new Date(iso).toISOString().slice(0, 10) : '');
+  const initials = name => GeoAuth.getInitials(name || '?');
+  const readJSON = (key, fallback) => {
+    try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; } catch (_) { return fallback; }
   };
 
-  // Run animation once on load
-  setTimeout(animateCounters, 500);
+  const STATUS_LABEL = { approved: 'Active', pending: 'Pending', rejected: 'Rejected', suspended: 'Suspended' };
+  const STATUS_BADGE = { approved: 'success', pending: 'warning', rejected: 'danger', suspended: 'danger' };
+  const roleLabel = role => ({ student: 'Student', teacher: 'Teacher', admin: 'Admin', computer: 'Computer' }[role] || role);
 
-  // 5. Student Management Table Logic
-  const mockStudents = [
-    { id: 'GEO-24-001', name: 'John Doe', email: 'john.doe@example.com', course: 'Frontend Development', payment: 'Paid', status: 'Active', regDate: 'Oct 12, 2024', avatar: 'https://i.pravatar.cc/150?u=1' },
-    { id: 'GEO-24-002', name: 'Jane Smith', email: 'jane.smith@example.com', course: 'UI/UX Design', payment: 'Pending', status: 'Pending', regDate: 'Oct 15, 2024', avatar: 'https://i.pravatar.cc/150?u=2' },
-    { id: 'GEO-24-003', name: 'Michael Johnson', email: 'michael.j@example.com', course: 'Backend Development', payment: 'Paid', status: 'Active', regDate: 'Oct 18, 2024', avatar: 'https://i.pravatar.cc/150?u=3' },
-    { id: 'GEO-24-004', name: 'Sarah Williams', email: 'sarah.w@example.com', course: 'Data Science', payment: 'Overdue', status: 'Suspended', regDate: 'Oct 20, 2024', avatar: 'https://i.pravatar.cc/150?u=4' },
-    { id: 'GEO-24-005', name: 'David Brown', email: 'david.b@example.com', course: 'Frontend Development', payment: 'Paid', status: 'Active', regDate: 'Oct 22, 2024', avatar: 'https://i.pravatar.cc/150?u=5' }
-  ];
+  const getUsers = () => GeoAuth.getUsers();
+  const getPayments = () => readJSON('geoPaymentHistory', []);
 
-  const studentsTableBody = document.getElementById('studentsTableBody');
-  const searchInputStudent = document.getElementById('studentSearch');
-  const filterCourse = document.getElementById('filterCourse');
-  const filterStatus = document.getElementById('filterStatus');
-  const totalStudents = document.getElementById('totalStudents');
-
-  function renderStudents(data) {
-    if (!studentsTableBody) return;
-    studentsTableBody.innerHTML = '';
-    
-    if (data.length === 0) {
-      document.getElementById('tableEmptyState').classList.remove('hidden');
-      document.getElementById('studentsTable').classList.add('hidden');
-    } else {
-      document.getElementById('tableEmptyState').classList.add('hidden');
-      document.getElementById('studentsTable').classList.remove('hidden');
-      
-      data.forEach(student => {
-        let paymentBadge = '';
-        if (student.payment === 'Paid') paymentBadge = '<span class="admin-badge success">Paid</span>';
-        else if (student.payment === 'Pending') paymentBadge = '<span class="admin-badge warning">Pending</span>';
-        else paymentBadge = '<span class="admin-badge danger">Overdue</span>';
-
-        let statusBadge = '';
-        if (student.status === 'Active') statusBadge = '<span class="admin-badge success">Active</span>';
-        else if (student.status === 'Pending') statusBadge = '<span class="admin-badge warning">Pending</span>';
-        else statusBadge = '<span class="admin-badge danger">Suspended</span>';
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><input type="checkbox" class="admin-checkbox"></td>
-          <td>
-            <div class="student-profile-cell">
-              <img src="${student.avatar}" alt="${student.name}" class="student-avatar" onerror="this.src='../images/avatar-placeholder.png'">
-              <div class="student-name-col">
-                <span class="student-name">${student.name}</span>
-              </div>
-            </div>
-          </td>
-          <td><span style="font-family: monospace; color: rgba(255,255,255,0.7);">${student.id}</span></td>
-          <td>${student.email}</td>
-          <td>${student.course}</td>
-          <td>${paymentBadge}</td>
-          <td>${statusBadge}</td>
-          <td>${student.regDate}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn-action view" data-tooltip="View Details">👁️</button>
-              <button class="btn-action edit" data-tooltip="Edit Student">✏️</button>
-              <button class="btn-action approve" data-tooltip="Approve">✓</button>
-              <button class="btn-action suspend" data-tooltip="Suspend">⏸️</button>
-              <button class="btn-action delete" data-tooltip="Delete">🗑️</button>
-            </div>
-          </td>
-        `;
-        studentsTableBody.appendChild(row);
-      });
-    }
-    
-    if (totalStudents) totalStudents.innerText = data.length;
-    injectTableLabels();
-  }
-
-  function filterTable() {
-    if (!searchInputStudent || !filterCourse || !filterStatus) return;
-    
-    const searchTerm = searchInputStudent.value.toLowerCase();
-    const course = filterCourse.value;
-    const status = filterStatus.value;
-
-    const filtered = mockStudents.filter(student => {
-      const matchSearch = student.name.toLowerCase().includes(searchTerm) || 
-                          student.email.toLowerCase().includes(searchTerm) || 
-                          student.id.toLowerCase().includes(searchTerm);
-      const matchCourse = course === '' || student.course === course;
-      const matchStatus = status === '' || student.status === status;
-      
-      return matchSearch && matchCourse && matchStatus;
-    });
-
-    renderStudents(filtered);
-  }
-
-  if (searchInputStudent) searchInputStudent.addEventListener('input', filterTable);
-  if (filterCourse) filterCourse.addEventListener('change', filterTable);
-  if (filterStatus) filterStatus.addEventListener('change', filterTable);
-
-  // Initial render
-  renderStudents(mockStudents);
-
-  // 6. Teacher Management Table Logic
-  const mockTeachers = [
-    { id: 'TCH-24-101', name: 'Dr. Alan Turing', email: 'alan.turing@geo.edu', phone: '+234 801 234 5678', course: 'Data Science', payment: 'Paid', status: 'Active', regDate: 'Jan 10, 2024', avatar: 'https://i.pravatar.cc/150?u=11', bankName: 'First Bank', acctName: 'Alan Turing', acctNo: '3029182390' },
-    { id: 'TCH-24-102', name: 'Grace Hopper', email: 'grace.hopper@geo.edu', phone: '+234 802 345 6789', course: 'Backend Development', payment: 'Requested', status: 'Active', regDate: 'Feb 14, 2024', avatar: 'https://i.pravatar.cc/150?u=12', bankName: 'GTBank', acctName: 'Grace M. Hopper', acctNo: '0129384756' },
-    { id: 'TCH-24-103', name: 'Ada Lovelace', email: 'ada.lovelace@geo.edu', phone: '+234 803 456 7890', course: 'Frontend Development', payment: 'Pending', status: 'Pending', regDate: 'Mar 05, 2024', avatar: 'https://i.pravatar.cc/150?u=13', bankName: 'Zenith Bank', acctName: 'Ada Lovelace', acctNo: '2093847561' },
-    { id: 'TCH-24-104', name: 'Tim Berners-Lee', email: 'tim.bl@geo.edu', phone: '+234 804 567 8901', course: 'UI/UX Design', payment: 'Paid', status: 'Active', regDate: 'Apr 22, 2024', avatar: 'https://i.pravatar.cc/150?u=14', bankName: 'Access Bank', acctName: 'Tim Berners', acctNo: '0012345678' }
-  ];
-
-  const teachersTableBody = document.getElementById('teachersTableBody');
-  const teacherSearch = document.getElementById('teacherSearch');
-  const filterTeacherCourse = document.getElementById('filterTeacherCourse');
-  const filterTeacherPayment = document.getElementById('filterTeacherPayment');
-  const filterTeacherStatus = document.getElementById('filterTeacherStatus');
-  const totalTeachers = document.getElementById('totalTeachers');
-
-  function renderTeachers(data) {
-    if (!teachersTableBody) return;
-    teachersTableBody.innerHTML = '';
-    
-    if (data.length === 0) {
-      document.getElementById('teacherTableEmptyState').classList.remove('hidden');
-      document.getElementById('teachersTable').classList.add('hidden');
-    } else {
-      document.getElementById('teacherTableEmptyState').classList.add('hidden');
-      document.getElementById('teachersTable').classList.remove('hidden');
-      
-      data.forEach(teacher => {
-        let paymentBadge = '';
-        if (teacher.payment === 'Paid') paymentBadge = '<span class="admin-badge success">Paid</span>';
-        else if (teacher.payment === 'Pending') paymentBadge = '<span class="admin-badge warning">Pending</span>';
-        else if (teacher.payment === 'Requested') paymentBadge = '<span class="admin-badge warning" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.3);">Requested</span>';
-        else paymentBadge = '<span class="admin-badge danger">Overdue</span>';
-
-        let statusBadge = '';
-        if (teacher.status === 'Active') statusBadge = '<span class="admin-badge success">Active</span>';
-        else if (teacher.status === 'Pending') statusBadge = '<span class="admin-badge warning">Pending</span>';
-        else statusBadge = '<span class="admin-badge danger">Suspended</span>';
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><input type="checkbox" class="admin-checkbox"></td>
-          <td>
-            <div class="student-profile-cell">
-              <img src="${teacher.avatar}" alt="${teacher.name}" class="student-avatar" onerror="this.src='../images/avatar-placeholder.png'">
-              <div class="student-name-col">
-                <span class="student-name">${teacher.name}</span>
-                <span class="student-role-text">${teacher.id}</span>
-              </div>
-            </div>
-          </td>
-          <td>
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <span style="color: white; font-size: 14px;">${teacher.email}</span>
-              <span style="color: rgba(255,255,255,0.6); font-size: 12px;">${teacher.phone}</span>
-            </div>
-          </td>
-          <td>${teacher.course}</td>
-          <td>
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                ${paymentBadge}
-              </div>
-              <span style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 4px;">${teacher.bankName} - ${teacher.acctNo}</span>
-            </div>
-          </td>
-          <td>${statusBadge}</td>
-          <td>${teacher.regDate}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn-action view" data-tooltip="View Details">👁️</button>
-              <button class="btn-action edit" data-tooltip="Edit Teacher">✏️</button>
-              <button class="btn-action approve" data-tooltip="Approve/Pay">💳</button>
-              <button class="btn-action suspend" data-tooltip="Suspend">⏸️</button>
-              <button class="btn-action delete" data-tooltip="Delete">🗑️</button>
-            </div>
-          </td>
-        `;
-        teachersTableBody.appendChild(row);
-      });
-    }
-    
-    if (totalTeachers) totalTeachers.innerText = data.length;
-    injectTableLabels();
-  }
-
-  function filterTeacherTable() {
-    if (!teacherSearch || !filterTeacherCourse || !filterTeacherStatus || !filterTeacherPayment) return;
-    
-    const searchTerm = teacherSearch.value.toLowerCase();
-    const course = filterTeacherCourse.value;
-    const status = filterTeacherStatus.value;
-    const payment = filterTeacherPayment.value;
-
-    const filtered = mockTeachers.filter(teacher => {
-      const matchSearch = teacher.name.toLowerCase().includes(searchTerm) || 
-                          teacher.email.toLowerCase().includes(searchTerm) || 
-                          teacher.id.toLowerCase().includes(searchTerm);
-      const matchCourse = course === '' || teacher.course === course;
-      const matchStatus = status === '' || teacher.status === status;
-      const matchPayment = payment === '' || teacher.payment === payment;
-      
-      return matchSearch && matchCourse && matchStatus && matchPayment;
-    });
-
-    renderTeachers(filtered);
-  }
-
-  if (teacherSearch) teacherSearch.addEventListener('input', filterTeacherTable);
-  if (filterTeacherCourse) filterTeacherCourse.addEventListener('change', filterTeacherTable);
-  if (filterTeacherStatus) filterTeacherStatus.addEventListener('change', filterTeacherTable);
-  if (filterTeacherPayment) filterTeacherPayment.addEventListener('change', filterTeacherTable);
-
-  // 7. Pending Approvals Logic
-  const mockPendingUsers = [
-    { id: 'GEO-24-051', name: 'Alice Walker', email: 'alice.w@example.com', role: 'Student', status: 'Pending', regDate: '2024-11-01', avatar: 'https://i.pravatar.cc/150?u=51', phone: '+234 810 123 4567', docs: [{ name: 'Birth Certificate.pdf', size: '1.5 MB' }, { name: 'High School Result.pdf', size: '2.1 MB' }] },
-    { id: 'GEO-24-052', name: 'Robert Fox', email: 'robert.fox@example.com', role: 'Teacher', status: 'Pending', regDate: '2024-11-02', avatar: 'https://i.pravatar.cc/150?u=52', phone: '+234 811 234 5678', docs: [{ name: 'CV_Fox.pdf', size: '0.8 MB' }, { name: 'Teaching License.pdf', size: '1.2 MB' }] },
-    { id: 'GEO-24-053', name: 'Esther Howard', email: 'esther.h@example.com', role: 'Student', status: 'Pending', regDate: '2024-11-03', avatar: 'https://i.pravatar.cc/150?u=53', phone: '+234 812 345 6789', docs: [{ name: 'National ID.jpg', size: '3.4 MB' }] },
-    { id: 'GEO-24-054', name: 'Cody Fisher', email: 'cody.f@example.com', role: 'Student', status: 'Rejected', regDate: '2024-10-28', avatar: 'https://i.pravatar.cc/150?u=54', phone: '+234 813 456 7890', docs: [{ name: 'Incomplete_ID.pdf', size: '0.5 MB' }] },
-    { id: 'GEO-24-055', name: 'Dianne Russell', email: 'dianne.r@example.com', role: 'Teacher', status: 'Pending', regDate: '2024-11-05', avatar: 'https://i.pravatar.cc/150?u=55', phone: '+234 814 567 8901', docs: [{ name: 'Degree Certificate.pdf', size: '2.5 MB' }, { name: 'Portfolio.zip', size: '15.2 MB' }] }
-  ];
-
-  const pendingTableBody = document.getElementById('pendingTableBody');
-  const pendingSearch = document.getElementById('pendingSearch');
-  const filterPendingRole = document.getElementById('filterPendingRole');
-  const filterPendingStatus = document.getElementById('filterPendingStatus');
-  const filterPendingDate = document.getElementById('filterPendingDate');
-  const totalPending = document.getElementById('totalPending');
-  const selectAllPending = document.getElementById('selectAllPending');
-
-  // Modal Elements
-  const reviewModal = document.getElementById('reviewModalOverlay');
-  const closeReviewBtn = document.getElementById('closeReviewBtn');
-  const modalCancelBtn = document.getElementById('modalCancelBtn');
-  
-  function renderPending(data) {
-    if (!pendingTableBody) return;
-    pendingTableBody.innerHTML = '';
-    
-    if (data.length === 0) {
-      document.getElementById('pendingTableEmptyState').classList.remove('hidden');
-      document.getElementById('pendingTable').classList.add('hidden');
-    } else {
-      document.getElementById('pendingTableEmptyState').classList.add('hidden');
-      document.getElementById('pendingTable').classList.remove('hidden');
-      
-      data.forEach(user => {
-        let statusBadge = '';
-        if (user.status === 'Pending') statusBadge = '<span class="admin-badge pending">Pending</span>';
-        else if (user.status === 'Rejected') statusBadge = '<span class="admin-badge rejected">Rejected</span>';
-        else statusBadge = '<span class="admin-badge approved">Approved</span>';
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><input type="checkbox" class="admin-checkbox pending-row-check"></td>
-          <td>
-            <div class="student-profile-cell">
-              <img src="${user.avatar}" alt="${user.name}" class="student-avatar" onerror="this.src='../images/avatar-placeholder.png'">
-              <div class="student-name-col">
-                <span class="student-name">${user.name}</span>
-              </div>
-            </div>
-          </td>
-          <td><span style="font-family: monospace; color: rgba(255,255,255,0.7);">${user.id}</span></td>
-          <td>${user.email}</td>
-          <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
-          <td>${user.regDate}</td>
-          <td>${statusBadge}</td>
-          <td>
-            <div style="display: flex; gap: 4px;">
-              <span class="btn-action view" style="padding: 4px 8px; font-size: 10px; border-radius: 4px;" title="View Documents">📄 ${user.docs.length}</span>
-            </div>
-          </td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn-action view review-btn" data-id="${user.id}" data-tooltip="Review Profile">👁️</button>
-              <button class="btn-action approve" data-id="${user.id}" data-tooltip="Approve">✓</button>
-              <button class="btn-action reject" data-id="${user.id}" data-tooltip="Reject">✕</button>
-              <button class="btn-action suspend" data-id="${user.id}" data-tooltip="Suspend">⏸️</button>
-              <button class="btn-action delete" data-id="${user.id}" data-tooltip="Delete">🗑️</button>
-            </div>
-          </td>
-        `;
-        pendingTableBody.appendChild(row);
-      });
-      
-      // Add event listeners to review buttons
-      document.querySelectorAll('.review-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const userId = btn.getAttribute('data-id');
-          openReviewModal(userId);
-        });
-      });
-    }
-    
-    if (totalPending) totalPending.innerText = data.length;
-    injectTableLabels();
-  }
-
-  function filterPendingTable() {
-    if (!pendingSearch || !filterPendingRole || !filterPendingStatus || !filterPendingDate) return;
-    
-    const searchTerm = pendingSearch.value.toLowerCase();
-    const role = filterPendingRole.value;
-    const status = filterPendingStatus.value;
-    const date = filterPendingDate.value;
-
-    const filtered = mockPendingUsers.filter(user => {
-      const matchSearch = user.name.toLowerCase().includes(searchTerm) || 
-                          user.email.toLowerCase().includes(searchTerm) || 
-                          user.id.toLowerCase().includes(searchTerm);
-      const matchRole = role === '' || user.role === role;
-      const matchStatus = status === '' || user.status === status;
-      const matchDate = date === '' || user.regDate === date;
-      
-      return matchSearch && matchRole && matchStatus && matchDate;
-    });
-
-    renderPending(filtered);
-  }
-
-  if (pendingSearch) pendingSearch.addEventListener('input', filterPendingTable);
-  if (filterPendingRole) filterPendingRole.addEventListener('change', filterPendingTable);
-  if (filterPendingStatus) filterPendingStatus.addEventListener('change', filterPendingTable);
-  if (filterPendingDate) filterPendingDate.addEventListener('input', filterPendingTable);
-
-  if (selectAllPending) {
-    selectAllPending.addEventListener('change', () => {
-      const checks = document.querySelectorAll('.pending-row-check');
-      checks.forEach(check => check.checked = selectAllPending.checked);
-    });
-  }
-
-  function openReviewModal(userId) {
-    const user = mockPendingUsers.find(u => u.id === userId);
-    if (!user) return;
-
-    // Fill modal data
-    document.getElementById('modalUserId').innerText = `ID: ${user.id}`;
-    document.getElementById('modalProfileImg').src = user.avatar;
-    document.getElementById('modalRoleIndicator').innerText = user.role;
-    document.getElementById('modalFullName').innerText = user.name;
-    document.getElementById('modalEmail').innerText = user.email;
-    document.getElementById('modalRegDate').innerText = user.regDate;
-    
-    document.getElementById('detailFullName').innerText = user.name;
-    document.getElementById('detailEmail').innerText = user.email;
-    document.getElementById('detailPhone').innerText = user.phone;
-    document.getElementById('detailRole').innerText = user.role;
-
-    const docsList = document.getElementById('modalDocsList');
-    docsList.innerHTML = '';
-    user.docs.forEach(doc => {
-      const docCard = document.createElement('div');
-      docCard.className = 'doc-card';
-      docCard.innerHTML = `
-        <div class="doc-icon">📄</div>
-        <div class="doc-info">
-          <span class="doc-name">${doc.name}</span>
-          <span class="doc-size">${doc.size}</span>
-        </div>
-        <button class="btn-view-doc">View</button>
-      `;
-      docsList.appendChild(docCard);
-    });
-
-    // Show modal
-    reviewModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeReviewModal() {
-    reviewModal.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
-
-  if (closeReviewBtn) closeReviewBtn.addEventListener('click', closeReviewModal);
-  if (modalCancelBtn) modalCancelBtn.addEventListener('click', closeReviewModal);
-  if (reviewModal) {
-    reviewModal.addEventListener('click', (e) => {
-      if (e.target === reviewModal) closeReviewModal();
-    });
-  }
-
-  // 8. Analytics & Charts System
-  let revenueChart, registrationChart, courseActivityChart, growthChart;
-
-  const chartColors = {
-    blue: {
-      solid: 'rgba(59, 130, 246, 1)',
-      bg: 'rgba(59, 130, 246, 0.1)',
-      gradient: ['rgba(59, 130, 246, 0.5)', 'rgba(59, 130, 246, 0)']
-    },
-    purple: {
-      solid: 'rgba(139, 92, 246, 1)',
-      bg: 'rgba(139, 92, 246, 0.1)',
-      gradient: ['rgba(139, 92, 246, 0.5)', 'rgba(139, 92, 246, 0)']
-    },
-    emerald: {
-      solid: 'rgba(16, 185, 129, 1)',
-      bg: 'rgba(16, 185, 129, 0.1)'
-    },
-    orange: {
-      solid: 'rgba(245, 158, 11, 1)',
-      bg: 'rgba(245, 158, 11, 0.1)'
-    },
-    rose: {
-      solid: 'rgba(244, 63, 94, 1)',
-      bg: 'rgba(244, 63, 94, 0.1)'
-    }
+  const courseName = user => {
+    const course = typeof geoFindCourse === 'function' ? geoFindCourse(user.program || user.department) : null;
+    return course ? course.name : (user.department || user.subject || '—');
   };
 
-  function initCharts() {
-    // Shared Chart Options
-    const commonOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.9)',
-          titleFont: { size: 13, weight: 'bold' },
-          bodyFont: { size: 12 },
-          padding: 12,
-          cornerRadius: 8,
-          displayColors: true
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 11 } }
-        },
-        y: {
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 11 } }
-        }
-      }
-    };
+  const avatarHtml = user => (user.profileImage
+    ? `<img src="${esc(user.profileImage)}" alt="" class="student-avatar">`
+    : `<span class="student-avatar avatar-initials" aria-hidden="true">${esc(user.avatar || initials(user.fullName))}</span>`);
 
-    // 1. Revenue & Growth Area Chart
-    const revCtx = document.getElementById('revenueChart').getContext('2d');
-    const revGradient = revCtx.createLinearGradient(0, 0, 0, 300);
-    revGradient.addColorStop(0, chartColors.blue.gradient[0]);
-    revGradient.addColorStop(1, chartColors.blue.gradient[1]);
+  const badge = (text, tone) => `<span class="admin-badge ${tone}">${esc(text)}</span>`;
+  const statusBadge = status => badge(STATUS_LABEL[status] || status || 'Unknown', STATUS_BADGE[status] || 'warning');
 
-    revenueChart = new Chart(revCtx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-          label: 'Revenue (₦)',
-          data: [1200000, 1500000, 1100000, 1800000, 2200000, 2000000, 2500000, 2800000, 3200000, 3800000, 4200000, 4500000],
-          borderColor: chartColors.blue.solid,
-          backgroundColor: revGradient,
-          fill: true,
-          tension: 0.4,
-          borderWidth: 3,
-          pointRadius: 4,
-          pointBackgroundColor: chartColors.blue.solid,
-          pointBorderColor: 'white',
-          pointBorderWidth: 2,
-          pointHoverRadius: 6
-        }]
-      },
-      options: commonOptions
-    });
+  const paymentsFor = user => getPayments().filter(p =>
+    (p.studentRef && p.studentRef === user.identifier) || (!p.studentRef && user.email && p.email === user.email));
 
-    // 2. Registration Line Chart
-    const regCtx = document.getElementById('registrationChart').getContext('2d');
-    registrationChart = new Chart(regCtx, {
-      type: 'line',
-      data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        datasets: [
-          {
-            label: 'Students',
-            data: [45, 52, 38, 65, 48, 72, 58],
-            borderColor: chartColors.purple.solid,
-            backgroundColor: 'transparent',
-            tension: 0.4,
-            borderWidth: 2,
-            pointRadius: 3
-          },
-          {
-            label: 'Teachers',
-            data: [12, 15, 8, 10, 14, 9, 11],
-            borderColor: chartColors.emerald.solid,
-            backgroundColor: 'transparent',
-            tension: 0.4,
-            borderWidth: 2,
-            pointRadius: 3
-          }
-        ]
-      },
-      options: {
-        ...commonOptions,
-        plugins: {
-          ...commonOptions.plugins,
-          legend: { display: true, position: 'top', align: 'end', labels: { color: 'white', boxWidth: 12, usePointStyle: true, padding: 15 } }
-        }
-      }
-    });
-
-    // 3. Course Activity Doughnut Chart
-    const courseCtx = document.getElementById('courseActivityChart').getContext('2d');
-    courseActivityChart = new Chart(courseCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Frontend', 'Backend', 'UI/UX', 'Data Science', 'Others'],
-        datasets: [{
-          data: [35, 25, 20, 15, 5],
-          backgroundColor: [
-            chartColors.blue.solid,
-            chartColors.purple.solid,
-            chartColors.emerald.solid,
-            chartColors.orange.solid,
-            chartColors.rose.solid
-          ],
-          borderWidth: 0,
-          hoverOffset: 15
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '70%',
-        plugins: {
-          legend: {
-            display: true,
-            position: 'right',
-            labels: { color: 'white', font: { size: 12 }, padding: 15 }
-          }
-        }
-      }
-    });
-
-    // 4. Growth Bar Chart
-    const growthCtx = document.getElementById('growthChart').getContext('2d');
-    growthChart = new Chart(growthCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-          label: 'User Growth',
-          data: [250, 320, 280, 450, 520, 680],
-          backgroundColor: chartColors.blue.solid,
-          borderRadius: 8,
-          barThickness: 25
-        }]
-      },
-      options: commonOptions
-    });
-  }
-
-  // Handle Filter Switching
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      const range = btn.getAttribute('data-range');
-      updateChartData(range);
-    });
-  });
-
-  function updateChartData(range) {
-    // Simulate dynamic data updates
-    const randomData = (count, max) => Array.from({ length: count }, () => Math.floor(Math.random() * max));
-    
-    if (revenueChart) {
-      revenueChart.data.datasets[0].data = randomData(12, 5000000);
-      revenueChart.update('active');
-    }
-    
-    if (registrationChart) {
-      registrationChart.data.datasets[0].data = randomData(7, 100);
-      registrationChart.data.datasets[1].data = randomData(7, 30);
-      registrationChart.update('active');
-    }
-  }
-
-  // Initialize charts when the analytics section becomes active or on load
-  // To optimize, we can use an Intersection Observer or trigger on nav click
-  const analyticsNavItem = document.querySelector('[data-target="analyticsSection"]');
-  if (analyticsNavItem) {
-    analyticsNavItem.addEventListener('click', () => {
-      if (!revenueChart) {
-        setTimeout(initCharts, 100); // Small delay to ensure section is visible
-      }
-    });
-  }
-
-  // 9. Notification & Message Center Logic
-  const mockNotifications = [
-    { id: 1, type: 'Registration', title: 'New Student Joined', msg: 'Alice Walker registered for Frontend Development.', time: '5 mins ago', status: 'unread', icon: '👨‍🎓', priority: 'new', date: '2024-11-06' },
-    { id: 2, type: 'Payment', title: 'Payment Confirmed', msg: 'Payment of ₦45,000 confirmed for John Doe.', time: '20 mins ago', status: 'unread', icon: '💳', priority: 'info', date: '2024-11-06' },
-    { id: 3, type: 'Approval', title: 'Pending Approval', msg: 'Robert Fox is waiting for document verification.', time: '1 hour ago', status: 'unread', icon: '⏳', priority: 'urgent', date: '2024-11-06' },
-    { id: 4, type: 'System', title: 'System Update', msg: 'The dashboard will undergo maintenance at 2 AM.', time: '3 hours ago', status: 'read', icon: '⚙️', priority: 'warning', date: '2024-11-06' },
-    { id: 5, type: 'Message', title: 'New Message', msg: 'Esther Howard sent a message regarding bulk enrollment.', time: '5 hours ago', status: 'read', icon: '💬', priority: 'info', date: '2024-11-05' },
-    { id: 6, type: 'Warning', title: 'Storage Almost Full', msg: 'Your system storage is at 92%. Consider cleaning up.', time: 'Yesterday', status: 'read', icon: '⚠️', priority: 'warning', date: '2024-11-05' }
-  ];
-
-  const mockMessages = [
-    { id: 101, name: 'Alice Walker', role: 'Student', msg: 'Hello Admin, I am having trouble accessing my course content. Can you please help check my subscription status?', time: '10:45 AM', status: 'unread', avatar: 'https://i.pravatar.cc/150?u=51', date: '2024-11-06' },
-    { id: 102, name: 'Robert Fox', role: 'Teacher', msg: 'I have uploaded the new curriculum for Backend Development. Please review and approve so I can start the class.', time: 'Yesterday', status: 'read', avatar: 'https://i.pravatar.cc/150?u=52', date: '2024-11-05' },
-    { id: 103, name: 'Esther Howard', role: 'Student', msg: 'Is there a discount for bulk enrollment for my team? We are looking to enroll 15 people.', time: '2 days ago', status: 'read', avatar: 'https://i.pravatar.cc/150?u=53', date: '2024-11-04' }
-  ];
-
-  // DOM Elements
-  const notifDropdownBtn = document.getElementById('notifDropdownBtn');
-  const notifDropdown = document.getElementById('notifDropdown');
-  const topbarNotifBadge = document.getElementById('topbarNotifBadge');
-  const notifSearch = document.getElementById('notifSearch');
-  const filterNotifType = document.getElementById('filterNotifType');
-  const filterNotifStatus = document.getElementById('filterNotifStatus');
-  const markAllReadBtn = document.getElementById('markAllReadBtn');
-  
-  const messageSearch = document.getElementById('messageSearch');
-  const messageInboxList = document.getElementById('messageInboxList');
-  const messageDetailView = document.getElementById('messageDetailView');
-  const noMessageSelected = document.getElementById('noMessageSelected');
-
-  // --- NOTIFICATIONS ---
-
-  function updateNotifBadge() {
-    const unreadCount = mockNotifications.filter(n => n.status === 'unread').length;
-    if (topbarNotifBadge) {
-      topbarNotifBadge.innerText = unreadCount;
-      topbarNotifBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
-    }
-  }
-
-  function renderNotificationDropdown() {
-    const list = document.getElementById('dropdownNotifList');
-    if (!list) return;
-    list.innerHTML = '';
-    
-    mockNotifications.filter(n => n.status === 'unread').slice(0, 5).forEach(notif => {
-      const item = document.createElement('div');
-      item.className = 'notif-item-quick unread';
-      item.innerHTML = `
-        <div class="notif-icon-small" style="background: rgba(255,255,255,0.1)">${notif.icon}</div>
-        <div class="notif-content-small">
-          <span class="notif-title-small">${notif.title}</span>
-          <span class="notif-msg-small">${notif.msg}</span>
-          <span class="notif-time-small">${notif.time}</span>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-    updateNotifBadge();
-  }
-
-  function renderFullNotifications(data) {
-    const list = document.getElementById('notificationsFullList');
-    if (!list) return;
-    list.innerHTML = '';
-    
-    if (data.length === 0) {
-      list.innerHTML = '<div style="text-align:center; padding:40px; color:rgba(255,255,255,0.3)">No notifications found matching your filters.</div>';
-      return;
-    }
-
-    data.forEach(notif => {
-      const card = document.createElement('div');
-      card.className = `notif-card-full ${notif.status}`;
-      card.innerHTML = `
-        <div class="notif-icon-full">${notif.icon}</div>
-        <div class="notif-info-full">
-          <div class="notif-header-full">
-            <span class="notif-title-full">${notif.title}</span>
-            <span class="notif-time-full">${notif.time}</span>
-          </div>
-          <div class="notif-msg-full">${notif.msg}</div>
-          <div style="margin-top: 12px; display:flex; align-items:center; gap:10px;">
-            <span class="notif-badge ${notif.priority}">${notif.priority}</span>
-            <span style="font-size: 11px; color: rgba(255,255,255,0.3);">${notif.type}</span>
-          </div>
-        </div>
-        <div class="notif-actions-full">
-          ${notif.status === 'unread' ? '<button class="btn-action approve mark-read-btn" title="Mark as Read">✓</button>' : ''}
-          <button class="btn-action delete dismiss-btn" title="Dismiss">✕</button>
-        </div>
-      `;
-
-      // Event Listeners
-      const markBtn = card.querySelector('.mark-read-btn');
-      if (markBtn) {
-        markBtn.addEventListener('click', () => {
-          notif.status = 'read';
-          notif.priority = 'read';
-          renderFullNotifications(filterNotifs());
-          renderNotificationDropdown();
-        });
-      }
-
-      card.querySelector('.dismiss-btn').addEventListener('click', () => {
-        const index = mockNotifications.indexOf(notif);
-        if (index > -1) mockNotifications.splice(index, 1);
-        renderFullNotifications(filterNotifs());
-        renderNotificationDropdown();
-      });
-
-      list.appendChild(card);
-    });
-  }
-
-  function filterNotifs() {
-    const term = notifSearch ? notifSearch.value.toLowerCase() : '';
-    const type = filterNotifType ? filterNotifType.value : '';
-    const status = filterNotifStatus ? filterNotifStatus.value.toLowerCase() : '';
-
-    return mockNotifications.filter(n => {
-      const matchSearch = n.title.toLowerCase().includes(term) || n.msg.toLowerCase().includes(term);
-      const matchType = type === '' || n.type === type;
-      const matchStatus = status === '' || n.status === status;
-      return matchSearch && matchType && matchStatus;
-    });
-  }
-
-  // --- MESSAGES ---
-
-  function renderMessageInbox(data) {
-    if (!messageInboxList) return;
-    messageInboxList.innerHTML = '';
-    
-    data.forEach(msg => {
-      const item = document.createElement('div');
-      item.className = `inbox-item ${msg.status}`;
-      item.dataset.id = msg.id;
-      item.innerHTML = `
-        <img src="${msg.avatar}" class="inbox-avatar" alt="${msg.name}">
-        <div class="inbox-info">
-          <div class="inbox-header">
-            <span class="inbox-name">${msg.name}</span>
-            <span class="inbox-time">${msg.time}</span>
-          </div>
-          <div class="inbox-msg">${msg.msg}</div>
-        </div>
-      `;
-
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.inbox-item').forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-        item.classList.remove('unread');
-        msg.status = 'read';
-        openMessage(msg);
-      });
-
-      messageInboxList.appendChild(item);
-    });
-  }
-
-  function openMessage(msg) {
-    if (!messageDetailView || !noMessageSelected) return;
-    
-    noMessageSelected.classList.add('hidden');
-    messageDetailView.classList.remove('hidden');
-    
-    document.getElementById('detailSenderImg').src = msg.avatar;
-    document.getElementById('detailSenderName').innerText = msg.name;
-    document.getElementById('detailSenderRole').innerText = msg.role;
-    document.getElementById('detailTimestamp').innerText = `Sent ${msg.time}`;
-    document.getElementById('detailBody').innerText = msg.msg;
-
-    // Scroll to bottom of message body if needed
-    const body = messageDetailView.querySelector('.detail-body');
-    body.scrollTop = body.scrollHeight;
-
-    // Mobile logic: If width is small, show as modal or full screen
-    if (window.innerWidth <= 768) {
-      document.querySelector('.message-content-view').classList.add('active-mobile');
-      // Add a back button if it doesn't exist
-      if (!document.getElementById('mobileBackBtn')) {
-        const backBtn = document.createElement('button');
-        backBtn.id = 'mobileBackBtn';
-        backBtn.className = 'admin-btn-secondary';
-        backBtn.style.margin = '10px';
-        backBtn.innerText = '← Back to Inbox';
-        backBtn.onclick = () => {
-          document.querySelector('.message-content-view').classList.remove('active-mobile');
-        };
-        messageDetailView.prepend(backBtn);
-      }
-    }
-  }
-
-  // --- EVENT LISTENERS ---
-
-  if (notifDropdownBtn) {
-    notifDropdownBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      notifDropdown.classList.toggle('hidden');
-    });
-  }
-
-  document.addEventListener('click', (e) => {
-    if (notifDropdown && !notifDropdown.contains(e.target) && e.target !== notifDropdownBtn) {
-      notifDropdown.classList.add('hidden');
-    }
-  });
-
-  if (markAllReadBtn) {
-    markAllReadBtn.addEventListener('click', () => {
-      mockNotifications.forEach(n => {
-        n.status = 'read';
-        n.priority = 'read';
-      });
-      renderFullNotifications(filterNotifs());
-      renderNotificationDropdown();
-    });
-  }
-
-  if (notifSearch) notifSearch.addEventListener('input', () => renderFullNotifications(filterNotifs()));
-  if (filterNotifType) filterNotifType.addEventListener('change', () => renderFullNotifications(filterNotifs()));
-  if (filterNotifStatus) filterNotifStatus.addEventListener('change', () => renderFullNotifications(filterNotifs()));
-
-  if (messageSearch) {
-    messageSearch.addEventListener('input', () => {
-      const term = messageSearch.value.toLowerCase();
-      const filtered = mockMessages.filter(m => m.name.toLowerCase().includes(term) || m.msg.toLowerCase().includes(term));
-      renderMessageInbox(filtered);
-    });
-  }
-
-  const sendReplyBtn = document.getElementById('sendReplyBtn');
-  if (sendReplyBtn) {
-    sendReplyBtn.addEventListener('click', () => {
-      const replyText = document.getElementById('replyText');
-      if (replyText.value.trim() === '') return;
-
-      // Add dummy reply bubble
-      const bubble = document.createElement('div');
-      bubble.className = 'message-text';
-      bubble.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
-      bubble.style.color = 'white';
-      bubble.style.alignSelf = 'flex-end';
-      bubble.style.marginTop = '15px';
-      bubble.innerText = replyText.value;
-      
-      document.querySelector('.detail-body').appendChild(bubble);
-      replyText.value = '';
-      
-      // Auto-scroll
-      const body = document.querySelector('.detail-body');
-      body.scrollTop = body.scrollHeight;
-
-      // Show toast
-      if (typeof showToast === 'function') showToast('Reply sent successfully!');
-    });
-  }
-
-  // Initial Initialization
-  renderNotificationDropdown();
-  renderFullNotifications(mockNotifications);
-  renderMessageInbox(mockMessages);
-
-  // Compose Message Logic
-  const composeMessageBtn = document.getElementById('composeMessageBtn');
-  const messageModalOverlay = document.getElementById('messageModalOverlay');
-  const closeMessageBtn = document.getElementById('closeMessageBtn');
-  const cancelComposeBtn = document.getElementById('cancelComposeBtn');
-
-  if (composeMessageBtn) {
-    composeMessageBtn.addEventListener('click', () => {
-      messageModalOverlay.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    });
-  }
-
-  const closeComposeModal = () => {
-    messageModalOverlay.classList.add('hidden');
-    document.body.style.overflow = '';
+  const paymentExpiry = p => {
+    const d = new Date(p.date);
+    d.setDate(d.getDate() + 30);
+    return d;
   };
-
-  if (closeMessageBtn) closeMessageBtn.addEventListener('click', closeComposeModal);
-  if (cancelComposeBtn) cancelComposeBtn.addEventListener('click', closeComposeModal);
-  if (messageModalOverlay) {
-    messageModalOverlay.addEventListener('click', (e) => {
-      if (e.target === messageModalOverlay) closeComposeModal();
-    });
-  }
-
-  // 10. Admin Settings Panel Logic
-  const settingsTabBtns = document.querySelectorAll('.settings-tab-btn');
-  const settingsPanes = document.querySelectorAll('.settings-pane');
-
-  if (settingsTabBtns.length > 0) {
-    settingsTabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Switch tabs
-        settingsTabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Switch panes
-        const targetPaneId = `pane-${btn.getAttribute('data-pane')}`;
-        settingsPanes.forEach(pane => {
-          pane.classList.remove('active');
-        });
-        const targetPane = document.getElementById(targetPaneId);
-        if (targetPane) targetPane.classList.add('active');
-      });
-    });
-  }
-
-  // File Upload Preview & Animation Logic
-  function setupFileUpload(inputId, areaId, previewId, progressId) {
-    const input = document.getElementById(inputId);
-    const area = document.getElementById(areaId);
-    const preview = document.getElementById(previewId);
-    const progressContainer = document.getElementById(progressId);
-    
-    if (!input || !area) return;
-
-    area.addEventListener('click', () => input.click());
-
-    area.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      area.classList.add('dragover');
-    });
-
-    area.addEventListener('dragleave', () => {
-      area.classList.remove('dragover');
-    });
-
-    area.addEventListener('drop', (e) => {
-      e.preventDefault();
-      area.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) {
-        handleFile(e.dataTransfer.files[0], preview, progressContainer);
-      }
-    });
-
-    input.addEventListener('change', () => {
-      if (input.files.length > 0) {
-        handleFile(input.files[0], preview, progressContainer);
-      }
-    });
-  }
-
-  function handleFile(file, previewEl, progressEl) {
-    if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file.');
-      return;
-    }
-
-    const reader = new FileReader();
-    const progressBar = progressEl.querySelector('.progress-bar');
-    
-    progressEl.style.display = 'block';
-    progressBar.style.width = '0%';
-
-    // Simulate upload progress
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 30;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-        
-        reader.onload = (e) => {
-          const img = previewEl.querySelector('img');
-          if (img) img.src = e.target.result;
-          setTimeout(() => {
-            progressEl.style.display = 'none';
-          }, 500);
-        };
-        reader.readAsDataURL(file);
-      }
-      progressBar.style.width = `${progress}%`;
-    }, 200);
-  }
-
-  setupFileUpload('schoolLogoInput', 'schoolLogoUploadArea', 'schoolLogoPreview', 'schoolLogoProgress');
-  setupFileUpload('adminAvatarInput', 'adminAvatarUploadArea', 'adminAvatarPreview', 'adminAvatarProgress');
-
-  // Theme & Accent Color Switching
-  const settingsDarkModeToggle = document.getElementById('settingsDarkModeToggle');
-  if (settingsDarkModeToggle) {
-    // Sync with existing theme if any
-    const currentTheme = document.body.getAttribute('data-theme') || 'dark';
-    settingsDarkModeToggle.checked = currentTheme === 'dark';
-
-    settingsDarkModeToggle.addEventListener('change', () => {
-      const theme = settingsDarkModeToggle.checked ? 'dark' : 'light';
-      document.body.setAttribute('data-theme', theme);
-      // Trigger global theme toggle if it exists
-      const mainThemeToggle = document.getElementById('themeToggle');
-      if (mainThemeToggle && (theme === 'dark' !== mainThemeToggle.classList.contains('active'))) {
-        mainThemeToggle.click();
-      }
-    });
-  }
-
-  const colorOptions = document.querySelectorAll('.color-option');
-  colorOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      colorOptions.forEach(opt => opt.classList.remove('active'));
-      option.classList.add('active');
-      const color = option.getAttribute('data-color');
-      // Set CSS variable for accent color
-      const colors = {
-        blue: '#3b82f6',
-        purple: '#8b5cf6',
-        emerald: '#10b981',
-        orange: '#f59e0b',
-        red: '#ef4444'
-      };
-      document.documentElement.style.setProperty('--accent-color', colors[color]);
-      showToast(`Accent color updated to ${color}`);
-    });
-  });
-
-  // Settings Search Functionality
-  const settingsSearch = document.getElementById('settingsSearch');
-  if (settingsSearch) {
-    settingsSearch.addEventListener('input', () => {
-      const term = settingsSearch.value.toLowerCase();
-      const allFormGroups = document.querySelectorAll('.form-group, .settings-toggle-group');
-      
-      allFormGroups.forEach(group => {
-        const text = group.innerText.toLowerCase();
-        if (text.includes(term)) {
-          group.style.display = '';
-          // Ensure parent card and pane are visible? No, just the items.
-        } else {
-          group.style.display = 'none';
-        }
-      });
-      
-      // If a pane is empty after search, maybe hide its header?
-      settingsPanes.forEach(pane => {
-        const visibleItems = pane.querySelectorAll('.form-group:not([style*="display: none"]), .settings-toggle-group:not([style*="display: none"])');
-        const header = pane.querySelector('.settings-card-header');
-        if (visibleItems.length === 0 && term !== '') {
-          if (header) header.style.display = 'none';
-        } else {
-          if (header) header.style.display = '';
-        }
-      });
-    });
-  }
-
-  // Save / Reset Actions
-  const saveButtons = document.querySelectorAll('.btn-save');
-  saveButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const section = btn.getAttribute('data-section') || 'Settings';
-      btn.innerHTML = '<span class="spinner">⌛</span> Saving...';
-      btn.disabled = true;
-
-      setTimeout(() => {
-        btn.innerHTML = 'Save Changes';
-        btn.disabled = false;
-        showToast(`${section} saved successfully!`);
-      }, 1500);
-    });
-  });
-
-  const resetButtons = document.querySelectorAll('.btn-reset');
-  resetButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (confirm('Are you sure you want to reset these settings to default?')) {
-        showToast('Settings reset to default.');
-      }
-    });
-  });
-
-  // 11. Payments Management Logic
-  const mockPayments = [
-    { id: 'TXN-901', name: 'John Doe', studentId: 'GEO-24-001', method: 'Paystack', amount: 45000, status: 'Paid', date: '2024-10-12', expiry: '2025-01-12' },
-    { id: 'TXN-902', name: 'Jane Smith', studentId: 'GEO-24-002', method: 'Flutterwave', amount: 35000, status: 'Pending', date: '2024-10-15', expiry: '2025-01-15' },
-    { id: 'TXN-903', name: 'Michael Johnson', studentId: 'GEO-24-003', method: 'Bank Transfer', amount: 45000, status: 'Paid', date: '2024-10-18', expiry: '2025-01-18' },
-    { id: 'TXN-904', name: 'Sarah Williams', studentId: 'GEO-24-004', method: 'Paystack', amount: 50000, status: 'Failed', date: '2024-10-20', expiry: '-' }
-  ];
-
-  const paymentsTableBody = document.getElementById('paymentsTableBody');
-  const paymentSearch = document.getElementById('paymentSearch');
-  const filterPaymentMethod = document.getElementById('filterPaymentMethod');
-  const filterPaymentStatus = document.getElementById('filterPaymentStatus');
-  const totalPayments = document.getElementById('totalPayments');
-
-  function renderPayments(data) {
-    if (!paymentsTableBody) return;
-    paymentsTableBody.innerHTML = '';
-    
-    if (data.length === 0) {
-      if (document.getElementById('paymentTableEmptyState')) document.getElementById('paymentTableEmptyState').classList.remove('hidden');
-    } else {
-      if (document.getElementById('paymentTableEmptyState')) document.getElementById('paymentTableEmptyState').classList.add('hidden');
-      
-      data.forEach(pay => {
-        let statusBadge = '';
-        if (pay.status === 'Paid') statusBadge = '<span class="admin-badge success">Paid</span>';
-        else if (pay.status === 'Pending') statusBadge = '<span class="admin-badge warning">Pending</span>';
-        else statusBadge = '<span class="admin-badge danger">Failed</span>';
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><input type="checkbox" class="admin-checkbox"></td>
-          <td>
-            <div class="student-name-col">
-              <span class="student-name">${pay.name}</span>
-              <span class="student-role-text">${pay.studentId}</span>
-            </div>
-          </td>
-          <td><span style="font-family: monospace; opacity: 0.8;">${pay.id}</span></td>
-          <td>${pay.method}</td>
-          <td>₦${pay.amount.toLocaleString()}</td>
-          <td>${statusBadge}</td>
-          <td>${pay.date}</td>
-          <td>${pay.expiry}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn-action view" onclick="showReceipt('${pay.id}')" data-tooltip="View Receipt">📄</button>
-              <button class="btn-action approve" data-tooltip="Verify">✓</button>
-            </div>
-          </td>
-        `;
-        paymentsTableBody.appendChild(row);
-      });
-    }
-    if (totalPayments) totalPayments.innerText = data.length;
-    injectTableLabels();
-  }
-
-  // 12. All Users Management Logic
-  const mockUsers = [
-    { name: 'Admin User', role: 'Admin', id: 'ADM-001', email: 'admin@geo.edu', status: 'Active', registered: '2024-01-01' },
-    { name: 'John Doe', role: 'Student', id: 'GEO-24-001', email: 'john@example.com', status: 'Active', registered: '2024-10-12' },
-    { name: 'Alan Turing', role: 'Teacher', id: 'TCH-24-101', email: 'alan@geo.edu', status: 'Active', registered: '2024-01-10' }
-  ];
-
-  const usersTableBody = document.getElementById('usersTableBody');
-
-  function renderUsers(data) {
-    if (!usersTableBody) return;
-    usersTableBody.innerHTML = '';
-    
-    data.forEach(user => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>
-          <div class="student-profile-cell">
-            <div class="t-avatar">${user.name.split(' ').map(n => n[0]).join('')}</div>
-            <span class="student-name">${user.name}</span>
-          </div>
-        </td>
-        <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
-        <td>${user.id}</td>
-        <td>${user.email}</td>
-        <td><span class="admin-badge success">${user.status}</span></td>
-        <td>${user.registered}</td>
-      `;
-      usersTableBody.appendChild(row);
-    });
-    injectTableLabels();
-  }
-
-  // Final Inits
-  renderPayments(mockPayments);
-  renderUsers(mockUsers);
-
-  // Global Receipts Logic (placeholder)
-  window.showReceipt = (ref) => {
-    const modal = document.getElementById('receiptModalOverlay');
-    if (modal) {
-      document.getElementById('modalRef').innerText = ref;
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
+  const paymentState = p => {
+    if (!p) return 'Unpaid';
+    if (p.status === 'pending') return 'Pending';
+    if (p.status === 'failed') return 'Failed';
+    return paymentExpiry(p) > new Date() ? 'Paid' : 'Expired';
   };
+  const paymentBadge = state => badge(state, { Paid: 'success', Pending: 'warning', Unpaid: 'warning', Expired: 'danger', Failed: 'danger' }[state] || 'warning');
 
-  const closeReceiptBtn = document.getElementById('closeReceiptBtn');
-  if (closeReceiptBtn) {
-    closeReceiptBtn.onclick = () => {
-      document.getElementById('receiptModalOverlay').classList.add('hidden');
-      document.body.style.overflow = '';
-    };
-  }
-
-  // Initial table label injection for all sections
-  setTimeout(injectTableLabels, 1500);
-
-  // Helper: Toast Notification
-  function showToast(message) {
+  function showToast(message, isError = false) {
     const toast = document.createElement('div');
-    toast.className = 'profile-toast show'; // Reusing existing toast class
-    toast.style.bottom = '30px';
-    toast.style.right = '30px';
-    toast.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
-    toast.innerHTML = `<span style="margin-right: 10px;">✅</span> ${message}`;
+    toast.className = `profile-toast admin-toast show${isError ? ' error' : ''}`;
+    toast.setAttribute('role', 'status');
+    toast.textContent = message;
     document.body.appendChild(toast);
-
     setTimeout(() => {
       toast.classList.remove('show');
       setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    }, 3200);
   }
 
-  // 10. Logout Functionality
-  const logoutBtn = document.getElementById('logoutBtn');
-  const logoutModal = document.getElementById('logoutModalOverlay');
-  const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
-  const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
-  const logoutLoading = document.getElementById('logoutLoading');
+  function downloadCSV(filename, rows) {
+    const csv = rows.map(r => r.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const a = Object.assign(document.createElement('a'), { href: url, download: filename });
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
 
-  if (logoutBtn && logoutModal) {
-    logoutBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Sync modal profile image with topbar avatar
-      const topbarAvatar = document.querySelector('.admin-avatar img');
-      const modalAvatar = document.getElementById('logoutModalAvatar');
-      if (topbarAvatar && modalAvatar) {
-        modalAvatar.src = topbarAvatar.src;
-      }
+  function updateUser(userId, changes) {
+    const users = getUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return null;
+    Object.assign(user, changes);
+    GeoAuth.saveUsers(users);
+    return user;
+  }
+  function deleteUser(userId) {
+    const users = getUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return null;
+    if (user.id === admin.id) {
+      showToast('You can’t delete the account you are logged in with.', true);
+      return null;
+    }
+    GeoAuth.saveUsers(users.filter(u => u.id !== userId));
+    return user;
+  }
 
-      // Sync name and role if available
-      const adminNameTxt = document.getElementById('adminName');
-      const modalName = logoutModal.querySelector('.logout-admin-name');
-      if (adminNameTxt && modalName) {
-        modalName.innerText = adminNameTxt.innerText;
-      }
+  /* Counters: animate from the current value to the real one */
+  function setCounter(el, value) {
+    if (!el) return;
+    el.dataset.target = value;
+    const start = Number(String(el.textContent).replace(/[^\d.-]/g, '')) || 0;
+    const t0 = performance.now();
+    const duration = 900;
+    const tick = now => {
+      const k = Math.min((now - t0) / duration, 1);
+      el.textContent = Math.round(start + (value - start) * (1 - Math.pow(1 - k, 3))).toLocaleString('en-NG');
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    setTimeout(() => { el.textContent = Number(value).toLocaleString('en-NG'); }, duration + 400);
+  }
 
-      logoutModal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
+  /* Adds data-label attributes so tables can collapse into cards on mobile */
+  function injectTableLabels() {
+    document.querySelectorAll('.admin-modern-table').forEach(table => {
+      const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
+      table.querySelectorAll('tbody tr').forEach(row => {
+        row.querySelectorAll('td').forEach((cell, i) => {
+          if (headers[i]) cell.setAttribute('data-label', headers[i]);
+        });
+      });
     });
   }
 
-  if (cancelLogoutBtn) {
-    cancelLogoutBtn.addEventListener('click', () => {
-      logoutModal.classList.add('hidden');
-      document.body.style.overflow = '';
-    });
+  /* Generic paginator for the table footers */
+  function paginate(list, state, ids, rerender) {
+    const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+    state.page = Math.min(Math.max(state.page, 1), pages);
+    const startIdx = (state.page - 1) * PAGE_SIZE;
+    const slice = list.slice(startIdx, startIdx + PAGE_SIZE);
+    if ($(ids.start)) $(ids.start).textContent = list.length ? startIdx + 1 : 0;
+    if ($(ids.end)) $(ids.end).textContent = startIdx + slice.length;
+    if ($(ids.total)) $(ids.total).textContent = list.length;
+    const prev = $(ids.prev);
+    const next = $(ids.next);
+    if (prev) {
+      prev.classList.toggle('disabled', state.page <= 1);
+      prev.disabled = state.page <= 1;
+      prev.onclick = () => { state.page--; rerender(); };
+    }
+    if (next) {
+      next.classList.toggle('disabled', state.page >= pages);
+      next.disabled = state.page >= pages;
+      next.onclick = () => { state.page++; rerender(); };
+    }
+    const numbers = prev ? prev.parentElement.querySelector('.page-numbers') : null;
+    if (numbers) {
+      numbers.innerHTML = Array.from({ length: pages }, (_, i) =>
+        `<button type="button" class="page-num${i + 1 === state.page ? ' active' : ''}" data-page="${i + 1}">${i + 1}</button>`).join('');
+      numbers.querySelectorAll('button').forEach(b => { b.onclick = () => { state.page = Number(b.dataset.page); rerender(); }; });
+    }
+    return slice;
   }
 
-  if (logoutModal) {
-    logoutModal.addEventListener('click', (e) => {
-      if (e.target === logoutModal) {
-        logoutModal.classList.add('hidden');
-        document.body.style.overflow = '';
-      }
-    });
+  function toggleEmpty(tableId, emptyId, isEmpty) {
+    if ($(emptyId)) $(emptyId).classList.toggle('hidden', !isEmpty);
+    if ($(tableId)) $(tableId).classList.toggle('hidden', isEmpty);
   }
 
-  if (confirmLogoutBtn) {
-    confirmLogoutBtn.addEventListener('click', () => {
-      // Show loading spinner
-      if (logoutLoading) {
-        logoutLoading.classList.add('active');
+  /* ───────────────────────── Identity ───────────────────────── */
+  $('adminName').textContent = admin.fullName || 'Administrator';
+  $('adminAvatarInitials').textContent = admin.avatar || initials(admin.fullName);
+  $('welcomeAdminName').textContent = admin.fullName || 'Administrator';
+  if ($('adminFullName')) $('adminFullName').value = admin.fullName || '';
+  if ($('adminEmail')) $('adminEmail').value = admin.email || '';
+
+  /* ───────────────────────── Sidebar & sections ───────────────────────── */
+  const sidebar = $('sidebar');
+  const sidebarOverlay = $('sidebarOverlay');
+  const navItems = document.querySelectorAll('.admin-nav-item');
+  const sections = document.querySelectorAll('.admin-section');
+
+  const openSidebar = () => {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeSidebarMenu = () => {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  $('menuToggle')?.addEventListener('click', openSidebar);
+  $('closeSidebar')?.addEventListener('click', closeSidebarMenu);
+  sidebarOverlay?.addEventListener('click', closeSidebarMenu);
+
+  function showSection(targetId) {
+    navItems.forEach(nav => nav.classList.toggle('active', nav.dataset.target === targetId));
+    sections.forEach(section => section.classList.toggle('active', section.id === targetId));
+    if (window.innerWidth <= 1024) closeSidebarMenu();
+    if (targetId === 'analyticsSection') setTimeout(renderCharts, 60);
+    injectTableLabels();
+  }
+  navItems.forEach(item => {
+    item.setAttribute('role', 'button');
+    item.setAttribute('tabindex', '0');
+    item.addEventListener('click', () => showSection(item.dataset.target));
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showSection(item.dataset.target); }
+    });
+  });
+  document.querySelector('.view-all-notifs')?.removeAttribute('onclick');
+  document.querySelector('.view-all-notifs')?.addEventListener('click', () => {
+    $('notifDropdown').classList.add('hidden');
+    showSection('notificationsSection');
+  });
+
+  /* ───────────────────────── Filters (options from real data) ───────────────────────── */
+  function fillCourseFilter() {
+    const select = $('filterCourse');
+    if (!select || typeof GEOSOLUTION_COURSES === 'undefined') return;
+    const current = select.value;
+    select.innerHTML = '<option value="">All Courses</option>' +
+      GEOSOLUTION_COURSES.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+    select.value = current;
+  }
+  function fillTeacherSubjectFilter() {
+    const select = $('filterTeacherCourse');
+    if (!select) return;
+    const current = select.value;
+    const subjects = [...new Set(getUsers().filter(u => u.role === 'teacher' && u.subject).map(u => u.subject))].sort();
+    select.innerHTML = '<option value="">All Subjects</option>' + subjects.map(s => `<option>${esc(s)}</option>`).join('');
+    select.value = current;
+  }
+  const payMethodFilter = $('filterPaymentMethod');
+  if (payMethodFilter) {
+    payMethodFilter.innerHTML = '<option value="">All Methods</option><option value="card">Card</option><option value="transfer">Bank Transfer</option>';
+  }
+  const teacherPaymentFilter = $('filterTeacherPayment');
+  if (teacherPaymentFilter) teacherPaymentFilter.closest('select').remove();
+  const studentStatusFilter = $('filterStatus');
+  if (studentStatusFilter) {
+    studentStatusFilter.innerHTML = '<option value="">All Statuses</option><option value="approved">Active</option><option value="pending">Pending</option><option value="suspended">Suspended</option><option value="rejected">Rejected</option>';
+  }
+  const teacherStatusFilter = $('filterTeacherStatus');
+  if (teacherStatusFilter) {
+    teacherStatusFilter.innerHTML = '<option value="">All Statuses</option><option value="approved">Active</option><option value="pending">Pending</option><option value="suspended">Suspended</option><option value="rejected">Rejected</option>';
+  }
+  const pendingStatusFilter = $('filterPendingStatus');
+  if (pendingStatusFilter) pendingStatusFilter.innerHTML = '<option value="">Pending &amp; Rejected</option><option value="pending">Pending</option><option value="rejected">Rejected</option>';
+  const pendingRoleFilter = $('filterPendingRole');
+  if (pendingRoleFilter) pendingRoleFilter.innerHTML = '<option value="">All Roles</option><option value="student">Student</option><option value="teacher">Teacher</option><option value="admin">Admin</option>';
+
+  const matches = (user, term) => !term || [user.fullName, user.email, user.identifier, user.phoneNumber]
+    .some(v => String(v || '').toLowerCase().includes(term));
+
+  /* Shared row actions (event delegation) */
+  function handleUserAction(action, userId) {
+    const users = getUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+    const name = user.fullName;
+    switch (action) {
+      case 'review':
+        openReviewModal(userId);
+        return;
+      case 'approve':
+        updateUser(userId, { status: 'approved', approvedAt: new Date().toISOString() });
+        showToast(`${name}'s account is approved. They can now log in.`);
+        break;
+      case 'reject':
+        updateUser(userId, { status: 'rejected' });
+        showToast(`${name}'s registration was rejected.`, true);
+        break;
+      case 'suspend':
+        updateUser(userId, { status: 'suspended' });
+        showToast(`${name}'s account is suspended.`, true);
+        break;
+      case 'reactivate':
+        updateUser(userId, { status: 'approved' });
+        showToast(`${name}'s account is active again.`);
+        break;
+      case 'delete':
+        if (!confirm(`Delete ${name}'s account permanently? This cannot be undone.`)) return;
+        if (deleteUser(userId)) showToast(`${name}'s account was deleted.`, true);
+        break;
+      default:
+        return;
+    }
+    refreshAll();
+  }
+
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-user-action]');
+    if (btn) handleUserAction(btn.dataset.userAction, btn.dataset.id);
+  });
+
+  const actionButtons = (user, { review = true } = {}) => {
+    const btns = [];
+    const b = (action, icon, label, cls) =>
+      `<button type="button" class="btn-action ${cls}" data-user-action="${action}" data-id="${esc(user.id)}" data-tooltip="${label}" aria-label="${label}: ${esc(user.fullName)}">${icon}</button>`;
+    if (review) btns.push(b('review', '👁️', 'Review profile', 'view'));
+    if (user.status !== 'approved') btns.push(b('approve', '✓', 'Approve', 'approve'));
+    if (user.status === 'pending') btns.push(b('reject', '✕', 'Reject', 'reject'));
+    if (user.status === 'approved' && user.id !== admin.id) btns.push(b('suspend', '⏸️', 'Suspend', 'suspend'));
+    if (user.status === 'suspended') btns.push(b('reactivate', '▶️', 'Reactivate', 'approve'));
+    if (user.id !== admin.id) btns.push(b('delete', '🗑️', 'Delete', 'delete'));
+    return `<div class="action-buttons">${btns.join('')}</div>`;
+  };
+
+  /* ───────────────────────── Pending approvals ───────────────────────── */
+  const pendingState = { page: 1 };
+  function renderPending() {
+    const tbody = $('pendingTableBody');
+    if (!tbody) return;
+    const term = ($('pendingSearch')?.value || '').toLowerCase();
+    const role = $('filterPendingRole')?.value || '';
+    const status = $('filterPendingStatus')?.value || '';
+    const date = $('filterPendingDate')?.value || '';
+    const list = getUsers()
+      .filter(u => (status ? u.status === status : ['pending', 'rejected'].includes(u.status)))
+      .filter(u => (!role || u.role === role) && (!date || isoDay(u.createdAt) === date) && matches(u, term))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const rows = paginate(list, pendingState, { start: 'pendingPageStart', end: 'pendingPageEnd', total: 'totalPending', prev: 'prevPendingPage', next: 'nextPendingPage' }, renderPending);
+    toggleEmpty('pendingTable', 'pendingTableEmptyState', !list.length);
+    tbody.innerHTML = rows.map(u => `
+      <tr>
+        <td><input type="checkbox" class="admin-checkbox pending-row-check" value="${esc(u.id)}" aria-label="Select ${esc(u.fullName)}"></td>
+        <td><div class="student-profile-cell">${avatarHtml(u)}<div class="student-name-col"><span class="student-name">${esc(u.fullName)}</span><span class="student-role-text">${esc(courseName(u))}</span></div></div></td>
+        <td><span class="mono">${esc(u.identifier)}</span></td>
+        <td>${esc(u.email)}</td>
+        <td><span class="role-badge role-${esc(u.role)}">${esc(roleLabel(u.role))}</span></td>
+        <td>${fmtDate(u.createdAt)}</td>
+        <td>${statusBadge(u.status)}</td>
+        <td><button type="button" class="btn-doc-link" data-user-action="review" data-id="${esc(u.id)}">📄 ${u.registration ? 'Form' : 'Profile'}${u.profileImage ? ' + photo' : ''}</button></td>
+        <td class="text-right">${actionButtons(u)}</td>
+      </tr>`).join('');
+    if ($('selectAllPending')) $('selectAllPending').checked = false;
+    injectTableLabels();
+  }
+  ['pendingSearch', 'filterPendingRole', 'filterPendingStatus', 'filterPendingDate'].forEach(id => {
+    $(id)?.addEventListener('input', () => { pendingState.page = 1; renderPending(); });
+    $(id)?.addEventListener('change', () => { pendingState.page = 1; renderPending(); });
+  });
+  $('selectAllPending')?.addEventListener('change', e => {
+    document.querySelectorAll('.pending-row-check').forEach(c => { c.checked = e.target.checked; });
+  });
+  $('bulkApproveBtn')?.addEventListener('click', () => {
+    let ids = Array.from(document.querySelectorAll('.pending-row-check:checked')).map(c => c.value);
+    if (!ids.length) {
+      ids = getUsers().filter(u => u.status === 'pending').map(u => u.id);
+      if (!ids.length) return showToast('There are no pending accounts to approve.');
+      if (!confirm(`No rows selected. Approve all ${ids.length} pending account(s)?`)) return;
+    }
+    const users = getUsers();
+    users.forEach(u => { if (ids.includes(u.id)) { u.status = 'approved'; u.approvedAt = new Date().toISOString(); } });
+    GeoAuth.saveUsers(users);
+    showToast(`${ids.length} account(s) approved.`);
+    refreshAll();
+  });
+  $('exportPendingBtn')?.addEventListener('click', () => {
+    const list = getUsers().filter(u => ['pending', 'rejected'].includes(u.status));
+    downloadCSV('pending-approvals.csv', [['Name', 'Reference / ID', 'Email', 'Phone', 'Role', 'Course', 'Status', 'Registered'],
+      ...list.map(u => [u.fullName, u.identifier, u.email, u.phoneNumber, roleLabel(u.role), courseName(u), STATUS_LABEL[u.status], isoDay(u.createdAt)])]);
+  });
+
+  /* ───────────────────────── Students ───────────────────────── */
+  const studentsState = { page: 1 };
+  function renderStudents() {
+    const tbody = $('studentsTableBody');
+    if (!tbody) return;
+    const term = ($('studentSearch')?.value || '').toLowerCase();
+    const course = $('filterCourse')?.value || '';
+    const status = $('filterStatus')?.value || '';
+    const list = getUsers()
+      .filter(u => u.role === 'student' && matches(u, term) && (!course || courseName(u) === course) && (!status || u.status === status))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const rows = paginate(list, studentsState, { start: 'pageStart', end: 'pageEnd', total: 'totalStudents', prev: 'prevPage', next: 'nextPage' }, renderStudents);
+    toggleEmpty('studentsTable', 'tableEmptyState', !list.length);
+    tbody.innerHTML = rows.map(u => {
+      const latest = paymentsFor(u)[0];
+      return `
+      <tr>
+        <td><input type="checkbox" class="admin-checkbox" aria-label="Select ${esc(u.fullName)}"></td>
+        <td><div class="student-profile-cell">${avatarHtml(u)}<div class="student-name-col"><span class="student-name">${esc(u.fullName)}</span><span class="student-role-text">${esc(u.phoneNumber || '')}</span></div></div></td>
+        <td><span class="mono">${esc(u.identifier)}</span></td>
+        <td>${esc(u.email)}</td>
+        <td>${esc(courseName(u))}</td>
+        <td>${paymentBadge(paymentState(latest))}</td>
+        <td>${statusBadge(u.status)}</td>
+        <td>${fmtDate(u.createdAt)}</td>
+        <td class="text-right">${actionButtons(u)}</td>
+      </tr>`;
+    }).join('');
+    injectTableLabels();
+  }
+  ['studentSearch', 'filterCourse', 'filterStatus'].forEach(id => {
+    $(id)?.addEventListener('input', () => { studentsState.page = 1; renderStudents(); });
+    $(id)?.addEventListener('change', () => { studentsState.page = 1; renderStudents(); });
+  });
+  $('selectAllStudents')?.addEventListener('change', e => {
+    $('studentsTableBody').querySelectorAll('.admin-checkbox').forEach(c => { c.checked = e.target.checked; });
+  });
+  $('exportStudentsBtn')?.addEventListener('click', () => {
+    const list = getUsers().filter(u => u.role === 'student');
+    downloadCSV('students.csv', [['Name', 'Reference / Reg No', 'Email', 'Phone', 'Course', 'Schedule', 'Status', 'Payment', 'Registered', 'Guardian', 'Guardian Phone'],
+      ...list.map(u => {
+        const r = u.registration || {};
+        return [u.fullName, u.identifier, u.email, u.phoneNumber, courseName(u), r.schedule, STATUS_LABEL[u.status], paymentState(paymentsFor(u)[0]), isoDay(u.createdAt), r.guardianName, r.guardianPhone];
+      })]);
+  });
+
+  /* ───────────────────────── Teachers ───────────────────────── */
+  const teachersState = { page: 1 };
+  function renderTeachers() {
+    const tbody = $('teachersTableBody');
+    if (!tbody) return;
+    const term = ($('teacherSearch')?.value || '').toLowerCase();
+    const subject = $('filterTeacherCourse')?.value || '';
+    const status = $('filterTeacherStatus')?.value || '';
+    const list = getUsers()
+      .filter(u => u.role === 'teacher' && matches(u, term) && (!subject || u.subject === subject) && (!status || u.status === status));
+    const rows = paginate(list, teachersState, { start: 'teacherPageStart', end: 'teacherPageEnd', total: 'totalTeachers', prev: 'prevTeacherPage', next: 'nextTeacherPage' }, renderTeachers);
+    toggleEmpty('teachersTable', 'teacherTableEmptyState', !list.length);
+    tbody.innerHTML = rows.map(u => `
+      <tr>
+        <td><input type="checkbox" class="admin-checkbox" aria-label="Select ${esc(u.fullName)}"></td>
+        <td><div class="student-profile-cell">${avatarHtml(u)}<div class="student-name-col"><span class="student-name">${esc(u.fullName)}</span><span class="student-role-text">${esc(u.identifier)}</span></div></div></td>
+        <td><div class="cell-stack"><span>${esc(u.email)}</span><span class="cell-muted">${esc(u.phoneNumber || '—')}</span></div></td>
+        <td>${esc(u.subject || '—')}</td>
+        <td><span class="cell-muted">Not recorded</span></td>
+        <td>${statusBadge(u.status)}</td>
+        <td>${fmtDate(u.createdAt)}</td>
+        <td class="text-right">${actionButtons(u)}</td>
+      </tr>`).join('');
+    injectTableLabels();
+  }
+  ['teacherSearch', 'filterTeacherCourse', 'filterTeacherStatus'].forEach(id => {
+    $(id)?.addEventListener('input', () => { teachersState.page = 1; renderTeachers(); });
+    $(id)?.addEventListener('change', () => { teachersState.page = 1; renderTeachers(); });
+  });
+  $('exportTeachersBtn')?.addEventListener('click', () => {
+    const list = getUsers().filter(u => u.role === 'teacher');
+    downloadCSV('teachers.csv', [['Name', 'Email', 'Phone', 'Subject', 'Status', 'Registered'],
+      ...list.map(u => [u.fullName, u.email, u.phoneNumber, u.subject, STATUS_LABEL[u.status], isoDay(u.createdAt)])]);
+  });
+
+  /* ───────────────────────── Payments ───────────────────────── */
+  const paymentsState = { page: 1 };
+  const studentForPayment = p => getUsers().find(u => (p.studentRef && u.identifier === p.studentRef) || (!p.studentRef && p.email && u.email === p.email));
+
+  function renderPayments() {
+    const tbody = $('paymentsTableBody');
+    if (!tbody) return;
+    const term = ($('paymentSearch')?.value || '').toLowerCase();
+    const method = $('filterPaymentMethod')?.value || '';
+    const status = $('filterPaymentStatus')?.value || '';
+    const list = getPayments()
+      .map((p, index) => ({ ...p, index, student: studentForPayment(p), state: paymentState(p) }))
+      .filter(p => (!method || (p.method || 'card') === method) && (!status || p.state === status))
+      .filter(p => !term || [p.reference, p.studentRef, p.email, p.student?.fullName].some(v => String(v || '').toLowerCase().includes(term)));
+    const rows = paginate(list, paymentsState, { start: 'paymentPageStart', end: 'paymentPageEnd', total: 'totalPayments', prev: 'prevPaymentPage', next: 'nextPaymentPage' }, renderPayments);
+    toggleEmpty('paymentsTable', 'paymentTableEmptyState', !list.length);
+    tbody.innerHTML = rows.map(p => `
+      <tr>
+        <td><input type="checkbox" class="admin-checkbox" aria-label="Select payment ${esc(p.reference)}"></td>
+        <td><div class="student-name-col"><span class="student-name">${esc(p.student?.fullName || p.email || 'Unknown')}</span><span class="student-role-text">${esc(p.studentRef || p.email || '')}</span></div></td>
+        <td><span class="mono">${esc(p.reference)}</span></td>
+        <td>${p.method === 'transfer' ? 'Bank Transfer' : 'Card'}</td>
+        <td>${naira(p.amount)}</td>
+        <td>${paymentBadge(p.state)}</td>
+        <td>${fmtDate(p.date)}</td>
+        <td>${p.status === 'success' ? fmtDate(paymentExpiry(p).toISOString()) : '—'}</td>
+        <td class="text-right"><div class="action-buttons">
+          <button type="button" class="btn-action view" data-pay-action="receipt" data-index="${p.index}" data-tooltip="View receipt" aria-label="View receipt ${esc(p.reference)}">📄</button>
+          ${p.status === 'pending' ? `<button type="button" class="btn-action approve" data-pay-action="verify" data-index="${p.index}" data-tooltip="Confirm transfer" aria-label="Confirm transfer ${esc(p.reference)}">✓</button>
+          <button type="button" class="btn-action reject" data-pay-action="fail" data-index="${p.index}" data-tooltip="Mark as failed" aria-label="Mark ${esc(p.reference)} as failed">✕</button>` : ''}
+        </div></td>
+      </tr>`).join('');
+    injectTableLabels();
+  }
+  ['paymentSearch', 'filterPaymentMethod', 'filterPaymentStatus'].forEach(id => {
+    $(id)?.addEventListener('input', () => { paymentsState.page = 1; renderPayments(); });
+    $(id)?.addEventListener('change', () => { paymentsState.page = 1; renderPayments(); });
+  });
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-pay-action]');
+    if (!btn) return;
+    const history = getPayments();
+    const p = history[Number(btn.dataset.index)];
+    if (!p) return;
+    if (btn.dataset.payAction === 'receipt') return openReceipt(p);
+    p.status = btn.dataset.payAction === 'verify' ? 'success' : 'failed';
+    if (p.status === 'success') p.confirmedAt = new Date().toISOString();
+    localStorage.setItem('geoPaymentHistory', JSON.stringify(history));
+    showToast(p.status === 'success' ? `Payment ${p.reference} confirmed.` : `Payment ${p.reference} marked as failed.`, p.status !== 'success');
+    refreshAll();
+  });
+  $('exportPaymentsBtn')?.addEventListener('click', () => {
+    downloadCSV('payments.csv', [['Reference', 'Student', 'Student Ref', 'Email', 'Program', 'Method', 'Amount', 'Status', 'Date'],
+      ...getPayments().map(p => [p.reference, studentForPayment(p)?.fullName, p.studentRef, p.email, p.program, p.method === 'transfer' ? 'Bank Transfer' : 'Card', p.amount, paymentState(p), isoDay(p.date)])]);
+  });
+
+  const receiptModal = $('receiptModalOverlay');
+  function openReceipt(p) {
+    const student = studentForPayment(p);
+    $('modalRef').textContent = p.reference;
+    $('modalStudentName').textContent = student?.fullName || p.email || '—';
+    $('modalStudentId').textContent = `Ref: ${p.studentRef || '—'}`;
+    $('modalDate').textContent = fmtDate(p.date);
+    $('modalMethod').textContent = p.method === 'transfer' ? 'Bank Transfer' : 'Card';
+    const state = paymentState(p);
+    $('modalStatus').textContent = state;
+    $('modalStatus').className = `receipt-status status-${state.toLowerCase()}`;
+    $('modalStatus').removeAttribute('style');
+    $('modalAmount').textContent = Number(p.amount || 0).toLocaleString('en-NG');
+    $('modalTotal').textContent = Number(p.amount || 0).toLocaleString('en-NG');
+    const desc = receiptModal.querySelector('.receipt-items-table tbody td');
+    if (desc) desc.textContent = p.program ? `${p.program} — fees` : 'Course fees';
+    receiptModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  const closeReceipt = () => { receiptModal.classList.add('hidden'); document.body.style.overflow = ''; };
+  $('closeReceiptBtn')?.addEventListener('click', closeReceipt);
+  receiptModal?.addEventListener('click', e => { if (e.target === receiptModal) closeReceipt(); });
+  $('printReceiptBtn')?.addEventListener('click', () => window.print());
+  $('downloadReceiptBtn')?.addEventListener('click', () => window.print());
+
+  /* ───────────────────────── All users & global search ───────────────────────── */
+  function renderUsers() {
+    const tbody = $('usersTableBody');
+    if (!tbody) return;
+    const term = ($('globalSearch')?.value || '').toLowerCase();
+    const list = getUsers().filter(u => matches(u, term));
+    tbody.innerHTML = list.length ? list.map(u => `
+      <tr>
+        <td><div class="student-profile-cell">${avatarHtml(u)}<span class="student-name">${esc(u.fullName)}</span></div></td>
+        <td><span class="role-badge role-${esc(u.role)}">${esc(roleLabel(u.role))}</span></td>
+        <td><span class="mono">${esc(u.identifier)}</span></td>
+        <td>${esc(u.email)}</td>
+        <td>${statusBadge(u.status)}</td>
+        <td>${fmtDate(u.createdAt)}</td>
+      </tr>`).join('') : `<tr><td colspan="6" class="table-empty-cell">No users match “${esc(term)}”.</td></tr>`;
+    injectTableLabels();
+  }
+  const globalSearch = $('globalSearch');
+  globalSearch?.addEventListener('input', () => {
+    renderUsers();
+    if (globalSearch.value.trim()) showSection('usersSection');
+  });
+
+  /* ───────────────────────── Courses ───────────────────────── */
+  function renderCourses() {
+    const tbody = $('coursesTableBody');
+    if (!tbody || typeof GEOSOLUTION_COURSES === 'undefined') return;
+    const users = getUsers();
+    tbody.innerHTML = GEOSOLUTION_COURSES.map(c => {
+      const count = users.filter(u => u.program === c.id || u.department === c.name).length;
+      return `
+      <tr>
+        <td><span class="student-name">${esc(c.name)}</span></td>
+        <td>${esc(GEOSOLUTION_CATEGORIES[c.category] || c.category)}</td>
+        <td>${esc(c.duration || '—')}</td>
+        <td>${c.fee ? naira(c.fee) : '<span class="cell-muted">Not set</span>'}</td>
+        <td>${count}</td>
+        <td class="text-right">${c.page ? `<a class="btn-doc-link" href="${esc(c.page)}" target="_blank" rel="noopener">Open ↗</a>` : '<span class="cell-muted">—</span>'}</td>
+      </tr>`;
+    }).join('');
+    injectTableLabels();
+  }
+
+  /* ───────────────────────── Overview numbers ───────────────────────── */
+  function renderStats() {
+    const users = getUsers();
+    const payments = getPayments();
+    const students = users.filter(u => u.role === 'student');
+    const teachers = users.filter(u => u.role === 'teacher');
+    const pending = users.filter(u => u.status === 'pending');
+    const confirmed = payments.filter(p => p.status === 'success');
+    const revenue = confirmed.reduce((sum, p) => sum + Number(p.amount || 0), 0);
+    const active = confirmed.filter(p => paymentState(p) === 'Paid').length;
+    const expired = confirmed.filter(p => paymentState(p) === 'Expired').length;
+
+    setCounter($('statStudents'), students.length);
+    setCounter($('statTeachers'), teachers.length);
+    setCounter($('statPending'), pending.length);
+    setCounter($('statActivePayments'), active);
+    setCounter($('statExpiredPayments'), expired);
+    setCounter($('statRevenue'), revenue);
+    setCounter($('statCourses'), typeof GEOSOLUTION_COURSES !== 'undefined' ? GEOSOLUTION_COURSES.length : 0);
+    setCounter($('statMessages'), 0);
+
+    setCounter($('statPendingTotal'), pending.length);
+    setCounter($('statPendingStudents'), pending.filter(u => u.role === 'student').length);
+    setCounter($('statPendingTeachers'), pending.filter(u => u.role === 'teacher').length);
+
+    setCounter($('payStatRevenue'), revenue);
+    setCounter($('payStatActive'), active);
+    setCounter($('payStatPending'), payments.filter(p => p.status === 'pending').length);
+    setCounter($('payStatFailed'), payments.filter(p => p.status === 'failed').length);
+
+    setCounter($('anRevenue'), revenue);
+    setCounter($('anPending'), pending.length);
+    setCounter($('anStudents'), students.filter(u => u.status === 'approved').length);
+    setCounter($('anTeachers'), teachers.filter(u => u.status === 'approved').length);
+    setCounter($('anPaySuccess'), payments.length ? Math.round((confirmed.length / payments.length) * 100) : 0);
+
+    $('welcomePendingNote').textContent = pending.length
+      ? `${pending.length} account${pending.length === 1 ? ' is' : 's are'} waiting for your approval.`
+      : 'There are no accounts waiting for approval.';
+
+    const pendingNav = document.querySelector('[data-target="pendingSection"] .admin-nav-text');
+    if (pendingNav) pendingNav.innerHTML = `Pending Approvals${pending.length ? ` <span class="nav-count">${pending.length}</span>` : ''}`;
+  }
+
+  /* ───────────────────────── Notifications (derived from real events) ───────────────────────── */
+  const readNotifs = new Set(readJSON(READ_NOTIFS_KEY, []));
+  const saveRead = () => localStorage.setItem(READ_NOTIFS_KEY, JSON.stringify([...readNotifs]));
+  const timeAgo = iso => {
+    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins} min${mins === 1 ? '' : 's'} ago`;
+    const hours = Math.round(mins / 60);
+    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    const days = Math.round(hours / 24);
+    return days === 1 ? 'Yesterday' : `${days} days ago`;
+  };
+
+  function buildNotifications() {
+    const items = [];
+    getUsers().forEach(u => {
+      if (u.status === 'pending') {
+        items.push({ id: `reg-${u.id}`, type: 'Approval', icon: '⏳', priority: 'urgent', title: 'Registration awaiting approval',
+          msg: `${u.fullName} (${roleLabel(u.role)}${u.department ? `, ${u.department}` : ''}) registered and needs approval.`, date: u.createdAt, target: 'pendingSection' });
+      } else if (u.role !== 'admin' && u.createdAt) {
+        items.push({ id: `new-${u.id}`, type: 'Registration', icon: '👨‍🎓', priority: 'info', title: 'New account',
+          msg: `${u.fullName} joined as ${roleLabel(u.role).toLowerCase()}.`, date: u.createdAt, target: 'usersSection' });
       }
+    });
+    getPayments().forEach(p => {
+      const who = studentForPayment(p)?.fullName || p.email || p.studentRef;
+      items.push(p.status === 'pending'
+        ? { id: `pay-${p.reference}`, type: 'Payment', icon: '🏦', priority: 'urgent', title: 'Bank transfer to confirm', msg: `${who} reported a transfer of ${naira(p.amount)} (${p.reference}).`, date: p.date, target: 'paymentsSection' }
+        : { id: `pay-${p.reference}`, type: 'Payment', icon: '💳', priority: p.status === 'failed' ? 'warning' : 'new', title: p.status === 'failed' ? 'Payment failed' : 'Payment received', msg: `${naira(p.amount)} from ${who} (${p.reference}).`, date: p.date, target: 'paymentsSection' });
+    });
+    return items
+      .map(n => ({ ...n, status: readNotifs.has(n.id) ? 'read' : 'unread' }))
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
 
-      // 1. Clear Local Authentication Data
-      localStorage.removeItem('adminToken');
-      localStorage.removeItem('adminData');
-      localStorage.removeItem('geo_session');
-      sessionStorage.clear();
+  function renderNotifications() {
+    const all = buildNotifications();
+    const unread = all.filter(n => n.status === 'unread');
+    const badgeEl = $('topbarNotifBadge');
+    if (badgeEl) {
+      badgeEl.textContent = unread.length;
+      badgeEl.style.display = unread.length ? 'flex' : 'none';
+    }
 
-      // 2. Prevent back button access (history manipulation)
-      window.history.pushState(null, '', window.location.href);
-      window.onpopstate = function() {
-        window.history.pushState(null, '', window.location.href);
+    const quick = $('dropdownNotifList');
+    if (quick) {
+      quick.innerHTML = unread.length ? unread.slice(0, 5).map(n => `
+        <button type="button" class="notif-item-quick unread" data-notif-open="${esc(n.id)}" data-target-section="${n.target}">
+          <span class="notif-icon-small" aria-hidden="true">${n.icon}</span>
+          <span class="notif-content-small">
+            <span class="notif-title-small">${esc(n.title)}</span>
+            <span class="notif-msg-small">${esc(n.msg)}</span>
+            <span class="notif-time-small">${timeAgo(n.date)}</span>
+          </span>
+        </button>`).join('') : '<p class="notif-empty">You’re all caught up.</p>';
+    }
+
+    const full = $('notificationsFullList');
+    if (full) {
+      const term = ($('notifSearch')?.value || '').toLowerCase();
+      const type = $('filterNotifType')?.value || '';
+      const status = ($('filterNotifStatus')?.value || '').toLowerCase();
+      const list = all.filter(n => (!type || n.type === type) && (!status || n.status === status) &&
+        (!term || `${n.title} ${n.msg}`.toLowerCase().includes(term)));
+      full.innerHTML = list.length ? list.map(n => `
+        <div class="notif-card-full ${n.status}">
+          <div class="notif-icon-full" aria-hidden="true">${n.icon}</div>
+          <div class="notif-info-full">
+            <div class="notif-header-full"><span class="notif-title-full">${esc(n.title)}</span><span class="notif-time-full">${timeAgo(n.date)}</span></div>
+            <div class="notif-msg-full">${esc(n.msg)}</div>
+            <div class="notif-meta-row"><span class="notif-badge ${n.status === 'read' ? 'read' : n.priority}">${n.status === 'read' ? 'read' : n.priority}</span><span class="cell-muted">${n.type}</span></div>
+          </div>
+          <div class="notif-actions-full">
+            <button type="button" class="btn-action view" data-notif-open="${esc(n.id)}" data-target-section="${n.target}" aria-label="Open">➜</button>
+            ${n.status === 'unread' ? `<button type="button" class="btn-action approve" data-notif-read="${esc(n.id)}" aria-label="Mark as read">✓</button>` : ''}
+          </div>
+        </div>`).join('') : '<p class="notif-empty">No notifications match your filters.</p>';
+    }
+  }
+
+  document.addEventListener('click', e => {
+    const open = e.target.closest('[data-notif-open]');
+    const read = e.target.closest('[data-notif-read]');
+    if (open) {
+      readNotifs.add(open.dataset.notifOpen);
+      saveRead();
+      $('notifDropdown').classList.add('hidden');
+      showSection(open.dataset.targetSection);
+      renderNotifications();
+    } else if (read) {
+      readNotifs.add(read.dataset.notifRead);
+      saveRead();
+      renderNotifications();
+    }
+  });
+  $('notifDropdownBtn')?.addEventListener('click', e => {
+    e.stopPropagation();
+    $('notifDropdown').classList.toggle('hidden');
+  });
+  document.addEventListener('click', e => {
+    const dd = $('notifDropdown');
+    if (dd && !dd.contains(e.target) && !e.target.closest('#notifDropdownBtn')) dd.classList.add('hidden');
+  });
+  $('markAllReadBtn')?.addEventListener('click', () => {
+    buildNotifications().forEach(n => readNotifs.add(n.id));
+    saveRead();
+    renderNotifications();
+  });
+  ['notifSearch', 'filterNotifType', 'filterNotifStatus'].forEach(id => {
+    $(id)?.addEventListener('input', renderNotifications);
+    $(id)?.addEventListener('change', renderNotifications);
+  });
+
+  /* ───────────────────────── Messages ───────────────────────── */
+  const inbox = $('messageInboxList');
+  if (inbox) {
+    inbox.innerHTML = '<p class="notif-empty">No messages yet. Website enquiries currently arrive on WhatsApp and email.</p>';
+  }
+  const noMsg = $('noMessageSelected');
+  if (noMsg) {
+    noMsg.querySelector('h3').textContent = 'Inbox not connected yet';
+    noMsg.querySelector('p').textContent = 'The contact form hands messages to WhatsApp or email. A messaging backend is needed before they can appear here.';
+  }
+  const composeModal = $('messageModalOverlay');
+  const closeCompose = () => { composeModal.classList.add('hidden'); document.body.style.overflow = ''; };
+  $('composeMessageBtn')?.addEventListener('click', () => { composeModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; });
+  $('closeMessageBtn')?.addEventListener('click', closeCompose);
+  $('cancelComposeBtn')?.addEventListener('click', closeCompose);
+  composeModal?.addEventListener('click', e => { if (e.target === composeModal) closeCompose(); });
+  $('sendComposeBtn')?.addEventListener('click', () => {
+    closeCompose();
+    showToast('Messaging isn’t connected yet — please send this by WhatsApp or email for now.', true);
+  });
+
+  /* ───────────────────────── Review modal ───────────────────────── */
+  const reviewModal = $('reviewModalOverlay');
+  let reviewingId = null;
+  function openReviewModal(userId) {
+    const u = getUsers().find(x => x.id === userId);
+    if (!u) return;
+    reviewingId = userId;
+    const r = u.registration || {};
+    $('modalUserId').textContent = `ID: ${u.identifier}`;
+    $('modalProfileImg').src = u.profileImage || '../images/default-avatar.svg';
+    $('modalProfileImg').alt = u.profileImage ? `Passport photo of ${u.fullName}` : 'No photo uploaded';
+    $('modalRoleIndicator').textContent = roleLabel(u.role);
+    $('modalFullName').textContent = u.fullName;
+    $('modalEmail').textContent = u.email || '—';
+    $('modalRegDate').textContent = fmtDate(u.createdAt);
+    $('detailFullName').textContent = u.fullName;
+    $('detailEmail').textContent = u.email || '—';
+    $('detailPhone').textContent = u.phoneNumber || '—';
+    $('detailRole').textContent = `${roleLabel(u.role)} · ${STATUS_LABEL[u.status] || u.status}`;
+
+    const rows = u.role === 'student' ? [
+      ['Course', courseName(u)], ['Schedule', r.schedule], ['Date of Birth', r.dob ? fmtDate(r.dob) : ''], ['Gender', r.gender],
+      ['Address', r.address], ['State / LGA', [r.stateOfOrigin, r.lga].filter(Boolean).join(' / ')], ['School', r.school],
+      ['Class / Level', r.classLevel], ['Exam Year', r.examYear], ['Guardian', [r.guardianName, r.relationship].filter(Boolean).join(' — ')],
+      ['Guardian Phone', r.guardianPhone], ['Heard About Us', r.heardAbout]
+    ] : [['Subject', u.subject], ['Identifier', u.identifier]];
+    $('modalDocsList').innerHTML = `<dl class="review-detail-list">${rows.map(([k, v]) =>
+      `<div><dt>${k}</dt><dd>${esc(v || '—')}</dd></div>`).join('')}</dl>`;
+
+    $('modalApproveBtn').hidden = u.status === 'approved';
+    $('modalRejectBtn').hidden = u.status !== 'pending';
+    reviewModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  const closeReview = () => { reviewModal.classList.add('hidden'); document.body.style.overflow = ''; reviewingId = null; };
+  $('closeReviewBtn')?.addEventListener('click', closeReview);
+  $('modalCancelBtn')?.addEventListener('click', closeReview);
+  reviewModal?.addEventListener('click', e => { if (e.target === reviewModal) closeReview(); });
+  $('modalApproveBtn')?.addEventListener('click', () => { const id = reviewingId; closeReview(); handleUserAction('approve', id); });
+  $('modalRejectBtn')?.addEventListener('click', () => { const id = reviewingId; closeReview(); handleUserAction('reject', id); });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    [reviewModal, receiptModal, composeModal, $('logoutModalOverlay')].forEach(m => m && m.classList.add('hidden'));
+    document.body.style.overflow = '';
+  });
+
+  /* ───────────────────────── Analytics (Chart.js, real data) ───────────────────────── */
+  const charts = {};
+  const BLUE = '#58b0f8';
+  const BLUE_STRONG = '#1668c4';
+  const RED = '#f83838';
+  const PALETTE = [BLUE_STRONG, RED, '#10b981', '#f59e0b', '#8b5cf6', '#58b0f8', '#ec4899', '#64748b'];
+
+  function renderCharts() {
+    if (typeof Chart === 'undefined') {
+      document.querySelectorAll('.chart-wrapper').forEach(w => {
+        if (!w.querySelector('.chart-fallback')) w.insertAdjacentHTML('beforeend', '<p class="chart-fallback">Charts couldn’t load (check your internet connection).</p>');
+      });
+      return;
+    }
+    const dark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const tick = dark ? 'rgba(255,255,255,0.65)' : '#475569';
+    const grid = dark ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)';
+    const users = getUsers().filter(u => u.role !== 'admin');
+    const payments = getPayments().filter(p => p.status === 'success');
+    const now = new Date();
+
+    const months = Array.from({ length: 6 }, (_, i) => new Date(now.getFullYear(), now.getMonth() - 5 + i, 1));
+    const monthLabel = d => d.toLocaleDateString('en-GB', { month: 'short' });
+    const sameMonth = (iso, d) => { const x = new Date(iso); return x.getFullYear() === d.getFullYear() && x.getMonth() === d.getMonth(); };
+    const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(now); d.setDate(d.getDate() - 6 + i); return d; });
+
+    const common = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: tick } },
+        y: { beginAtZero: true, grid: { color: grid }, ticks: { color: tick, precision: 0 } }
+      }
+    };
+    const draw = (id, config) => {
+      const canvas = $(id);
+      if (!canvas) return;
+      charts[id]?.destroy();
+      charts[id] = new Chart(canvas, config);
+    };
+
+    draw('revenueChart', {
+      type: 'line',
+      data: { labels: months.map(monthLabel), datasets: [{ label: 'Revenue (₦)', data: months.map(m => payments.filter(p => sameMonth(p.date, m)).reduce((s, p) => s + Number(p.amount || 0), 0)),
+        borderColor: BLUE_STRONG, backgroundColor: 'rgba(88,176,248,0.25)', fill: true, tension: 0.35, borderWidth: 3, pointRadius: 4, pointBackgroundColor: BLUE_STRONG }] },
+      options: common
+    });
+    draw('registrationChart', {
+      type: 'line',
+      data: { labels: days.map(d => d.toLocaleDateString('en-GB', { weekday: 'short' })), datasets: [
+        { label: 'Students', data: days.map(d => users.filter(u => u.role === 'student' && isoDay(u.createdAt) === isoDay(d.toISOString())).length), borderColor: BLUE_STRONG, tension: 0.35, borderWidth: 2 },
+        { label: 'Teachers', data: days.map(d => users.filter(u => u.role === 'teacher' && isoDay(u.createdAt) === isoDay(d.toISOString())).length), borderColor: RED, tension: 0.35, borderWidth: 2 }
+      ] },
+      options: { ...common, plugins: { legend: { display: true, position: 'top', align: 'end', labels: { color: tick, boxWidth: 12, usePointStyle: true } } } }
+    });
+    const byCourse = {};
+    users.filter(u => u.role === 'student').forEach(u => { const name = courseName(u); byCourse[name] = (byCourse[name] || 0) + 1; });
+    const courseEntries = Object.entries(byCourse).sort((a, b) => b[1] - a[1]).slice(0, 7);
+    draw('courseActivityChart', {
+      type: 'doughnut',
+      data: { labels: courseEntries.length ? courseEntries.map(e => e[0]) : ['No registrations yet'],
+        datasets: [{ data: courseEntries.length ? courseEntries.map(e => e[1]) : [1], backgroundColor: courseEntries.length ? PALETTE : [grid], borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: true, position: 'bottom', labels: { color: tick, boxWidth: 12 } } } }
+    });
+    draw('growthChart', {
+      type: 'bar',
+      data: { labels: months.map(monthLabel), datasets: [{ label: 'New accounts', data: months.map(m => users.filter(u => u.createdAt && sameMonth(u.createdAt, m)).length), backgroundColor: BLUE, borderRadius: 8, maxBarThickness: 36 }] },
+      options: common
+    });
+  }
+  $('refreshChartsBtn')?.addEventListener('click', renderCharts);
+  $('exportReportBtn')?.addEventListener('click', () => {
+    const users = getUsers();
+    const payments = getPayments();
+    downloadCSV('geosolution-report.csv', [
+      ['Metric', 'Value'],
+      ['Students', users.filter(u => u.role === 'student').length],
+      ['Teachers', users.filter(u => u.role === 'teacher').length],
+      ['Pending approvals', users.filter(u => u.status === 'pending').length],
+      ['Confirmed payments', payments.filter(p => p.status === 'success').length],
+      ['Revenue (NGN)', payments.filter(p => p.status === 'success').reduce((s, p) => s + Number(p.amount || 0), 0)],
+      ['Report generated', new Date().toLocaleString('en-GB')]
+    ]);
+  });
+
+  /* ───────────────────────── Settings ───────────────────────── */
+  const settingsTabBtns = document.querySelectorAll('.settings-tab-btn');
+  const settingsPanes = document.querySelectorAll('.settings-pane');
+  settingsTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      settingsTabBtns.forEach(b => b.classList.toggle('active', b === btn));
+      settingsPanes.forEach(pane => pane.classList.toggle('active', pane.id === `pane-${btn.dataset.pane}`));
+    });
+  });
+
+  function setupFileUpload(inputId, areaId, previewId, progressId) {
+    const input = $(inputId);
+    const area = $(areaId);
+    const preview = $(previewId);
+    const progress = $(progressId);
+    if (!input || !area) return;
+    const handle = file => {
+      if (!file || !file.type.startsWith('image/')) return showToast('Please choose an image file.', true);
+      const bar = progress.querySelector('.progress-bar');
+      progress.style.display = 'block';
+      bar.style.width = '30%';
+      const reader = new FileReader();
+      reader.onload = e => {
+        bar.style.width = '100%';
+        const img = preview.querySelector('img');
+        if (img) img.src = e.target.result;
+        setTimeout(() => { progress.style.display = 'none'; }, 400);
       };
-
-      // 3. Redirect to login page
-      setTimeout(() => {
-        window.location.href = 'login2.html';
-      }, 1500); // 1.5s delay to show the nice animation
-    });
+      reader.readAsDataURL(file);
+    };
+    area.addEventListener('click', () => input.click());
+    area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+    area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+    area.addEventListener('drop', e => { e.preventDefault(); area.classList.remove('dragover'); handle(e.dataTransfer.files[0]); });
+    input.addEventListener('change', () => handle(input.files[0]));
   }
-});
+  setupFileUpload('schoolLogoInput', 'schoolLogoUploadArea', 'schoolLogoPreview', 'schoolLogoProgress');
+  setupFileUpload('adminAvatarInput', 'adminAvatarUploadArea', 'adminAvatarPreview', 'adminAvatarProgress');
 
+  const darkToggle = $('settingsDarkModeToggle');
+  const syncDarkToggle = () => { if (darkToggle) darkToggle.checked = document.documentElement.getAttribute('data-theme') === 'dark'; };
+  syncDarkToggle();
+  darkToggle?.addEventListener('change', () => {
+    const wantDark = darkToggle.checked;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (wantDark !== isDark) $('themeToggle')?.click();
+  });
+  $('themeToggle')?.addEventListener('click', () => setTimeout(() => {
+    syncDarkToggle();
+    if (document.getElementById('analyticsSection').classList.contains('active')) renderCharts();
+  }, 50));
+
+  document.querySelectorAll('.color-option').forEach(option => {
+    option.addEventListener('click', () => {
+      document.querySelectorAll('.color-option').forEach(o => o.classList.toggle('active', o === option));
+      document.documentElement.style.setProperty('--accent-color', option.style.background);
+      showToast(`Accent colour updated to ${option.dataset.color}.`);
+    });
+  });
+
+  $('settingsSearch')?.addEventListener('input', e => {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll('.settings-pane .form-group, .settings-pane .settings-toggle-group').forEach(group => {
+      group.style.display = group.innerText.toLowerCase().includes(term) ? '' : 'none';
+    });
+  });
+
+  document.querySelectorAll('.btn-save').forEach(btn => {
+    const label = btn.textContent;
+    btn.addEventListener('click', () => {
+      const section = btn.dataset.section || 'Settings';
+      if (section === 'Admin Profile') {
+        const name = $('adminFullName').value.trim();
+        const email = $('adminEmail').value.trim();
+        const pass = $('newPassword').value;
+        const confirmPass = $('confirmPassword').value;
+        if (name.length < 2) return showToast('Please enter your full name.', true);
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return showToast('Please enter a valid email address.', true);
+        if (pass && pass.length < 6) return showToast('The new password needs at least 6 characters.', true);
+        if (pass !== confirmPass) return showToast('The new passwords don’t match.', true);
+        const changes = { fullName: name, email, avatar: initials(name) };
+        if (pass) changes.password = pass;
+        const updated = updateUser(admin.id, changes);
+        if (updated) {
+          GeoAuth.setCurrentUser(updated);
+          $('adminName').textContent = updated.fullName;
+          $('adminAvatarInitials').textContent = updated.avatar;
+          $('newPassword').value = '';
+          $('confirmPassword').value = '';
+        }
+        return showToast('Your profile has been updated.');
+      }
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = label;
+        showToast(`${section} saved on this device.`);
+      }, 700);
+    });
+  });
+  document.querySelectorAll('.btn-reset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm('Reset these settings to their defaults?')) showToast('Settings reset to default.');
+    });
+  });
+
+  /* ───────────────────────── Logout ───────────────────────── */
+  const logoutModal = $('logoutModalOverlay');
+  $('logoutBtn')?.addEventListener('click', e => {
+    e.preventDefault();
+    const modalName = logoutModal.querySelector('.logout-admin-name');
+    if (modalName) modalName.textContent = $('adminName').textContent;
+    logoutModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  });
+  const closeLogout = () => { logoutModal.classList.add('hidden'); document.body.style.overflow = ''; };
+  $('cancelLogoutBtn')?.addEventListener('click', closeLogout);
+  logoutModal?.addEventListener('click', e => { if (e.target === logoutModal) closeLogout(); });
+  $('confirmLogoutBtn')?.addEventListener('click', () => {
+    $('logoutLoading')?.classList.add('active');
+    localStorage.removeItem('geo_session');
+    sessionStorage.clear();
+    setTimeout(() => { window.location.replace('login2.html'); }, 900);
+  });
+
+  /* ───────────────────────── Keep in sync ───────────────────────── */
+  function refreshAll() {
+    fillCourseFilter();
+    fillTeacherSubjectFilter();
+    renderStats();
+    renderPending();
+    renderStudents();
+    renderTeachers();
+    renderPayments();
+    renderUsers();
+    renderCourses();
+    renderNotifications();
+    if ($('analyticsSection').classList.contains('active')) renderCharts();
+  }
+  // Another tab (e.g. a student registering or paying) changed the data
+  window.addEventListener('storage', e => {
+    if (['geo_users', 'geoPaymentHistory'].includes(e.key)) refreshAll();
+  });
+
+  refreshAll();
+});

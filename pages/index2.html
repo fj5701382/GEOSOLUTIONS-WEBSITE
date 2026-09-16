@@ -3,42 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#1e3a8a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>GEO ACADEMY — Student Results Portal</title>
-<link rel="stylesheet" href="../css/style2.css">
-<link rel="stylesheet" href="../css/auth.css">
-<link rel="stylesheet" href="../css/animations.css">
-<script src="../js/theme.js"></script>
-  <link rel="stylesheet" href="../css/inline-styles.css">
+  <meta name="theme-color" content="#1668c4">
+  <title>Student Portal Login — Geosolution Educational Services</title>
+  <meta name="description" content="Log in to the Geosolution Student Portal to view your results, profile, payments and learning updates.">
+  <link rel="canonical" href="https://www.geoeduservices.com/pages/login2.html">
+  <meta property="og:title" content="Student Portal Login — Geosolution Educational Services">
+  <meta property="og:description" content="Log in to the Geosolution Student Portal to view your results, profile, payments and learning updates.">
+  <meta property="og:image" content="https://www.geoeduservices.com/images/og-image.jpg">
+  <meta property="og:url" content="https://www.geoeduservices.com/pages/login2.html">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../css/style2.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <script src="../js/theme.js"></script>
 </head>
 <body>
+<a href="#loginForm" class="skip-link">Skip to login form</a>
 <div class="auth-page">
-          <button class="theme-toggle geo-inline-30" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
-          <span class="slider">
-            <span class="slider-icon sun">☀️</span>
-            <span class="slider-icon moon">🌙</span>
-          </span>
-        </button>
-  <!-- LEFT PANEL -->
-  <div class="auth-left">
+    <button class="theme-toggle auth-theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+      <span class="slider"><span class="slider-icon sun" aria-hidden="true">☀️</span><span class="slider-icon moon" aria-hidden="true">🌙</span></span>
+    </button>
+  <main class="auth-left">
     <div class="auth-logo-wrap">
-    <a href="index.html" class="nav-logo">
-    <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
-
+      <a href="index.html" class="auth-logo" aria-label="Geosolution Educational Services — back to website">
+        <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services"></picture><picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture>
       </a>
+      <a href="index.html" class="auth-back-link"><span aria-hidden="true">←</span> Back to website</a>
     </div>
 
     <div class="auth-card">
       <h1 class="auth-heading">Welcome <span>Back!</span></h1>
-      <p class="auth-subheading">Log in to your account to continue.</p>
+      <p class="auth-subheading">Log in to the Student Portal to continue.</p>
 
-      <div id="errorMessage" class="error-message"></div>
+      <div id="errorMessage" class="error-message" role="alert" aria-live="assertive"></div>
 
       <form id="loginForm" novalidate>
         <div class="form-group">
-          <label for="roleSelect" class="form-label">Select Role</label>
+          <label for="roleSelect" class="form-label">I am a</label>
           <select id="roleSelect" class="form-control" required>
             <option value="student">🎓 Student</option>
             <option value="teacher">📚 Teacher</option>
@@ -48,41 +52,24 @@
         </div>
 
         <div class="form-group">
-          <label for="identifier" class="form-label">Identifier</label>
-          <input
-            type="text"
-            id="identifier"
-            class="form-control"
-            placeholder="Enter REG NUMBER (e.g. GEO/2024/001)"
-            autocomplete="username"
-            required
-          >
+          <label for="identifier" class="form-label">Reference / Reg Number</label>
+          <input type="text" id="identifier" class="form-control" placeholder="e.g. GEO-2026-12345" autocomplete="username" autocapitalize="characters" required>
         </div>
 
         <div class="form-group">
           <label for="password" class="form-label">Password</label>
           <div class="input-group">
-            <input
-              type="password"
-              id="password"
-              class="form-control"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              required
-            >
-            <button type="button" id="togglePassword" class="input-suffix" title="Toggle password">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" autocomplete="current-password" required>
+            <button type="button" id="togglePassword" class="input-suffix" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
         </div>
 
-        <div class="form-group form-checkbox">
-          <input
-            type="checkbox"
-            id="rememberPassword"
-            class="checkbox-input"
-          >
-          <label for="rememberPassword" class="checkbox-label">Remember my credentials</label>
+        <div class="auth-options">
+          <div class="form-checkbox">
+            <input type="checkbox" id="rememberPassword" class="checkbox-input">
+            <label for="rememberPassword" class="checkbox-label">Remember me</label>
+          </div>
+          <a href="https://wa.me/2347014673935?text=Hello%20Geosolution%2C%20I%20need%20help%20resetting%20my%20Student%20Portal%20password.%20My%20reference%20%2F%20reg%20number%20is%3A%20" target="_blank" rel="noopener" class="auth-forgot">Forgot password?</a>
         </div>
 
         <button type="submit" id="loginBtn" class="btn-primary">
@@ -91,13 +78,13 @@
       </form>
 
       <div class="auth-footer">
-<a href="register2.html">Create Account</a>
+        <p>New student? <a href="register2.html">Register now</a></p>
+        <p>Teacher or admin? <a href="register-staff.html">Create a staff account</a></p>
       </div>
     </div>
-  </div>
-
+  </main>
   <!-- RIGHT PANEL -->
-  <div class="auth-right">
+  <aside class="auth-right">
     <div class="auth-right-bg">
       <div class="bg-grid"></div>
       <div class="bg-orb bg-orb-1"></div>
@@ -134,7 +121,7 @@
       <div class="feature-chip"><span>🔒</span> Secure Access</div>
       <div class="feature-chip"><span>📱</span> Mobile Friendly</div>
     </div>
-  </div>
+  </aside>
 </div>
 
 <script src="../js/mockUsers.js"></script>

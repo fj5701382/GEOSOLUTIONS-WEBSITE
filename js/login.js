@@ -19,13 +19,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Dynamic placeholder based on role
   const placeholders = {
-    student: "Enter REG NUMBER (e.g. GEO/2024/001)",
-    teacher: "Enter Email Address",
-    admin: "Enter Admin Code"
+    student: "e.g. GEO-2026-12345 or GEO/2024/001",
+    teacher: "Enter your email address",
+    admin: "Enter your admin code"
   };
+  const labels = {
+    student: "Reference / Reg Number",
+    teacher: "Email Address",
+    admin: "Admin Code"
+  };
+  const identifierLabel = document.querySelector('label[for="identifier"]');
 
   roleSelect.addEventListener("change", () => {
     identifierInput.placeholder = placeholders[roleSelect.value] || "Enter Identifier";
+    if (identifierLabel) identifierLabel.textContent = labels[roleSelect.value] || "Identifier";
+    identifierInput.inputMode = roleSelect.value === "teacher" ? "email" : "text";
     identifierInput.value = "";
     hideError();
   });
@@ -34,6 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
   togglePassword.addEventListener("click", () => {
     const type = passwordInput.type === "password" ? "text" : "password";
     passwordInput.type = type;
+    togglePassword.setAttribute("aria-label", type === "password" ? "Show password" : "Hide password");
+    togglePassword.setAttribute("aria-pressed", String(type === "text"));
     togglePassword.innerHTML = type === "password"
       ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
       : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
@@ -51,7 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const rememberMe = rememberPasswordCheckbox.checked;
 
     if (!identifier || !password) {
-      showError("Please fill in all fields.");
+      showError(!identifier
+        ? `Please enter your ${(labels[role] || "identifier").toLowerCase()}.`
+        : "Please enter your password.");
       return;
     }
 
@@ -66,13 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (!user) {
-        showError("Invalid credentials. Please check your role, identifier, and password.");
+        showError("We couldn't log you in. Check that you've chosen the right role and that your details and password are correct.");
         setLoading(false);
         return;
       }
 
       if (user.status === "pending") {
-        showError("Your account is awaiting admin approval. Please check back later.");
+        showError("Your registration is still awaiting admin approval. You'll be able to log in once it's approved — contact us on WhatsApp if it's urgent.");
         setLoading(false);
         return;
       }

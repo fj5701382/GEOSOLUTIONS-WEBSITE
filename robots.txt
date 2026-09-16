@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /php/
+Disallow: /pages/student-dashboard2.html
+Disallow: /pages/teacher-dashboard2.html
+Disallow: /pages/admin-dashboard2.html
+
+Sitemap: https://www.geoeduservices.com/sitemap.xml

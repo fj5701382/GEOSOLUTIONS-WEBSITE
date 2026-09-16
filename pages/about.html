@@ -1,287 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Us — Geosolution Educational Services</title>
-  <meta name="description" content="Learn about Geosolution Educational Services — empowering students since 2012 in Lagos, Nigeria." />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<script src="../js/theme.js"></script>
-  <link rel="stylesheet" href="../css/inline-styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>About Us — Geosolution Educational Services, Lagos</title>
+  <meta name="description" content="Since 2012, Geosolution Educational Services has trained thousands of students in Lagos through exam coaching, admission support and GeoTech Academy.">
+  <link rel="canonical" href="https://www.geoeduservices.com/pages/about.html">
+  <meta name="theme-color" content="#1668c4">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Geosolution Educational Services">
+  <meta property="og:title" content="About Us — Geosolution Educational Services, Lagos">
+  <meta property="og:description" content="Since 2012, Geosolution Educational Services has trained thousands of students in Lagos through exam coaching, admission support and GeoTech Academy.">
+  <meta property="og:image" content="https://www.geoeduservices.com/images/og-image.jpg">
+  <meta property="og:url" content="https://www.geoeduservices.com/pages/about.html">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
+  <header class="navbar">
     <div class="container nav-inner">
-      <a href="../index.html" class="nav-logo">
-      <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
-
+      <a href="index.html" class="nav-logo" aria-label="Geosolution Educational Services — Home">
+        <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services"></picture><picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture>
       </a>
-      <ul class="nav-menu">
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="../index.html#services">Services</a></li>
-        <li><a href="about.html" class="active">About</a></li>
-        <li><a href="services.html">Courses</a></li>
-        <li><a href="techhub.html">Tech Hub</a></li>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html" class="active" aria-current="page">About Us</a></li>
+          <li class="nav-dropdown">
+            <button type="button" class="nav-dropdown-toggle" aria-expanded="false" aria-controls="programs-menu">
+              Programs <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <ul class="dropdown-menu" id="programs-menu">
+            <li><a href="courses/jamb-preparation.html"><i class="fas fa-book-open" aria-hidden="true"></i> JAMB / UTME Preparation</a></li>
+            <li><a href="courses/waec-neco.html"><i class="fas fa-pen-to-square" aria-hidden="true"></i> WAEC / NECO Coaching</a></li>
+            <li><a href="courses/ielts-training.html"><i class="fas fa-earth-africa" aria-hidden="true"></i> IELTS Training</a></li>
+            <li><a href="courses/cbt-training.html"><i class="fas fa-computer" aria-hidden="true"></i> CBT Training</a></li>
+            <li><a href="courses/admission-processing.html"><i class="fas fa-building-columns" aria-hidden="true"></i> Admission Processing</a></li>
+            <li class="dropdown-divider" role="separator"></li>
+            <li><a href="programs.html"><i class="fas fa-chess-knight" aria-hidden="true"></i> Special Programs (NSCC &amp; JOT)</a></li>
+            <li><a href="services.html" class="dropdown-all"><i class="fas fa-arrow-right" aria-hidden="true"></i> All Programs &amp; Courses</a></li>
+            </ul>
+          </li>
+          <li><a href="techhub.html">GeoTech Academy</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+          <span class="slider"><span class="slider-icon sun" aria-hidden="true">☀️</span><span class="slider-icon moon" aria-hidden="true">🌙</span></span>
+        </button>
+        <a href="register2.html" class="btn btn-primary btn-sm">Register Now</a>
+        <a href="login2.html" class="btn btn-accent btn-sm"><i class="fas fa-user-graduate" aria-hidden="true"></i> Student Portal</a>
+        <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav-backdrop" id="navBackdrop"></div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <div class="mobile-nav-header">
+      <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture><picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture>
+      <button class="mobile-nav-close" id="mobileNavClose" type="button" aria-label="Close menu"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <div class="mobile-nav-body">
+      <div class="mobile-nav-ctas">
+        <a href="register2.html" class="btn btn-primary"><i class="fas fa-user-plus" aria-hidden="true"></i> Register Now</a>
+        <a href="login2.html" class="btn btn-accent"><i class="fas fa-user-graduate" aria-hidden="true"></i> Student Portal</a>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html" class="active" aria-current="page">About Us</a></li>
+        <li>
+          <details>
+            <summary>Programs <i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+            <div class="mobile-subnav">
+              <a href="courses/jamb-preparation.html"><i class="fas fa-book-open" aria-hidden="true"></i> JAMB / UTME Preparation</a>
+              <a href="courses/waec-neco.html"><i class="fas fa-pen-to-square" aria-hidden="true"></i> WAEC / NECO Coaching</a>
+              <a href="courses/ielts-training.html"><i class="fas fa-earth-africa" aria-hidden="true"></i> IELTS Training</a>
+              <a href="courses/cbt-training.html"><i class="fas fa-computer" aria-hidden="true"></i> CBT Training</a>
+              <a href="courses/admission-processing.html"><i class="fas fa-building-columns" aria-hidden="true"></i> Admission Processing</a>
+              <a href="programs.html"><i class="fas fa-chess-knight" aria-hidden="true"></i> Special Programs (NSCC &amp; JOT)</a>
+              <a href="services.html"><i class="fas fa-arrow-right" aria-hidden="true"></i> All Programs &amp; Courses</a>
+            </div>
+          </details>
+        </li>
+        <li><a href="techhub.html">GeoTech Academy</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="payment.html">Make a Payment</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
-          <span class="slider">
-            <span class="slider-icon sun">☀️</span>
-            <span class="slider-icon moon">🌙</span>
-          </span>
-        </button>
-        <a href="contact.html" class="btn btn-outline geo-inline-4">Sign In</a>
-        <a href="contact.html" class="btn btn-primary geo-inline-4">Sign Up</a>
-      </div>
-      <button class="hamburger" aria-label="Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
     </div>
-  </nav>
-
-  <!-- Mobile Nav Overlay -->
-  <nav class="mobile-nav">
-    <a href="../index.html" class="nav-link">Home</a>
-    <a href="../index.html#services" class="nav-link">Services</a>
-    <a href="about.html" class="nav-link">About</a>
-    <a href="services.html" class="nav-link">Courses</a>
-    <a href="techhub.html" class="nav-link">Tech Hub</a>
-    <a href="contact.html" class="nav-link">Contact</a>
     <div class="mobile-nav-footer">
-      <a href="index2.html" class="btn btn-outline w-full geo-inline-2">Sign In</a>
-      <a href="register2.html" class="btn btn-primary w-full geo-inline-3">Sign Up</a>
+      <a href="tel:+2347014673935"><i class="fas fa-phone" aria-hidden="true"></i> Call us</a>
+      <a href="https://wa.me/2347014673935" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp</a>
     </div>
   </nav>
 
-  <!-- PAGE HERO -->
-  <section class="page-hero">
-    <div class="container">
-      <div class="breadcrumb">
-        <a href="../index.html">Home</a>
-        <span>/</span>
-        <span>About Us</span>
+  <main id="main-content" tabindex="-1">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">About Us</li></ol></nav>
+        <h1>About Geosolution</h1>
+        <p>Committed to academic excellence and human capital development since October 2012.</p>
       </div>
-      <h1>About Geosolution</h1>
-      <p>Committed to academic excellence and human capital development since October 2012.</p>
-    </div>
-  </section>
+    </section>
 
-  <!-- MISSION / VISION / VALUES -->
-  <section class="about-mission">
-    <div class="container">
-      <div class="reveal geo-inline-5">
-        <span class="section-label">Our Foundation</span>
-        <h2 class="section-title">Our Mission, Vision & Values</h2>
-        <p class="section-subtitle">Everything we do is driven by a passion for transforming students' lives.</p>
-      </div>
-      <div class="mission-grid">
-        <div class="mission-card reveal">
-          <div class="mc-icon"><i class="fas fa-bullseye"></i></div>
-          <h3>Our Mission</h3>
-          <p>To provide quality, affordable education and skill development that empowers Nigerian students to excel academically and professionally in a competitive global environment.</p>
+    <section class="section" aria-labelledby="mission-title">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-label">Our Foundation</span>
+          <h2 class="section-title" id="mission-title">Our Mission, Vision &amp; Values</h2>
+          <p class="section-subtitle">Everything we do is driven by a passion for transforming students' lives.</p>
         </div>
-        <div class="mission-card reveal">
-          <div class="mc-icon"><i class="fas fa-eye"></i></div>
-          <h3>Our Vision</h3>
-          <p>To become Nigeria's most trusted and innovative educational services provider, recognized for producing well-rounded, tech-savvy, and academically excellent graduates.</p>
-        </div>
-        <div class="mission-card reveal">
-          <div class="mc-icon"><i class="fas fa-heart"></i></div>
-          <h3>Our Values</h3>
-          <p>Excellence, Integrity, Innovation, Inclusivity. We believe every student deserves access to quality education and the tools to succeed — regardless of background.</p>
+        <div class="mission-grid">
+          <article class="card mission-card reveal"><div class="icon-tile" aria-hidden="true"><i class="fas fa-bullseye"></i></div><h3>Our Mission</h3><p>To provide quality, affordable education and skill development that empowers Nigerian students to excel academically and professionally in a competitive global environment.</p></article>
+          <article class="card mission-card reveal"><div class="icon-tile" aria-hidden="true"><i class="fas fa-eye"></i></div><h3>Our Vision</h3><p>To become Nigeria's most trusted and innovative educational services provider, recognised for producing well-rounded, tech-savvy and academically excellent graduates.</p></article>
+          <article class="card mission-card reveal"><div class="icon-tile" aria-hidden="true"><i class="fas fa-heart"></i></div><h3>Our Values</h3><p>Excellence, Integrity, Innovation, Inclusivity. We believe every student deserves access to quality education and the tools to succeed — regardless of background.</p></article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- OUR STORY -->
-  <section class="about-story">
-    <div class="container about-story-inner">
-      <div class="reveal">
-        <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80" 
-             alt="Geosolution classroom" 
-             / class="geo-inline-6">
+    <section class="section section-alt" aria-labelledby="story-title">
+      <div class="container split">
+        <div class="split-media reveal">
+          <picture><source type="image/webp" srcset="../images/img21-600.webp 600w, ../images/img21.webp 1200w" sizes="(max-width: 768px) 100vw, 50vw"><img src="../images/img21.jpeg" srcset="../images/img21-600.jpeg 600w, ../images/img21.jpeg 1200w" sizes="(max-width: 768px) 100vw, 50vw" width="1200" height="667" alt="The Geosolution team of tutors and staff at the centre in Lagos" loading="lazy" decoding="async"></picture>
+        </div>
+        <div class="story-text reveal">
+          <span class="section-label">Our Story</span>
+          <h2 class="section-title" id="story-title">From Humble Beginnings to Over <span data-stat="studentsTrainedCount" data-suffix="">6,000</span> Students</h2>
+          <p>Geosolution Educational Services commenced operations on <strong>October 22, 2012</strong>, with a strong commitment to academic excellence and human capital development. Founded by passionate educators who identified the gap in quality, affordable exam preparation in Lagos, we set out to change the narrative for Nigerian students.</p>
+          <p>Over the years, we have expanded our services from JAMB coaching to a full suite of educational offerings including WAEC/NECO preparation, IELTS coaching, university admission processing, and our flagship GeoTech Academy for digital skills training.</p>
+          <p>Today, we operate from our centre at <strong>12 Abayomi Street, Ikorodu Road, Lagos</strong>. With a <span data-stat="examPassRate" data-suffix="%">95%</span> exam pass rate and over <span data-stat="techGraduatesCount" data-suffix="">300</span> tech graduates, we remain unwavering in our commitment to transforming lives through education.</p>
+          <a href="contact.html" class="btn btn-primary mt-1">Get In Touch <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
       </div>
-      <div class="about-story-text reveal">
-        <span class="section-label">Our Story</span>
-        <h2 class="section-title">From Humble Beginnings to Over 1,000 Students</h2>
-        <p>
-          Geosolution Educational Services commenced operations on <strong>October 22, 2012</strong>, 
-          with a strong commitment to academic excellence and human capital development. 
-          Founded by passionate educators who identified the gap in quality, affordable exam preparation 
-          in Lagos, we set out to change the narrative for Nigerian students.
-        </p>
-        <p>
-          Over the years, we have expanded our services from simple JAMB coaching to a full suite of 
-          educational offerings including WAEC/NECO preparation, IELTS coaching, university admission 
-          processing, and our flagship GeoTech Academy for digital skills training.
-        </p>
-        <p>
-          Today, we operate from our centre at <strong>12 Abayomi Street, Ikorodu Road, Lagos</strong>, 
-          serving hundreds of students annually. With a 95% exam pass rate and over 300 tech graduates, 
-          we remain unwavering in our commitment to transforming lives through education.
-        </p>
-        <a href="contact.html" class="btn btn-primary geo-inline-7">Get In Touch <i class="fas fa-arrow-right"></i></a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ACHIEVEMENTS -->
-  <section class="achievements">
-    <div class="container">
-      <div class="achievements-inner">
-        <div class="ach-item reveal">
-          <strong><span data-count="1000" data-suffix="+">0+</span></strong>
-          <span>Students Trained</span>
-        </div>
-        <div class="ach-item reveal">
-          <strong><span data-count="300" data-suffix="+">0+</span></strong>
-          <span>Tech Graduates</span>
-        </div>
-        <div class="ach-item reveal">
-          <strong><span data-count="95" data-suffix="%">0%</span></strong>
-          <span>Exam Pass Rate</span>
-        </div>
-        <div class="ach-item reveal">
-          <strong><span data-count="12">0</span></strong>
-          <span>Years of Excellence</span>
-        </div>
+    <section class="achievements" aria-label="Our achievements">
+      <div class="container">
+        <ul class="achievements-inner">
+          <li class="ach-item"><strong><span data-stat="studentsTrainedCount" data-suffix="+">6,000+</span></strong><span>Students Trained</span></li>
+          <li class="ach-item"><strong><span data-stat="techGraduatesCount" data-suffix="+">300+</span></strong><span>Tech Graduates</span></li>
+          <li class="ach-item"><strong><span data-stat="examPassRate" data-suffix="%">95%</span></strong><span>Exam Pass Rate</span></li>
+          <li class="ach-item"><strong><span data-stat="yearsOfOperation" data-suffix="">14</span></strong><span>Years of Excellence</span></li>
+        </ul>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TEAM -->
-  <section class="team-section">
-    <div class="container">
-      <div class="reveal geo-inline-8">
-        <span class="section-label">Our Team</span>
-        <h2 class="section-title">Meet the People Behind Geosolution</h2>
-        <p class="section-subtitle">Dedicated educators and tech professionals committed to your success.</p>
-      </div>
-      <div class="team-grid">
-        <div class="team-card reveal">
-          <div class="team-avatar"><i class="fas fa-user-tie"></i></div>
-          <h3>Director / Founder</h3>
-          <p>Geosolution Educational Services</p>
+    <section class="section" aria-labelledby="team-title">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-label">Our Team</span>
+          <h2 class="section-title" id="team-title">Meet the People Behind Geosolution</h2>
+          <p class="section-subtitle">Dedicated educators and tech professionals committed to your success.</p>
         </div>
-        <div class="team-card reveal">
-          <div class="team-avatar"><i class="fas fa-chalkboard-teacher"></i></div>
-          <h3>Head of Academics</h3>
-          <p>JAMB, WAEC & NECO Lead Tutor</p>
-        </div>
-        <div class="team-card reveal">
-          <div class="team-avatar"><i class="fas fa-laptop-code"></i></div>
-          <h3>Tech Hub Lead</h3>
-          <p>GeoTech Academy Director</p>
-        </div>
-        <div class="team-card reveal">
-          <div class="team-avatar"><i class="fas fa-globe"></i></div>
-          <h3>IELTS Coordinator</h3>
-          <p>International Exams Specialist</p>
+        <div class="team-grid">
+          <article class="card team-card reveal"><div class="team-avatar" aria-hidden="true"><i class="fas fa-user-tie"></i></div><h3>Director / Founder</h3><p>Geosolution Educational Services</p></article>
+          <article class="card team-card reveal"><div class="team-avatar" aria-hidden="true"><i class="fas fa-chalkboard-user"></i></div><h3>Head of Academics</h3><p>JAMB, WAEC &amp; NECO Lead Tutor</p></article>
+          <article class="card team-card reveal"><div class="team-avatar" aria-hidden="true"><i class="fas fa-laptop-code"></i></div><h3>Tech Hub Lead</h3><p>GeoTech Academy Director</p></article>
+          <article class="card team-card reveal"><div class="team-avatar" aria-hidden="true"><i class="fas fa-earth-africa"></i></div><h3>IELTS Coordinator</h3><p>International Exams Specialist</p></article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- WHY CHOOSE US -->
-  <section class="geo-inline-9">
-    <div class="container">
-      <div class="reveal geo-inline-8">
-        <span class="section-label">Why Geosolution</span>
-        <h2 class="section-title">Why Students Choose Us</h2>
-      </div>
-      <div class="services-grid">
-        <div class="service-card reveal">
-          <div class="service-icon"><i class="fas fa-award"></i></div>
-          <h3>Proven Results</h3>
-          <p>95% exam pass rate across all subjects</p>
+    <section class="section section-alt" aria-labelledby="why-title">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-label">Why Geosolution</span>
+          <h2 class="section-title" id="why-title">Why Students Choose Us</h2>
         </div>
-        <div class="service-card reveal">
-          <div class="service-icon"><i class="fas fa-users"></i></div>
-          <h3>Small Classes</h3>
-          <p>Personalised attention for every student</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon"><i class="fas fa-wallet"></i></div>
-          <h3>Affordable Fees</h3>
-          <p>Quality education at accessible prices</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon"><i class="fas fa-map-marker-alt"></i></div>
-          <h3>Central Location</h3>
-          <p>Easily accessible on Ikorodu Road, Lagos</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon"><i class="fas fa-certificate"></i></div>
-          <h3>Certified Programs</h3>
-          <p>Nationally recognized training certifications</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon"><i class="fas fa-headset"></i></div>
-          <h3>24/7 Support</h3>
-          <p>Dedicated student support team always available</p>
+        <div class="services-grid">
+          <article class="card reveal"><div class="icon-tile mb-2" aria-hidden="true"><i class="fas fa-award"></i></div><h3>Proven Results</h3><p><span data-stat="examPassRate" data-suffix="%">95%</span> exam pass rate across our programs.</p></article>
+          <article class="card reveal"><div class="icon-tile mb-2" aria-hidden="true"><i class="fas fa-users"></i></div><h3>Small Classes</h3><p>Personalised attention for every student.</p></article>
+          <article class="card reveal"><div class="icon-tile mb-2" aria-hidden="true"><i class="fas fa-wallet"></i></div><h3>Affordable Fees</h3><p>Quality education at accessible prices.</p></article>
+          <article class="card reveal"><div class="icon-tile mb-2" aria-hidden="true"><i class="fas fa-location-dot"></i></div><h3>Central Location</h3><p>Easily accessible on Ikorodu Road, Lagos.</p></article>
+          <article class="card reveal"><div class="icon-tile mb-2" aria-hidden="true"><i class="fas fa-certificate"></i></div><h3>Certified Programs</h3><p>Graduate with a certificate employers recognise.</p></article>
+          <article class="card reveal"><div class="icon-tile mb-2" aria-hidden="true"><i class="fas fa-headset"></i></div><h3>Dedicated Support</h3><p>Friendly help by phone, WhatsApp and email.</p></article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER -->
+    <section class="cta-banner" aria-labelledby="cta-title">
+      <div class="container">
+        <h2 id="cta-title">Ready to Start Your Journey?</h2>
+        <p>Join 6,000+ students achieving their academic and career goals with Geosolution.</p>
+        <div class="cta-buttons">
+          <a href="register2.html" class="btn btn-accent btn-lg">Register Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp" aria-hidden="true"></i> Chat With Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-logo">
-            <div class="nav-logo-icon"><i class="fas fa-graduation-cap"></i></div>
-            <span>GEO<em>SOLUTION</em></span>
-          </div>
-          <p class="footer-desc">Empowering students since 2012 with quality education, tech skills, and career development services in Lagos, Nigeria.</p>
+          <a href="index.html" class="footer-logo" aria-label="Geosolution Educational Services — Home"><picture><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture></a>
+          <p class="footer-desc">A modern education, technology and consultancy company empowering students in Lagos, Nigeria since 2012.</p>
           <div class="footer-socials">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <!-- Add Facebook / Instagram / YouTube links here once official page URLs are confirmed -->
+            <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+            <a href="tel:+2347014673935" aria-label="Call Geosolution"><i class="fas fa-phone" aria-hidden="true"></i></a>
+            <a href="mailto:Geoslutions360@gmail.com" aria-label="Email Geosolution"><i class="fas fa-envelope" aria-hidden="true"></i></a>
           </div>
         </div>
         <div class="footer-col">
-          <h4>Quick Links</h4>
+          <h2>Explore</h2>
           <ul>
-            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
+            <li><a href="techhub.html">GeoTech Academy</a></li>
             <li><a href="services.html">Services</a></li>
-            <li><a href="techhub.html">Tech Hub</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Services</h4>
+          <h2>Programs</h2>
           <ul>
-            <li><a href="services.html">JAMB / UTME</a></li>
-            <li><a href="services.html">WAEC / NECO</a></li>
-            <li><a href="services.html">CBT Training</a></li>
-            <li><a href="services.html">Admission Processing</a></li>
-            <li><a href="services.html">IELTS Coaching</a></li>
+            <li><a href="courses/jamb-preparation.html">JAMB / UTME Prep</a></li>
+            <li><a href="courses/waec-neco.html">WAEC / NECO</a></li>
+            <li><a href="courses/ielts-training.html">IELTS Training</a></li>
+            <li><a href="courses/cbt-training.html">CBT Training</a></li>
+            <li><a href="courses/admission-processing.html">Admission Processing</a></li>
+            <li><a href="programs.html">Special Programs</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Contact Us</h4>
-          <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>12, Abayomi Street, Ikorodu Road, Lagos</span></div>
-          <div class="footer-contact-item"><i class="fas fa-phone"></i><span>+2347014673935<br>+2347061054873</span></div>
-          <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>Geoslutions360@gmail.com</span></div>
+          <h2>Students</h2>
+          <ul>
+            <li><a href="register2.html">Register Now</a></li>
+            <li><a href="login2.html">Student Portal</a></li>
+            <li><a href="payment.html">Make a Payment</a></li>
+            <li><a href="register-staff.html">Staff Registration</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Contact Us</h2>
+          <div class="footer-contact-item"><i class="fas fa-location-dot" aria-hidden="true"></i><span>12, Abayomi Street, Opposite Abeokuta Mosques, Irawo Ajegunle, Ikorodu Road, Lagos</span></div>
+          <div class="footer-contact-item"><i class="fas fa-phone" aria-hidden="true"></i><span><a href="tel:+2347014673935">+234 701 467 3935</a><br><a href="tel:+2347061054873">+234 706 105 4873</a></span></div>
+          <div class="footer-contact-item"><i class="fas fa-envelope" aria-hidden="true"></i><span><a href="mailto:Geoslutions360@gmail.com">Geoslutions360@gmail.com</a><br><a href="mailto:Geotechacademy@gmail.com">Geotechacademy@gmail.com</a></span></div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2024 <span>Geosolution Educational Services</span>. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> Geosolution Educational Services. All rights reserved.</p>
+        <p>Designed with ❤️ in Lagos</p>
       </div>
     </div>
   </footer>
 
-  <div id="scroll-top"><i class="fas fa-chevron-up"></i></div>
-  <script src="../js/script.js"></script>
+  <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat with Geosolution on WhatsApp">
+    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+  </a>
+  <button type="button" id="scroll-top" aria-label="Back to top"><i class="fas fa-chevron-up" aria-hidden="true"></i></button>
+
+  <script src="../js/site-config.js" defer></script>
+  <script src="../js/script.js" defer></script>
 </body>
 </html>

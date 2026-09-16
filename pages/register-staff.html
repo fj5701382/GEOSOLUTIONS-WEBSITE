@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1668c4">
+  <title>Staff Registration — Geosolution Portal</title>
+  <meta name="description" content="Create a teacher or administrator account for the Geosolution Educational Services portal.">
+  <link rel="canonical" href="https://www.geoeduservices.com/pages/register-staff.html">
+  <meta name="robots" content="noindex">
+  <meta property="og:title" content="Staff Registration — Geosolution Portal">
+  <meta property="og:description" content="Create a teacher or administrator account for the Geosolution Educational Services portal.">
+  <meta property="og:image" content="https://www.geoeduservices.com/images/og-image.jpg">
+  <meta property="og:url" content="https://www.geoeduservices.com/pages/register-staff.html">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../css/style2.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+<div class="auth-page">
+    <button class="theme-toggle auth-theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+      <span class="slider"><span class="slider-icon sun" aria-hidden="true">☀️</span><span class="slider-icon moon" aria-hidden="true">🌙</span></span>
+    </button>
+  <!-- LEFT PANEL -->
+  <main class="auth-left">
+    <div class="auth-logo-wrap">
+      <a href="index.html" class="auth-logo" aria-label="Geosolution Educational Services — back to website">
+        <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services"></picture><picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture>
+      </a>
+      <a href="index.html" class="auth-back-link"><span aria-hidden="true">←</span> Back to website</a>
+    </div>
+
+    <div class="auth-card">
+      <h1 class="auth-heading">Staff <span>Registration</span></h1>
+      <p class="auth-subheading">For teachers and administrators. Students should use the <a href="register2.html">student registration form</a>.</p>
+
+      <div id="errorMessage" class="error-message" role="alert" aria-live="assertive"></div>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label for="roleSelect" class="form-label">I am a</label>
+          <select id="roleSelect" class="form-control" required>
+                        <option value="teacher">📚 Teacher</option>
+            <option value="computer">💻 Computer</option>
+            <option value="admin">🛡️ Administrator</option>
+          </select>
+        </div>
+
+        <div class="register-cols">
+          <div class="form-group">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input type="text" id="fullName" class="form-control" placeholder="e.g. Amara Okafor" autocomplete="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" id="email" class="form-control" placeholder="your@email.com" autocomplete="email" inputmode="email" required>
+          </div>
+        </div>
+
+        <div class="register-cols">
+          <div class="form-group">
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input type="tel" id="phoneNumber" class="form-control" placeholder="e.g. +2347014673935" autocomplete="tel" inputmode="tel" required>
+          </div>
+          <div class="form-group student-computer-field">
+            <label for="regDate" class="form-label">Date of Registration</label>
+            <input type="date" id="regDate" class="form-control">
+          </div>
+        </div>
+
+        <!-- Computer Fields -->
+        <div id="computerFields" class="role-extra-fields">
+          <div class="form-group">
+            <label for="program" class="form-label">Program</label>
+            <input type="text" id="program" class="form-control" placeholder="e.g. Web Design">
+          </div>
+        </div>
+        <!-- Student Fields -->
+        <div id="studentFields" class="role-extra-fields">
+          <div class="form-group">
+            <label for="regNumber" class="form-label">REG NUMBER</label>
+            <input type="text" id="regNumber" class="form-control" placeholder="e.g. GEO/2024/001">
+          </div>
+        </div>
+
+        <!-- Teacher Fields -->
+        <div id="teacherFields" class="role-extra-fields">
+          <div class="form-group">
+            <label for="subject" class="form-label">Subject Taught</label>
+            <input type="text" id="subject" class="form-control" placeholder="e.g. Mathematics">
+          </div>
+        </div>
+
+        <!-- Admin Fields -->
+        <div id="adminFields" class="role-extra-fields">
+          <div class="form-group">
+            <label for="adminCode" class="form-label">Admin Code</label>
+            <input type="text" id="adminCode" class="form-control" placeholder="Enter your admin code">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              placeholder="Minimum 6 characters"
+              autocomplete="new-password"
+              required
+            >
+            <button type="button" id="togglePassword" class="input-suffix" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profileImage" class="form-label">Profile Photo</label>
+          <div class="image-upload-wrapper">
+            <input
+              type="file"
+              id="profileImage"
+              class="form-control image-input"
+              accept="image/*"
+              title="Upload a profile image (JPG, PNG, etc.)"
+            >
+            <label for="profileImage" class="image-upload-label">
+              <span class="upload-icon">📷</span>
+              <span class="upload-text">Click to upload photo or drag and drop</span>
+              <span class="upload-hint">PNG, JPG, GIF up to 5MB</span>
+            </label>
+            <div id="imagePreview" class="image-preview" hidden>
+              <img id="previewImg" src="" alt="Preview">
+              <button type="button" id="removeImage" class="remove-image-btn" aria-label="Remove photo">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="registerBtn" class="btn-primary">
+          <span class="btn-text">Create Account</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login2.html">Login here</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="auth-right">
+    <div class="auth-right-bg">
+      <div class="bg-grid"></div>
+      <div class="bg-orb bg-orb-1"></div>
+      <div class="bg-orb bg-orb-2"></div>
+      <div class="bg-orb bg-orb-3"></div>
+      <div class="floating-icons">
+        <div class="float-icon">✏️</div>
+        <div class="float-icon">🎒</div>
+        <div class="float-icon">🏆</div>
+        <div class="float-icon">📝</div>
+        <div class="float-icon">🌍</div>
+      </div>
+    </div>
+
+    <div class="right-illustration">
+      <div class="illus-circle">🎓</div>
+      <div class="illus-title">Join GEO ACADEMY</div>
+      <div class="illus-sub">Create your account and begin your academic journey with us.</div>
+    </div>
+
+    <div class="testimonial-card">
+      <p class="testimonial-quote">The registration was seamless. Once approved by the admin, I had full access to all my academic records and could see my progress in real time.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">CI</div>
+        <div class="author-info">
+          <div class="author-name">Chisom Ibe</div>
+          <div class="author-role">Year 3 Student · GEO/2022/044</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-chips">
+      <div class="feature-chip"><span>⚡</span> Quick Setup</div>
+      <div class="feature-chip"><span>✅</span> Admin Verified</div>
+      <div class="feature-chip"><span>🎯</span> Role Based</div>
+    </div>
+  </aside>
+</div>
+
+<!-- Success Overlay -->
+<div id="successOverlay" class="success-overlay">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h2 class="success-title">Account Created!</h2>
+    <p class="success-body">
+      Welcome, <strong class="success-name"></strong>!<br><br>
+      Your account is currently <strong>pending admin approval</strong>. You will be able to login once an administrator approves your account.
+    </p>
+    <div class="success-actions">
+      <a href="login2.html" class="btn-primary btn-link-block"><span class="btn-text">Go to Login Page</span></a>
+      <button class="btn-secondary" onclick="document.getElementById('successOverlay').classList.remove('visible')">Register Another</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/mockUsers.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/register.js"></script>
+</body>
+</html>

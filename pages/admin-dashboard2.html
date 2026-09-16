@@ -3,23 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#1e3a8a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Admin Dashboard — GEO ACADEMY</title>
+  <meta name="theme-color" content="#1668c4">
+  <meta name="robots" content="noindex">
+  <title>Admin Dashboard — Geosolution Educational Services</title>
+  <link rel="icon" type="image/png" href="../images/favicon.png">
   <link rel="stylesheet" href="../css/style2.css">
   <link rel="stylesheet" href="../css/animations.css">
   <link rel="stylesheet" href="../css/dashboard.css">
-  <script src="../js/auth.js"></script>
-  <script>
-    // Immediate Session Check
-    document.addEventListener('DOMContentLoaded', () => {
-      const user = GeoAuth.getCurrentUser();
-      if (!user || user.role !== 'admin') {
-        window.location.href = 'login2.html';
-      }
-    });
-  </script>
+  <script src="../js/theme.js"></script>
 </head>
 <body>
 <div class="admin-dash-wrapper">
@@ -27,9 +18,9 @@
   <aside class="admin-sidebar admin-glass-panel" id="sidebar">
     <div class="admin-sidebar-header">
       <div class="geo-logo sidebar-logo">
-        <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
+        <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services" class="sidebar-logo-img"></picture><picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" class="sidebar-logo-img" loading="lazy"></picture>
       </div>
-      <button class="mobile-close-btn" id="closeSidebar">✕</button>
+      <button class="mobile-close-btn" id="closeSidebar" aria-label="Close menu">✕</button>
     </div>
 
     <div class="admin-sidebar-nav">
@@ -95,7 +86,7 @@
     <!-- TOP NAVBAR -->
     <header class="admin-topbar admin-glass-panel">
       <div class="admin-topbar-left">
-        <button class="admin-menu-toggle" id="menuToggle">
+        <button class="admin-menu-toggle" id="menuToggle" aria-label="Open menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -104,7 +95,7 @@
         </button>
         <div class="admin-search-bar">
           <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Search dashboard...">
+          <input type="text" id="globalSearch" placeholder="Search users by name, email or ID..." aria-label="Search users">
         </div>
       </div>
 
@@ -117,9 +108,9 @@
         </button>
         
         <div class="admin-notification-container">
-          <button class="admin-notification-btn" id="notifDropdownBtn">
+          <button class="admin-notification-btn" id="notifDropdownBtn" aria-label="Notifications">
             <span class="bell-icon">🔔</span>
-            <span class="notification-badge" id="topbarNotifBadge">5</span>
+            <span class="notification-badge" id="topbarNotifBadge">0</span>
           </button>
           
           <!-- Dropdown Panel -->
@@ -143,7 +134,7 @@
             <span class="admin-role">Super Admin</span>
           </div>
           <div class="admin-avatar" id="adminAvatarContainer">
-            <img src="../images/avatar-placeholder.png" alt="Admin" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect width=\'48\' height=\'48\' fill=\'%233b82f6\'/><text x=\'50%\' y=\'50%\' fill=\'white\' font-size=\'18\' font-family=\'sans-serif\' font-weight=\'bold\' text-anchor=\'middle\' dy=\'.35em\'>AD</text></svg>'">
+            <span class="admin-initials" id="adminAvatarInitials">AD</span>
           </div>
         </div>
       </div>
@@ -154,8 +145,8 @@
       <!-- OVERVIEW SECTION -->
       <div id="overviewSection" class="admin-section active">
         <div class="admin-glass-card welcome-banner">
-          <h2>Welcome back, Administrator! 👋</h2>
-          <p>Here's what's happening at GEO ACADEMY today. This dashboard has been completely redesigned with a glassmorphism and modern blue gradient aesthetic.</p>
+          <h2>Welcome back, <span id="welcomeAdminName">Administrator</span>! 👋</h2>
+          <p>Here's what's happening at Geosolution Educational Services today. <span id="welcomePendingNote"></span></p>
         </div>
 
         <div class="admin-stats-grid">
@@ -165,13 +156,9 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">🎓</span>
               </div>
-              <div class="stat-trend positive">
-                <span class="trend-icon">↑</span>
-                <span class="trend-value">12%</span>
-              </div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="1250">0</div>
+              <div class="stat-value counter" id="statStudents" data-target="0">0</div>
               <div class="stat-label">Total Students</div>
             </div>
             <div class="stat-pulse"></div>
@@ -183,13 +170,9 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">👨‍🏫</span>
               </div>
-              <div class="stat-trend positive">
-                <span class="trend-icon">↑</span>
-                <span class="trend-value">5%</span>
-              </div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="85">0</div>
+              <div class="stat-value counter" id="statTeachers" data-target="0">0</div>
               <div class="stat-label">Total Teachers</div>
             </div>
             <div class="stat-pulse"></div>
@@ -201,13 +184,9 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">⏳</span>
               </div>
-              <div class="stat-trend negative">
-                <span class="trend-icon">↑</span>
-                <span class="trend-value">3%</span>
-              </div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="24">0</div>
+              <div class="stat-value counter" id="statPending" data-target="0">0</div>
               <div class="stat-label">Pending Approvals</div>
             </div>
             <div class="stat-pulse"></div>
@@ -219,13 +198,9 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">💳</span>
               </div>
-              <div class="stat-trend positive">
-                <span class="trend-icon">↑</span>
-                <span class="trend-value">18%</span>
-              </div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="980">0</div>
+              <div class="stat-value counter" id="statActivePayments" data-target="0">0</div>
               <div class="stat-label">Active Payments</div>
             </div>
             <div class="stat-pulse"></div>
@@ -237,13 +212,9 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">⚠️</span>
               </div>
-              <div class="stat-trend negative">
-                <span class="trend-icon">↓</span>
-                <span class="trend-value">2%</span>
-              </div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="45">0</div>
+              <div class="stat-value counter" id="statExpiredPayments" data-target="0">0</div>
               <div class="stat-label">Expired Payments</div>
             </div>
             <div class="stat-pulse"></div>
@@ -255,15 +226,11 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">💰</span>
               </div>
-              <div class="stat-trend positive">
-                <span class="trend-icon">↑</span>
-                <span class="trend-value">22%</span>
-              </div>
             </div>
             <div class="stat-card-body">
               <div class="stat-value-container">
                 <span class="stat-currency">₦</span>
-                <span class="stat-value counter" data-target="4500000">0</span>
+                <span class="stat-value counter" id="statRevenue" data-target="0">0</span>
               </div>
               <div class="stat-label">Total Revenue</div>
             </div>
@@ -276,13 +243,9 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">📚</span>
               </div>
-              <div class="stat-trend positive">
-                <span class="trend-icon">↑</span>
-                <span class="trend-value">8%</span>
-              </div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="120">0</div>
+              <div class="stat-value counter" id="statCourses" data-target="0">0</div>
               <div class="stat-label">Total Courses</div>
             </div>
             <div class="stat-pulse"></div>
@@ -294,13 +257,9 @@
               <div class="stat-icon-wrapper">
                 <span class="stat-icon">💬</span>
               </div>
-              <div class="stat-trend neutral">
-                <span class="trend-icon">-</span>
-                <span class="trend-value">0%</span>
-              </div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="38">0</div>
+              <div class="stat-value counter" id="statMessages" data-target="0">0</div>
               <div class="stat-label">Unread Messages</div>
             </div>
             <div class="stat-pulse"></div>
@@ -312,7 +271,7 @@
       <div id="pendingSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="color: white;">Pending Account Approvals</h2>
+            <h2 class="section-title">Pending Account Approvals</h2>
             <p class="section-subtitle">Review and manage new student and teacher registrations</p>
           </div>
           <div class="header-right" style="display: flex; gap: 12px;">
@@ -329,19 +288,19 @@
         <div class="admin-stats-grid">
           <div class="admin-stat-card admin-glass-panel gradient-blue">
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="24">0</div>
+              <div class="stat-value counter" id="statPendingTotal" data-target="0">0</div>
               <div class="stat-label">Total Pending</div>
             </div>
           </div>
           <div class="admin-stat-card admin-glass-panel gradient-purple">
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="15">0</div>
+              <div class="stat-value counter" id="statPendingStudents" data-target="0">0</div>
               <div class="stat-label">Pending Students</div>
             </div>
           </div>
           <div class="admin-stat-card admin-glass-panel gradient-orange">
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="9">0</div>
+              <div class="stat-value counter" id="statPendingTeachers" data-target="0">0</div>
               <div class="stat-label">Pending Teachers</div>
             </div>
           </div>
@@ -413,9 +372,7 @@
             <div class="pagination-info">Showing <span id="pendingPageStart">1</span> to <span id="pendingPageEnd">5</span> of <span id="totalPending">0</span> entries</div>
             <div class="pagination-controls">
               <button class="page-btn disabled" id="prevPendingPage">← Prev</button>
-              <div class="page-numbers">
-                <button class="page-num active">1</button>
-              </div>
+              <div class="page-numbers"></div>
               <button class="page-btn disabled" id="nextPendingPage">Next →</button>
             </div>
           </div>
@@ -425,7 +382,7 @@
       <!-- USERS SECTION -->
       <div id="usersSection" class="admin-section">
         <div class="admin-glass-card admin-section-header">
-          <h2 class="section-title" style="color: white; margin-bottom: 0;">All Users</h2>
+          <h2 class="section-title">All Users</h2>
         </div>
         <div class="table-wrap">
           <table>
@@ -448,7 +405,7 @@
       <div id="studentsSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="color: white;">Student Management</h2>
+            <h2 class="section-title">Student Management</h2>
             <p class="section-subtitle">View, edit, and manage all registered students</p>
           </div>
           <div class="header-right">
@@ -469,10 +426,6 @@
             <div class="filter-group">
               <select class="admin-select" id="filterCourse">
                 <option value="">All Courses</option>
-                <option value="Frontend Development">Frontend Development</option>
-                <option value="Backend Development">Backend Development</option>
-                <option value="UI/UX Design">UI/UX Design</option>
-                <option value="Data Science">Data Science</option>
               </select>
               
               <select class="admin-select" id="filterStatus">
@@ -526,9 +479,7 @@
             <div class="pagination-info">Showing <span id="pageStart">1</span> to <span id="pageEnd">5</span> of <span id="totalStudents">0</span> entries</div>
             <div class="pagination-controls">
               <button class="page-btn disabled" id="prevPage">← Prev</button>
-              <div class="page-numbers">
-                <button class="page-num active">1</button>
-              </div>
+              <div class="page-numbers"></div>
               <button class="page-btn disabled" id="nextPage">Next →</button>
             </div>
           </div>
@@ -537,16 +488,14 @@
       <div id="teachersSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="color: white;">Teacher Management</h2>
+            <h2 class="section-title">Teacher Management</h2>
             <p class="section-subtitle">Manage instructors, view payment requests, and update roles</p>
           </div>
           <div class="header-right" style="display: flex; gap: 12px;">
             <button class="admin-btn-primary" id="exportTeachersBtn">
               <span class="btn-icon">📥</span> Export CSV
             </button>
-            <button class="admin-btn-primary" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-              <span class="btn-icon">➕</span> Add Teacher
-            </button>
+            <a class="admin-btn-primary btn-green" href="register-staff.html" target="_blank" rel="noopener"><span class="btn-icon">➕</span> Add Teacher</a>
           </div>
         </div>
 
@@ -561,10 +510,6 @@
             <div class="filter-group">
               <select class="admin-select" id="filterTeacherCourse">
                 <option value="">All Courses</option>
-                <option value="Frontend Development">Frontend Development</option>
-                <option value="Backend Development">Backend Development</option>
-                <option value="UI/UX Design">UI/UX Design</option>
-                <option value="Data Science">Data Science</option>
               </select>
               
               <select class="admin-select" id="filterTeacherPayment">
@@ -623,9 +568,7 @@
             <div class="pagination-info">Showing <span id="teacherPageStart">1</span> to <span id="teacherPageEnd">5</span> of <span id="totalTeachers">0</span> entries</div>
             <div class="pagination-controls">
               <button class="page-btn disabled" id="prevTeacherPage">← Prev</button>
-              <div class="page-numbers">
-                <button class="page-num active">1</button>
-              </div>
+              <div class="page-numbers"></div>
               <button class="page-btn disabled" id="nextTeacherPage">Next →</button>
             </div>
           </div>
@@ -642,7 +585,7 @@
             </div>
             <div class="stat-card-body">
               <div class="stat-value-container">
-                <span class="stat-currency">₦</span><span class="stat-value counter" data-target="4500000">0</span>
+                <span class="stat-currency">₦</span><span class="stat-value counter" id="payStatRevenue" data-target="0">0</span>
               </div>
               <div class="stat-label">Total Revenue</div>
             </div>
@@ -653,7 +596,7 @@
               <div class="stat-icon-wrapper"><span class="stat-icon">✅</span></div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="980">0</div>
+              <div class="stat-value counter" id="payStatActive" data-target="0">0</div>
               <div class="stat-label">Active Payments</div>
             </div>
           </div>
@@ -663,7 +606,7 @@
               <div class="stat-icon-wrapper"><span class="stat-icon">⏳</span></div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="45">0</div>
+              <div class="stat-value counter" id="payStatPending" data-target="0">0</div>
               <div class="stat-label">Pending Payments</div>
             </div>
           </div>
@@ -673,7 +616,7 @@
               <div class="stat-icon-wrapper"><span class="stat-icon">❌</span></div>
             </div>
             <div class="stat-card-body">
-              <div class="stat-value counter" data-target="12">0</div>
+              <div class="stat-value counter" id="payStatFailed" data-target="0">0</div>
               <div class="stat-label">Failed Payments</div>
             </div>
           </div>
@@ -681,7 +624,7 @@
 
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="color: white;">Payment Management</h2>
+            <h2 class="section-title">Payment Management</h2>
             <p class="section-subtitle">Monitor transactions, approve payments, and manage receipts</p>
           </div>
           <div class="header-right">
@@ -752,9 +695,7 @@
             <div class="pagination-info">Showing <span id="paymentPageStart">1</span> to <span id="paymentPageEnd">5</span> of <span id="totalPayments">0</span> entries</div>
             <div class="pagination-controls">
               <button class="page-btn disabled" id="prevPaymentPage">← Prev</button>
-              <div class="page-numbers">
-                <button class="page-num active">1</button>
-              </div>
+              <div class="page-numbers"></div>
               <button class="page-btn disabled" id="nextPaymentPage">Next →</button>
             </div>
           </div>
@@ -766,8 +707,7 @@
         <div class="admin-receipt-modal glass-panel">
           <div class="receipt-header">
             <div class="school-logo-area">
-              <span class="logo-icon">🌍</span>
-              <span class="logo-text">GEO ACADEMY</span>
+              <img src="../images/logo.png" alt="Geosolution Educational Services" class="receipt-logo-img">
             </div>
             <button class="close-modal-btn" id="closeReceiptBtn">✖</button>
           </div>
@@ -834,21 +774,13 @@
       <div id="analyticsSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Analytics Overview</h2>
+            <h2 class="section-title">Analytics Overview</h2>
             <p class="section-subtitle">Real-time platform performance and growth metrics</p>
           </div>
           <div class="header-right">
-            <div class="date-range-picker">
-              <div class="filter-group">
-                <button class="filter-btn active" data-range="weekly">Weekly</button>
-                <button class="filter-btn" data-range="monthly">Monthly</button>
-                <button class="filter-btn" data-range="yearly">Yearly</button>
-              </div>
-              <input type="date" class="admin-select custom-date" id="customDateRange">
-              <button class="admin-btn-primary" id="exportReportBtn">
+            <button class="admin-btn-primary" id="exportReportBtn">
                 <span class="btn-icon">📊</span> Export Report
               </button>
-            </div>
           </div>
         </div>
 
@@ -860,9 +792,9 @@
               <span class="card-label">Total Revenue</span>
               <div class="card-value-container">
                 <span class="currency">₦</span>
-                <h3 class="counter" data-target="4500000">0</h3>
+                <h3 class="counter" id="anRevenue" data-target="0">0</h3>
               </div>
-              <span class="card-trend positive">↑ 12.5% vs last month</span>
+              <span class="card-trend neutral">From confirmed payments</span>
             </div>
             <div class="card-glow"></div>
           </div>
@@ -870,12 +802,11 @@
           <div class="analytics-card admin-glass-panel gradient-purple">
             <div class="card-icon">📈</div>
             <div class="card-content">
-              <span class="card-label">Monthly Growth</span>
+              <span class="card-label">Pending Approvals</span>
               <div class="card-value-container">
-                <h3 class="counter" data-target="24">0</h3>
-                <span class="unit">%</span>
+                <h3 class="counter" id="anPending" data-target="0">0</h3>
               </div>
-              <span class="card-trend positive">↑ 3.2% vs last month</span>
+              <span class="card-trend neutral">Awaiting review</span>
             </div>
             <div class="card-glow"></div>
           </div>
@@ -885,9 +816,9 @@
             <div class="card-content">
               <span class="card-label">Active Students</span>
               <div class="card-value-container">
-                <h3 class="counter" data-target="1250">0</h3>
+                <h3 class="counter" id="anStudents" data-target="0">0</h3>
               </div>
-              <span class="card-trend positive">↑ 150 new this week</span>
+              <span class="card-trend neutral">Approved accounts</span>
             </div>
             <div class="card-glow"></div>
           </div>
@@ -897,9 +828,9 @@
             <div class="card-content">
               <span class="card-label">Active Teachers</span>
               <div class="card-value-container">
-                <h3 class="counter" data-target="85">0</h3>
+                <h3 class="counter" id="anTeachers" data-target="0">0</h3>
               </div>
-              <span class="card-trend positive">↑ 5 new this week</span>
+              <span class="card-trend neutral">Approved accounts</span>
             </div>
             <div class="card-glow"></div>
           </div>
@@ -909,10 +840,10 @@
             <div class="card-content">
               <span class="card-label">Payment Success Rate</span>
               <div class="card-value-container">
-                <h3 class="counter" data-target="98">0</h3>
+                <h3 class="counter" id="anPaySuccess" data-target="0">0</h3>
                 <span class="unit">%</span>
               </div>
-              <span class="card-trend neutral">Steady this month</span>
+              <span class="card-trend neutral">Of all recorded payments</span>
             </div>
             <div class="card-glow"></div>
           </div>
@@ -923,10 +854,9 @@
           <!-- Revenue & Growth Area Chart -->
           <div class="chart-container admin-glass-panel span-2">
             <div class="chart-header">
-              <h4>Revenue Analytics & Trends</h4>
+              <h4>Revenue by Month (₦)</h4>
               <div class="chart-actions">
-                <button class="btn-icon-only" title="Refresh">🔄</button>
-                <button class="btn-icon-only" title="Fullscreen">⛶</button>
+                <button class="btn-icon-only" id="refreshChartsBtn" title="Refresh charts" aria-label="Refresh charts">🔄</button>
               </div>
             </div>
             <div class="chart-wrapper">
@@ -937,7 +867,7 @@
           <!-- Registration Trends Line Chart -->
           <div class="chart-container admin-glass-panel">
             <div class="chart-header">
-              <h4>Registration Trends</h4>
+              <h4>Registrations — Last 7 Days</h4>
             </div>
             <div class="chart-wrapper">
               <canvas id="registrationChart"></canvas>
@@ -947,7 +877,7 @@
           <!-- Course Activity Doughnut Chart -->
           <div class="chart-container admin-glass-panel">
             <div class="chart-header">
-              <h4>Course Activity Distribution</h4>
+              <h4>Registrations by Course</h4>
             </div>
             <div class="chart-wrapper small-chart">
               <canvas id="courseActivityChart"></canvas>
@@ -957,7 +887,7 @@
           <!-- Monthly Growth Bar Chart -->
           <div class="chart-container admin-glass-panel span-2">
             <div class="chart-header">
-              <h4>Monthly User Growth Analytics</h4>
+              <h4>New Accounts by Month</h4>
             </div>
             <div class="chart-wrapper">
               <canvas id="growthChart"></canvas>
@@ -969,7 +899,7 @@
       <div id="notificationsSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Notification Center</h2>
+            <h2 class="section-title">Notification Center</h2>
             <p class="section-subtitle">Manage system alerts, registrations, and updates</p>
           </div>
           <div class="header-right">
@@ -1005,7 +935,7 @@
       <div id="messagesSection" class="admin-section">
         <div class="admin-glass-card section-header-card">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Message Center</h2>
+            <h2 class="section-title">Message Center</h2>
             <p class="section-subtitle">Communication hub for students and teachers</p>
           </div>
           <div class="header-right">
@@ -1064,13 +994,26 @@
         </div>
       </div>
       <div id="coursesSection" class="admin-section">
-        <div class="admin-glass-card"><h2>Courses</h2><p>Content for this section goes here.</p></div>
+        <div class="admin-glass-card section-header-card">
+          <div class="header-left">
+            <h2 class="section-title">Courses</h2>
+            <p class="section-subtitle">Programs offered on the website, with registration counts. Edit names and fees in js/site-config.js.</p>
+          </div>
+        </div>
+        <div class="admin-glass-card table-container-card">
+          <div class="admin-table-responsive">
+            <table class="admin-modern-table" id="coursesTable">
+              <thead><tr><th>Course</th><th>Category</th><th>Duration</th><th>Fee</th><th>Registrations</th><th class="text-right">Page</th></tr></thead>
+              <tbody id="coursesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <!-- SETTINGS SECTION -->
       <div id="settingsSection" class="admin-section">
         <div class="admin-glass-card section-header-card" style="margin-bottom: 24px;">
           <div class="header-left">
-            <h2 class="section-title" style="margin-bottom: 4px; color: white;">Admin Settings Panel</h2>
+            <h2 class="section-title">Admin Settings Panel</h2>
             <p class="section-subtitle">Manage school configuration, security, and system preferences</p>
           </div>
           <div class="header-right">
@@ -1129,7 +1072,7 @@
                     <label>School Logo</label>
                     <div class="upload-container">
                       <div class="upload-preview" id="schoolLogoPreview">
-                        <img src="../images/logo.jpg" alt="School Logo" onerror="this.src='../images/avatar-placeholder.png'">
+                        <img src="../images/logo.png" alt="Geosolution logo">
                       </div>
                       <div class="upload-area" id="schoolLogoUploadArea">
                         <span class="upload-icon">📤</span>
@@ -1143,23 +1086,23 @@
                   </div>
                   <div class="form-group">
                     <label for="schoolName">School Name</label>
-                    <input type="text" id="schoolName" class="settings-input" value="GEO ACADEMY">
+                    <input type="text" id="schoolName" class="settings-input" value="Geosolution Educational Services">
                   </div>
                   <div class="form-group">
                     <label for="schoolEmail">School Email</label>
-                    <input type="email" id="schoolEmail" class="settings-input" value="info@geoacademy.com">
+                    <input type="email" id="schoolEmail" class="settings-input" value="Geoslutions360@gmail.com">
                   </div>
                   <div class="form-group">
                     <label for="schoolPhone">Phone Number</label>
-                    <input type="tel" id="schoolPhone" class="settings-input" value="+234 800 123 4567">
+                    <input type="tel" id="schoolPhone" class="settings-input" value="+234 701 467 3935">
                   </div>
                   <div class="form-group">
                     <label for="schoolWebsite">Website URL</label>
-                    <input type="url" id="schoolWebsite" class="settings-input" value="https://www.geoacademy.com">
+                    <input type="url" id="schoolWebsite" class="settings-input" value="https://www.geoeduservices.com">
                   </div>
                   <div class="form-group full-width">
                     <label for="schoolAddress">Address</label>
-                    <textarea id="schoolAddress" class="settings-textarea" rows="3">123 Education Plaza, Lagos State, Nigeria</textarea>
+                    <textarea id="schoolAddress" class="settings-textarea" rows="3">12, Abayomi Street, Opposite Abeokuta Mosques, Irawo Ajegunle, Ikorodu Road, Lagos</textarea>
                   </div>
                 </div>
                 <div class="settings-actions">
@@ -1182,7 +1125,7 @@
                     <label>Profile Picture</label>
                     <div class="upload-container">
                       <div class="upload-preview" id="adminAvatarPreview">
-                        <img src="../images/avatar-placeholder.png" alt="Admin Avatar">
+                        <img src="../images/default-avatar.svg" alt="Admin Avatar">
                       </div>
                       <div class="upload-area" id="adminAvatarUploadArea">
                         <span class="upload-icon">👤</span>
@@ -1196,11 +1139,11 @@
                   </div>
                   <div class="form-group">
                     <label for="adminFullName">Full Name</label>
-                    <input type="text" id="adminFullName" class="settings-input" value="Super Administrator">
+                    <input type="text" id="adminFullName" class="settings-input" value="">
                   </div>
                   <div class="form-group">
                     <label for="adminEmail">Email Address</label>
-                    <input type="email" id="adminEmail" class="settings-input" value="admin@geoacademy.com">
+                    <input type="email" id="adminEmail" class="settings-input" value="">
                   </div>
                   <div class="form-group">
                     <label for="newPassword">New Password</label>
@@ -1282,11 +1225,11 @@
                   <label>Accent Color</label>
                   <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 10px;">Choose a primary color for buttons and highlights.</p>
                   <div class="accent-color-grid">
-                    <div class="color-option active" style="background: #3b82f6;" data-color="blue"></div>
+                    <div class="color-option active" style="background: #1668c4;" data-color="blue"></div>
                     <div class="color-option" style="background: #8b5cf6;" data-color="purple"></div>
                     <div class="color-option" style="background: #10b981;" data-color="emerald"></div>
                     <div class="color-option" style="background: #f59e0b;" data-color="orange"></div>
-                    <div class="color-option" style="background: #ef4444;" data-color="red"></div>
+                    <div class="color-option" style="background: #d92b2b;" data-color="red"></div>
                   </div>
                 </div>
                 <div class="form-group" style="margin-top: 25px;">
@@ -1455,7 +1398,7 @@
         <div class="modal-header">
           <div class="header-left">
             <h3>Profile Review</h3>
-            <span class="user-id-badge" id="modalUserId">ID: GEO-24-000</span>
+            <span class="user-id-badge" id="modalUserId">ID: —</span>
           </div>
           <button class="close-modal-btn" id="closeReviewBtn">✖</button>
         </div>
@@ -1464,7 +1407,7 @@
           <div class="review-grid">
             <div class="review-left">
               <div class="review-avatar-container">
-                <img src="../images/avatar-placeholder.png" alt="Profile Image" id="modalProfileImg" class="review-avatar">
+                <img src="../images/default-avatar.svg" alt="Profile Image" id="modalProfileImg" class="review-avatar">
                 <div class="role-indicator" id="modalRoleIndicator">Student</div>
               </div>
               
@@ -1499,23 +1442,14 @@
               </div>
               
               <div class="review-section">
-                <h4 class="section-label">Uploaded Documents</h4>
+                <h4 class="section-label">Registration Details</h4>
                 <div class="documents-list" id="modalDocsList">
-                  <!-- Documents will be injected here -->
-                  <div class="doc-card">
-                    <div class="doc-icon">📄</div>
-                    <div class="doc-info">
-                      <span class="doc-name">Government ID.pdf</span>
-                      <span class="doc-size">1.2 MB</span>
-                    </div>
-                    <button class="btn-view-doc">View</button>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="modal-footer">
           <div class="footer-left">
             <button class="admin-btn-danger" id="modalRejectBtn">
@@ -1545,21 +1479,21 @@
               <option value="">Select Recipient...</option>
               <option value="all">All Students</option>
               <option value="teachers">All Teachers</option>
-              <option value="student1">John Doe (Student)</option>
+              
             </select>
           </div>
           <div class="form-group" style="margin-bottom: 20px;">
             <label>Subject</label>
-            <input type="text" class="admin-input" placeholder="Enter message subject..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white;">
+            <input type="text" class="admin-input compose-field" id="composeSubject" placeholder="Enter message subject...">
           </div>
           <div class="form-group">
             <label>Message</label>
-            <textarea class="admin-textarea" rows="6" placeholder="Type your message here..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white;"></textarea>
+            <textarea class="admin-textarea compose-field" id="composeBody" rows="6" placeholder="Type your message here..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button class="admin-btn-secondary" id="cancelComposeBtn">Cancel</button>
-          <button class="admin-btn-primary">Send Message</button>
+          <button class="admin-btn-primary" id="sendComposeBtn">Send Message</button>
         </div>
       </div>
     </div>
@@ -1573,7 +1507,7 @@
         <!-- Loading Overlay for transition -->
         <div class="logout-loading-overlay" id="logoutLoading">
           <div class="logout-spinner"></div>
-          <span style="color: white; font-weight: 600; letter-spacing: 0.5px;">Signing out...</span>
+          <span class="logout-loading-text">Signing out...</span>
         </div>
 
         <div class="modal-body logout-modal-content">
@@ -1581,13 +1515,13 @@
           
           <div class="logout-admin-preview">
             <div class="logout-avatar-wrap">
-              <img src="../images/avatar-placeholder.png" alt="Admin" id="logoutModalAvatar">
+              <img src="../images/default-avatar.svg" alt="Admin" id="logoutModalAvatar">
             </div>
             <span class="logout-admin-name">Administrator</span>
             <span class="logout-admin-role">Super Admin</span>
           </div>
 
-          <h3 style="color: white; margin-bottom: 10px; font-size: 22px;">Confirm Logout</h3>
+          <h3 class="logout-title">Confirm Logout</h3>
           <p class="logout-message">Are you sure you want to logout? You will need to login again to access the dashboard.</p>
 
           <div class="logout-modal-actions">
@@ -1599,11 +1533,10 @@
         </div>
       </div>
     </div>
-
-    <script src="../js/mockUsers.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="../js/site-config.js"></script>
+<script src="../js/mockUsers.js"></script>
 <script src="../js/auth.js"></script>
-<script src="../js/admin.js"></script>
 <script src="../js/admin-dashboard.js"></script>
-<script src="../js/theme.js"></script>
 </body>
 </html>

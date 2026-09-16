@@ -3,360 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#1e3a8a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Student Dashboard — GEO ACADEMY</title>
-  <link rel="stylesheet" href="../css/style2.css">
-  <link rel="stylesheet" href="../css/animations.css">
-  <link rel="stylesheet" href="../css/dashboard.css">
-<script src="../js/theme.js"></script>
-  <link rel="stylesheet" href="../css/inline-styles.css">
+  <meta name="theme-color" content="#1668c4">
+  <meta name="robots" content="noindex">
+  <title>Student Portal — Geosolution Educational Services</title>
+  <meta name="description" content="Your Geosolution Student Portal: courses, registration and payment status, results and support.">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/student-dashboard.css">
+  <script src="../js/theme.js"></script>
 </head>
-<body>
-<div class="admin-dash-wrapper">
-  <aside class="admin-sidebar admin-glass-panel" id="sidebar">
-    <div class="admin-sidebar-header">
-      <div class="geo-logo sidebar-logo">
-        <img src="../images/logo.jpg" alt="Geo Academy Logo" class="geo-logo-img geo-inline-1">
-      </div>
-      <button class="mobile-close-btn" id="closeSidebar">✕</button>
+<body class="student-portal">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<div class="sd-layout">
+  <aside class="sd-sidebar" id="sidebar" aria-label="Student portal">
+    <div class="sd-sidebar-header">
+      <a href="index.html" class="sd-logo" aria-label="Geosolution Educational Services — website">
+        <picture class="logo-light"><source type="image/webp" srcset="../images/logo.webp"><img src="../images/logo.png" width="340" height="54" alt="Geosolution Educational Services"></picture>
+        <picture class="logo-dark"><source type="image/webp" srcset="../images/logo-dark.webp"><img src="../images/logo-dark.png" width="340" height="54" alt="Geosolution Educational Services" loading="lazy"></picture>
+      </a>
+      <button type="button" class="sd-icon-btn sd-close" id="closeSidebar" aria-label="Close menu"><i class="fas fa-xmark" aria-hidden="true"></i></button>
     </div>
-    <div class="sidebar-user" style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px;">
-      <div class="sidebar-avatar" id="sidebarAvatar" style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: white;">MA</div>
-      <div class="sidebar-user-info">
-        <div class="user-name" id="sidebarName" style="font-weight: 600; font-size: 16px; color: white;">Student</div>
-        <div class="user-role" style="font-size: 13px; color: rgba(255,255,255,0.6);">Student</div>
-      </div>
-    </div>
-    <div class="admin-sidebar-nav">
-      <div class="admin-nav-item active" data-target="overviewSection">
-        <span class="admin-nav-icon">📊</span><span class="admin-nav-text">Overview</span>
-      </div>
-      <div class="admin-nav-item" data-target="resultsSection">
-        <span class="admin-nav-icon">📋</span><span class="admin-nav-text">My Results</span>
-      </div>
-      <div class="admin-nav-item" data-target="profileSection">
-        <span class="admin-nav-icon">👤</span><span class="admin-nav-text">My Profile</span>
-      </div>
-      <div class="admin-nav-item" data-target="eduNeedsSection">
-        <span class="admin-nav-icon">🎒</span><span class="admin-nav-text">Edu Needs</span>
-      </div>
-      <div class="admin-nav-item payment-countdown-btn" id="paymentCountdownBtn">
-        <span class="admin-nav-icon payment-icon-pulse">⏳</span>
-        <div class="payment-timer-col" style="display: flex; flex-direction: column;">
-          <span class="admin-nav-text payment-timer-label" style="font-size: 12px; line-height: 1.2;">Next Payment</span>
-          <span class="timer-text" id="paymentTimerText" style="font-size: 11px; color: rgba(255,255,255,0.7);">Pending</span>
-        </div>
-      </div>
-      <div class="admin-nav-item" id="makePaymentBtn">
-        <span class="admin-nav-icon">💳</span><span class="admin-nav-text">Make Payment</span>
+
+    <div class="sd-user">
+      <div class="sd-avatar" id="sidebarAvatar" aria-hidden="true">ST</div>
+      <div class="sd-user-info">
+        <p class="sd-user-name" id="sidebarName">Student</p>
+        <p class="sd-user-role">Student</p>
       </div>
     </div>
-    <div class="admin-sidebar-footer">
-      <button class="admin-btn-logout" id="logoutBtn">
-        <span class="admin-nav-icon">🚪</span><span class="admin-nav-text">Logout</span>
-      </button>
+
+    <nav class="sd-nav" aria-label="Portal sections">
+      <button type="button" class="sd-nav-item active" data-target="overviewSection" aria-current="page"><i class="fas fa-house" aria-hidden="true"></i> Overview</button>
+      <button type="button" class="sd-nav-item" data-target="resultsSection"><i class="fas fa-chart-column" aria-hidden="true"></i> My Results</button>
+      <button type="button" class="sd-nav-item" data-target="profileSection"><i class="fas fa-user" aria-hidden="true"></i> My Profile</button>
+      <button type="button" class="sd-nav-item" data-target="eduNeedsSection"><i class="fas fa-book-open-reader" aria-hidden="true"></i> Learning Materials</button>
+
+      <div class="sd-nav-divider" role="separator"></div>
+
+      <div class="sd-nav-item sd-timer" id="paymentCountdownBtn">
+        <i class="fas fa-hourglass-half payment-icon-pulse" aria-hidden="true"></i>
+        <span class="sd-timer-text"><span class="sd-timer-label">Access renews in</span><span id="paymentTimerText" aria-live="polite">Pending</span></span>
+      </div>
+      <a href="payment.html" class="sd-nav-item sd-nav-pay" id="makePaymentLink"><i class="fas fa-credit-card" aria-hidden="true"></i> Make Payment</a>
+      <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="sd-nav-item"><i class="fab fa-whatsapp" aria-hidden="true"></i> Get Support</a>
+    </nav>
+
+    <div class="sd-sidebar-footer">
+      <button type="button" class="sd-nav-item sd-logout" id="logoutBtn"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> Logout</button>
     </div>
   </aside>
 
-  <div class="admin-sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sd-overlay" id="sidebarOverlay"></div>
 
-  <main class="admin-main-content">
-    <header class="admin-topbar admin-glass-panel">
-      <div class="admin-topbar-left">
-        <button class="admin-menu-toggle" id="menuToggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <div class="sd-main">
+    <header class="sd-topbar">
+      <button type="button" class="sd-icon-btn sd-menu-toggle" id="menuToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+      <p class="sd-topbar-title" id="topbarTitle">Overview</p>
+      <div class="sd-topbar-right">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+          <span class="slider"><span class="slider-icon sun" aria-hidden="true">☀️</span><span class="slider-icon moon" aria-hidden="true">🌙</span></span>
         </button>
-        <h1 class="page-title" style="margin: 0; font-size: 20px;">Student Dashboard</h1>
-      </div>
-      <div class="admin-topbar-right">
-        <button class="admin-theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
-          <span class="slider">
-            <span class="slider-icon sun">☀️</span>
-            <span class="slider-icon moon">🌙</span>
-          </span>
-        </button>
-        <div class="admin-profile-menu">
-          <div class="admin-profile-info">
-            <span class="admin-name" id="topbarName">Student</span>
-            <span class="admin-role">Student</span>
-          </div>
-          <div class="admin-avatar" id="topbarAvatarContainer" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: white; border: 2px solid rgba(255,255,255,0.2);">
-            <span id="topbarAvatar">MA</span>
-          </div>
+        <div class="sd-profile-chip">
+          <span class="sd-profile-name" id="topbarName">Student</span>
+          <span class="sd-avatar sd-avatar-sm" id="topbarAvatarContainer" aria-hidden="true"><span id="topbarAvatar">ST</span></span>
         </div>
-        <button class="btn-logout-mobile" id="logoutBtnMobile" style="display: none;">Logout</button>
+        <button type="button" class="sd-icon-btn sd-logout-mobile" id="logoutBtnMobile" aria-label="Logout"><i class="fas fa-right-from-bracket" aria-hidden="true"></i></button>
       </div>
     </header>
 
-    <div class="admin-content-area">
+    <main class="sd-content" id="main-content" tabindex="-1">
       <!-- OVERVIEW -->
-      <div id="overviewSection" class="admin-section active">
-        <div class="admin-glass-card welcome-banner">
-          <h2 id="welcomeMsg">Welcome back! 🎓</h2>
-          <p id="welcomeSub">Track your academic progress and results.</p>
+      <section id="overviewSection" class="sd-section active" aria-labelledby="welcomeMsg">
+        <div class="dashboard-welcome">
+          <div>
+            <h1 id="welcomeMsg">Welcome back, <span id="studentName">Student</span>!</h1>
+            <p id="welcomeSub">Here's your learning overview.</p>
+          </div>
+          <span class="status-badge" id="welcomeStatus" hidden></span>
         </div>
-        
-        <div class="admin-stats-grid">
-          <div class="admin-stat-card admin-glass-panel gradient-blue">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">📚</span></div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value counter">8</div>
-              <div class="stat-label">Subjects</div>
-            </div>
-          </div>
-          <div class="admin-stat-card admin-glass-panel gradient-purple">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">🏆</span></div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value counter">76%</div>
-              <div class="stat-label">Average Score</div>
-            </div>
-          </div>
-          <div class="admin-stat-card admin-glass-panel gradient-orange">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">📝</span></div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value counter">5</div>
-              <div class="stat-label">Exams Taken</div>
-            </div>
-          </div>
-          <div class="admin-stat-card admin-glass-panel gradient-emerald">
-            <div class="stat-card-header">
-              <div class="stat-icon-wrapper"><span class="stat-icon">⭐</span></div>
-            </div>
-            <div class="stat-card-body">
-              <div class="stat-value counter">B+</div>
-              <div class="stat-label">Overall Grade</div>
-            </div>
-          </div>
+
+        <div class="dashboard-grid">
+          <article class="dash-card">
+            <div class="dash-card-icon tone-brand" aria-hidden="true"><i class="fas fa-book"></i></div>
+            <h2>My Courses</h2>
+            <p class="dash-card-value" id="cardCourses">—</p>
+            <a href="services.html" class="dash-card-link" id="cardCoursesLink">Browse courses <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
+          <article class="dash-card">
+            <div class="dash-card-icon tone-green" aria-hidden="true"><i class="fas fa-circle-check"></i></div>
+            <h2>Registration Status</h2>
+            <p class="dash-card-value"><span class="status-badge" id="cardRegStatus">—</span></p>
+            <p class="dash-card-meta" id="cardRegRef"></p>
+          </article>
+          <article class="dash-card">
+            <div class="dash-card-icon tone-red" aria-hidden="true"><i class="fas fa-credit-card"></i></div>
+            <h2>Payment Status</h2>
+            <p class="dash-card-value"><span class="status-badge" id="cardPayStatus">—</span></p>
+            <p class="dash-card-meta" id="cardPayMeta"></p>
+            <a href="payment.html" class="dash-card-link">Make Payment <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
+          <article class="dash-card">
+            <div class="dash-card-icon tone-blue" aria-hidden="true"><i class="fas fa-calendar-days"></i></div>
+            <h2>Class Schedule</h2>
+            <p class="dash-card-value" id="cardSchedule">To be confirmed</p>
+            <p class="dash-card-meta">Our team confirms exact class times.</p>
+          </article>
+          <article class="dash-card">
+            <div class="dash-card-icon tone-purple" aria-hidden="true"><i class="fas fa-chart-column"></i></div>
+            <h2>Results / Performance</h2>
+            <p class="dash-card-value" id="cardResults">—</p>
+            <button type="button" class="dash-card-link" data-goto="resultsSection">View Results <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+          </article>
+          <article class="dash-card">
+            <div class="dash-card-icon tone-orange" aria-hidden="true"><i class="fas fa-bullhorn"></i></div>
+            <h2>Announcements</h2>
+            <p class="dash-card-value">No new announcements</p>
+            <p class="dash-card-meta">Updates from your tutors will appear here.</p>
+          </article>
+          <article class="dash-card">
+            <div class="dash-card-icon tone-brand" aria-hidden="true"><i class="fas fa-book-open-reader"></i></div>
+            <h2>Learning Materials</h2>
+            <p class="dash-card-value">Coming soon</p>
+            <button type="button" class="dash-card-link" data-goto="eduNeedsSection">Learn more <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+          </article>
+          <article class="dash-card">
+            <div class="dash-card-icon tone-green" aria-hidden="true"><i class="fas fa-headset"></i></div>
+            <h2>Support</h2>
+            <p class="dash-card-value">Need help?</p>
+            <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="dash-card-link">Contact Support <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
         </div>
-      </div>
+      </section>
 
       <!-- RESULTS -->
-      <div id="resultsSection" class="admin-section">
-        <div class="admin-glass-card section-header-card" style="margin-bottom: 20px;">
-          <h2 class="section-title" style="margin: 0; color: inherit;">My Academic Results</h2>
+      <section id="resultsSection" class="sd-section" aria-labelledby="resultsTitle">
+        <div class="sd-section-head">
+          <h2 id="resultsTitle">My Academic Results</h2>
+          <p>1st Term · 2024/2025</p>
         </div>
-        <div class="results-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Mathematics</div>
-            <div class="result-score excellent" style="font-size: 36px; font-weight: bold; color: #10b981;">92</div>
-            <span class="result-grade grade-a" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(16,185,129,0.2); color: #10b981; font-weight: 600; margin: 10px 0;">A1 — Excellent</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">English Language</div>
-            <div class="result-score good" style="font-size: 36px; font-weight: bold; color: #3b82f6;">78</div>
-            <span class="result-grade grade-b" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(59,130,246,0.2); color: #3b82f6; font-weight: 600; margin: 10px 0;">B2 — Good</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Physics</div>
-            <div class="result-score good" style="font-size: 36px; font-weight: bold; color: #3b82f6;">81</div>
-            <span class="result-grade grade-b" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(59,130,246,0.2); color: #3b82f6; font-weight: 600; margin: 10px 0;">B1 — Good</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Chemistry</div>
-            <div class="result-score average" style="font-size: 36px; font-weight: bold; color: #f59e0b;">65</div>
-            <span class="result-grade grade-c" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(245,158,11,0.2); color: #f59e0b; font-weight: 600; margin: 10px 0;">C4 — Average</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Biology</div>
-            <div class="result-score excellent" style="font-size: 36px; font-weight: bold; color: #10b981;">88</div>
-            <span class="result-grade grade-a" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(16,185,129,0.2); color: #10b981; font-weight: 600; margin: 10px 0;">A2 — Excellent</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Geography</div>
-            <div class="result-score good" style="font-size: 36px; font-weight: bold; color: #3b82f6;">74</div>
-            <span class="result-grade grade-b" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(59,130,246,0.2); color: #3b82f6; font-weight: 600; margin: 10px 0;">B3 — Good</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Civic Education</div>
-            <div class="result-score excellent" style="font-size: 36px; font-weight: bold; color: #10b981;">90</div>
-            <span class="result-grade grade-a" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(16,185,129,0.2); color: #10b981; font-weight: 600; margin: 10px 0;">A1 — Excellent</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-          <div class="result-card admin-glass-panel" style="padding: 20px; border-radius: 16px; text-align: center;">
-            <div class="result-subject" style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Economics</div>
-            <div class="result-score average" style="font-size: 36px; font-weight: bold; color: #f59e0b;">62</div>
-            <span class="result-grade grade-c" style="display: inline-block; padding: 4px 12px; border-radius: 12px; background: rgba(245,158,11,0.2); color: #f59e0b; font-weight: 600; margin: 10px 0;">C5 — Average</span>
-            <div class="result-term" style="font-size: 12px; color: rgba(255,255,255,0.6);">1st Term · 2024/2025</div>
-          </div>
-        </div>
-      </div>
+        <ul class="results-grid" id="resultsGrid">
+          <li class="result-card" data-score="92"><p class="result-subject">Mathematics</p><p class="result-score score-excellent">92</p><span class="result-grade grade-excellent">A1 — Excellent</span></li>
+          <li class="result-card" data-score="78"><p class="result-subject">English Language</p><p class="result-score score-good">78</p><span class="result-grade grade-good">B2 — Good</span></li>
+          <li class="result-card" data-score="81"><p class="result-subject">Physics</p><p class="result-score score-good">81</p><span class="result-grade grade-good">B1 — Good</span></li>
+          <li class="result-card" data-score="65"><p class="result-subject">Chemistry</p><p class="result-score score-average">65</p><span class="result-grade grade-average">C4 — Average</span></li>
+          <li class="result-card" data-score="88"><p class="result-subject">Biology</p><p class="result-score score-excellent">88</p><span class="result-grade grade-excellent">A2 — Excellent</span></li>
+          <li class="result-card" data-score="74"><p class="result-subject">Geography</p><p class="result-score score-good">74</p><span class="result-grade grade-good">B3 — Good</span></li>
+          <li class="result-card" data-score="90"><p class="result-subject">Civic Education</p><p class="result-score score-excellent">90</p><span class="result-grade grade-excellent">A1 — Excellent</span></li>
+          <li class="result-card" data-score="62"><p class="result-subject">Economics</p><p class="result-score score-average">62</p><span class="result-grade grade-average">C5 — Average</span></li>
+        </ul>
+      </section>
 
       <!-- PROFILE -->
-      <div id="profileSection" class="admin-section">
-        <div class="admin-glass-card section-header-card">
-          <h2 class="section-title" style="margin: 0; color: inherit;">My Profile</h2>
+      <section id="profileSection" class="sd-section" aria-labelledby="profileTitle">
+        <div class="sd-section-head">
+          <h2 id="profileTitle">My Profile</h2>
+          <p>Keep your contact details up to date.</p>
         </div>
-        <div class="info-card profile-card-container admin-glass-panel" id="profileCard" style="padding: 20px; border-radius: 16px;">
-          <!-- Populated by JS with profile image and all info -->
+        <div class="sd-panel profile-card-container" id="profileCard">
+          <!-- Built by student-dashboard.js -->
         </div>
-      </div>
+      </section>
 
-      <!-- EDU NEEDS -->
-      <div id="eduNeedsSection" class="admin-section">
-        <div class="admin-glass-card section-header-card" style="margin-bottom: 20px;">
-          <h2 class="section-title" style="margin: 0; color: inherit;">Educational Needs</h2>
+      <!-- LEARNING MATERIALS -->
+      <section id="eduNeedsSection" class="sd-section" aria-labelledby="materialsTitle">
+        <div class="sd-section-head">
+          <h2 id="materialsTitle">Learning Materials</h2>
         </div>
-        <div class="info-card admin-glass-panel" style="padding: 40px 20px; text-align: center; border-radius: 16px;">
-           <div class="edu-needs-placeholder">
-             <div class="edu-icon" style="font-size: 48px; margin-bottom: 20px;">🎒</div>
-             <h3>Coming Soon</h3>
-             <p style="color: rgba(255,255,255,0.7); max-width: 400px; margin: 0 auto;">School materials, educational tools, e-books, learning resources, and student services will be available here.</p>
-           </div>
+        <div class="sd-panel sd-empty">
+          <div class="dash-card-icon tone-brand" aria-hidden="true"><i class="fas fa-book-open-reader"></i></div>
+          <h3>Coming Soon</h3>
+          <p>School materials, educational tools, e-books, learning resources and student services will be available here.</p>
         </div>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- PAYMENT MODAL -->
-<div class="modal-overlay" id="paymentModalOverlay">
-  <div class="admin-modal glass-panel" style="max-width: 450px; margin: auto; padding: 30px; position: relative;">
-    <button class="mobile-close-btn" id="closePaymentModal" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1); border: none; color: inherit; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">✕</button>
-    <div style="text-align: center; margin-bottom: 20px;">
-      <div class="modal-header-icon" style="font-size: 40px;">💳</div>
-      <h2 style="margin: 10px 0 5px; color: inherit;">Make Payment</h2>
-      <p class="payment-subtitle" style="color: rgba(255,255,255,0.7); font-size: 14px;">Renew your access for the next 30 days via Paystack</p>
-    </div>
-    
-    <form id="paystackPaymentForm" class="realtime-payment-form">
-      <div class="form-group" style="margin-bottom: 20px;">
-        <label for="payEmail" class="admin-label" style="display: block; margin-bottom: 8px;">Registered Email Address</label>
-        <div style="position: relative; display: flex; align-items: center; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 12px 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;">
-          <span style="font-size: 20px; margin-right: 12px; opacity: 0.9;">✉️</span>
-          <input type="email" id="payEmail" placeholder="student@geoacademy.edu" required readonly style="width: 100%; background: transparent; border: none; color: inherit; font-size: 15px; font-weight: 500; outline: none; cursor: default; opacity: 0.9;">
-          <span style="font-size: 12px; background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 4px 10px; border-radius: 20px; font-weight: 600; margin-left: 10px; display: flex; align-items: center; gap: 4px; white-space: nowrap; border: 1px solid rgba(16, 185, 129, 0.3);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width: 12px; height: 12px;"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> Verified
-          </span>
-        </div>
-      </div>
-      
-      <div class="form-group" style="margin-bottom: 20px;">
-        <label for="payAmount" class="admin-label" style="display: block; margin-bottom: 5px;">Amount (NGN)</label>
-        <div class="payment-amount-display" style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <span class="currency" style="font-size: 24px; color: rgba(255,255,255,0.5); margin-right: 10px;">₦</span>
-          <span class="amount" style="font-size: 28px; font-weight: bold; color: inherit;">15,000.00</span>
-        </div>
-      </div>
-      
-      <div class="payment-method" style="margin-bottom: 25px;">
-        <label class="admin-label" style="display: block; margin-bottom: 10px;">Payment Gateway</label>
-        <div class="gateway-option active" style="display: flex; align-items: center; gap: 10px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 15px; border-radius: 12px; color: #10b981;">
-          <span class="gateway-icon">🔒</span>
-          <span style="font-weight: 500;">Paystack (Card, Transfer, USSD)</span>
-        </div>
-      </div>
-      
-      <button type="submit" class="admin-btn-primary" id="confirmPaymentBtn" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 12px; display: flex; justify-content: center; align-items: center;">
-        <span class="btn-text">Pay ₦15,000</span>
-        <span class="btn-loader" style="display:none; margin-left: 10px;">
-          <svg class="spinner" viewBox="0 0 50 50" style="width: 20px; height: 20px; animation: spin 2s linear infinite;"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="90, 150" stroke-dashoffset="0" style="animation: dash 1.5s ease-in-out infinite;"></circle></svg>
-        </span>
-      </button>
-    </form>
+      </section>
+    </main>
   </div>
+
+  <nav class="sd-bottom-nav" aria-label="Portal sections">
+    <button type="button" class="sd-tab active" data-target="overviewSection" aria-current="page"><i class="fas fa-house" aria-hidden="true"></i><span>Home</span></button>
+    <button type="button" class="sd-tab" data-target="resultsSection"><i class="fas fa-chart-column" aria-hidden="true"></i><span>Results</span></button>
+    <a href="payment.html" class="sd-tab sd-tab-pay"><i class="fas fa-credit-card" aria-hidden="true"></i><span>Pay</span></a>
+    <button type="button" class="sd-tab" data-target="profileSection"><i class="fas fa-user" aria-hidden="true"></i><span>Profile</span></button>
+    <button type="button" class="sd-tab" id="moreTab" aria-controls="sidebar" aria-expanded="false"><i class="fas fa-ellipsis" aria-hidden="true"></i><span>More</span></button>
+  </nav>
 </div>
 
-<!-- RECEIPT MODAL -->
-<div class="modal-overlay" id="receiptModalOverlay">
-  <div class="admin-modal glass-panel receipt-modal" style="max-width: 450px; margin: auto; padding: 0;">
-    <div style="padding: 20px; display: flex; justify-content: flex-end;">
-      <button class="mobile-close-btn" id="closeReceiptModal" style="background: rgba(255,255,255,0.1); border: none; color: inherit; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">✕</button>
-    </div>
-    <div class="receipt-content" id="printableReceipt" style="padding: 0 30px 30px;">
-      <div class="receipt-header" style="text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 20px; margin-bottom: 20px;">
-        <div class="receipt-logo" style="width: 60px; height: 60px; margin: 0 auto 10px; border-radius: 50%; overflow: hidden;">
-          <img src="../images/logo.jpg" alt="Geo Academy" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <h2 style="margin: 0 0 5px; color: inherit;">Payment Receipt</h2>
-        <p style="color: rgba(255,255,255,0.6); margin: 0; font-size: 14px;">GEO ACADEMY PORTAL</p>
-      </div>
-      <div class="receipt-body">
-        <div class="receipt-row" style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span style="color: rgba(255,255,255,0.7);">Reference:</span> <strong id="receiptRef" style="color: inherit;">...</strong></div>
-        <div class="receipt-row" style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span style="color: rgba(255,255,255,0.7);">Date:</span> <strong id="receiptDate" style="color: inherit;">...</strong></div>
-        <div class="receipt-row" style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span style="color: rgba(255,255,255,0.7);">Student:</span> <strong id="receiptName" style="color: inherit;">...</strong></div>
-        <div class="receipt-row" style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span style="color: rgba(255,255,255,0.7);">Reg No:</span> <strong id="receiptReg" style="color: inherit;">...</strong></div>
-        <div class="receipt-row" style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span style="color: rgba(255,255,255,0.7);">Status:</span> <strong class="status-success" style="color: #10b981; background: rgba(16,185,129,0.1); padding: 2px 8px; border-radius: 12px;">SUCCESSFUL</strong></div>
-        <div class="receipt-divider" style="height: 1px; border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0;"></div>
-        <div class="receipt-row total" style="display: flex; justify-content: space-between; font-size: 18px;"><span style="color: rgba(255,255,255,0.8);">Amount Paid:</span> <strong style="color: inherit;">₦15,000.00</strong></div>
-      </div>
-      <div class="receipt-footer" style="text-align: center; margin-top: 30px; font-size: 13px; color: rgba(255,255,255,0.6);">
-        <p style="margin: 0 0 5px;">Thank you for your payment!</p>
-        <p style="margin: 0;">Your portal access has been renewed for 30 days.</p>
-      </div>
-    </div>
-    <div class="receipt-actions" style="padding: 20px 30px 30px; display: flex; gap: 15px;">
-      <button class="btn-logout-cancel" id="downloadReceiptBtn" style="flex: 1; padding: 12px; border-radius: 8px;">⬇ PDF</button>
-      <button class="admin-btn-primary" id="printReceiptBtn" style="flex: 1; padding: 12px; border-radius: 8px;">🖨 Print</button>
-    </div>
-  </div>
-</div>
-
-<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="../js/site-config.js"></script>
 <script src="../js/mockUsers.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/student-dashboard.js"></script>
 <script src="../js/dashboard.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const user = GeoAuth.requireAuth("student");
-  if (!user) return;
-
-  const initials = user.avatar || GeoAuth.getInitials(user.fullName);
-  document.getElementById("sidebarAvatar").textContent = initials;
-  document.getElementById("sidebarName").textContent = user.fullName.split(" ")[0];
-  document.getElementById("topbarAvatar").textContent = initials;
-  document.getElementById("topbarName").textContent = user.fullName;
-  document.getElementById("welcomeMsg").textContent = `Welcome back, ${user.fullName.split(" ")[0]}! 🎓`;
-  document.getElementById("welcomeSub").textContent = `REG: ${user.identifier} · Check your results and academic progress.`;
-
-  /* Profile section — built and wired by external student-dashboard.js */
-  GeoStudentDashboard.initProfileEdit(user);
-
-  document.getElementById("logoutBtn").addEventListener("click", () => GeoAuth.logout());
-  document.getElementById("logoutBtnMobile").addEventListener("click", () => GeoAuth.logout());
-
-  // Sidebar + overlay helpers
-  const sidebar = document.querySelector(".admin-sidebar");
-  const overlay = document.getElementById("sidebarOverlay");
-  function openSidebar() { sidebar.classList.add("open"); overlay.classList.add("active"); }
-  function closeSidebar() { sidebar.classList.remove("open"); overlay.classList.remove("active"); }
-
-  document.getElementById("menuToggle").addEventListener("click", () => {
-    sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
-  });
-  overlay.addEventListener("click", closeSidebar);
-
-  document.querySelectorAll(".admin-nav-item").forEach(item => {
-    item.addEventListener("click", () => {
-      if (item.id === "makePaymentBtn" || item.id === "paymentCountdownBtn") return;
-
-      document.querySelectorAll(".admin-nav-item").forEach(n => n.classList.remove("active"));
-      item.classList.add("active");
-      const target = item.dataset.target;
-      if (target) {
-        document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
-        const targetEl = document.getElementById(target);
-        if (targetEl) targetEl.classList.add("active");
-      }
-      if (window.innerWidth <= 768) closeSidebar();
-    });
-  });
-});
-</script>
+<script src="../js/student-portal.js"></script>
 </body>
 </html>
