@@ -24,8 +24,8 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/style.css?v=20260916">
+  <script src="../js/theme.js?v=20260916"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -119,12 +119,12 @@
     <section class="register-section">
       <div class="container register-wrap">
         <div class="register-intro">
-          <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">Student Registration</li></ol></nav>
-          <h1>Student Registration</h1>
+          <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">Register</li></ol></nav>
+          <h1>Student registration</h1>
           <p>Takes about 5 minutes. Fields marked <span class="req">*</span> are required.</p>
         </div>
 
-        <div class="card register-card" id="registerCard">
+        <div class="register-card" id="registerCard">
           <ol class="step-progress" aria-label="Registration progress">
             <li class="step active" data-step="1"><span>1</span> Personal</li><li class="step" data-step="2"><span>2</span> Contact</li><li class="step" data-step="3"><span>3</span> Academic</li><li class="step" data-step="4"><span>4</span> Program</li><li class="step" data-step="5"><span>5</span> Guardian</li><li class="step" data-step="6"><span>6</span> Review</li>
           </ol>
@@ -324,9 +324,9 @@
           </form>
         </div>
 
-        <div class="card register-card form-success" id="registerSuccess" hidden tabindex="-1">
+        <div class="register-card form-success" id="registerSuccess" hidden tabindex="-1">
           <div class="success-icon" aria-hidden="true"><i class="fas fa-check"></i></div>
-          <h2>Registration Successful!</h2>
+          <h2>Registration successful</h2>
           <p>Thank you, <strong data-success-name></strong>. Your reference number is:</p>
           <div class="reference-box"><small>Reference Number</small><strong id="referenceNumber">GEO-2026-00000</strong></div>
           <p><strong>Please save this number for payment and portal access.</strong> Your portal account will be activated once our admin team approves your registration — you'll log in with this reference number and the password you created.</p>
@@ -356,7 +356,8 @@
           </div>
         </div>
         <div class="footer-col">
-          <h2>Explore</h2>
+          <details class="footer-acc" open>
+            <summary>Explore<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
@@ -365,9 +366,11 @@
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
-          <h2>Programs</h2>
+          <details class="footer-acc" open>
+            <summary>Programs<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="courses/jamb-preparation.html">JAMB / UTME Prep</a></li>
             <li><a href="courses/waec-neco.html">WAEC / NECO</a></li>
@@ -376,15 +379,18 @@
             <li><a href="courses/admission-processing.html">Admission Processing</a></li>
             <li><a href="programs.html">Special Programs</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
-          <h2>Students</h2>
+          <details class="footer-acc" open>
+            <summary>Students<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="register2.html">Register Now</a></li>
             <li><a href="login2.html">Student Portal</a></li>
             <li><a href="payment.html">Make a Payment</a></li>
             <li><a href="register-staff.html">Staff Registration</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
           <h2>Contact Us</h2>
@@ -405,10 +411,10 @@
   </a>
   <button type="button" id="scroll-top" aria-label="Back to top"><i class="fas fa-chevron-up" aria-hidden="true"></i></button>
 
-  <script src="../js/site-config.js" defer></script>
-  <script src="../js/script.js" defer></script>
+  <script src="../js/site-config.js?v=20260916" defer></script>
+  <script src="../js/script.js?v=20260916" defer></script>
   <script src="../js/mockUsers.js" defer></script>
-  <script src="../js/auth.js" defer></script>
-  <script src="../js/register-wizard.js" defer></script>
+  <script src="../js/auth.js?v=20260916" defer></script>
+  <script src="../js/register-wizard.js?v=20260916" defer></script>
 </body>
 </html>

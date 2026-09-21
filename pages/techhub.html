@@ -24,8 +24,8 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/style.css?v=20260916">
+  <script src="../js/theme.js?v=20260916"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -116,162 +116,145 @@
   </nav>
 
   <main id="main-content" tabindex="-1">
-    <section class="page-hero band-dark">
+    <section class="page-head">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">GeoTech Academy</li></ol></nav>
         <h1>GeoTech Academy</h1>
-        <p>Industry-relevant digital skills training that launches your tech career — <span data-stat="techGraduatesCount" data-suffix="+">300+</span> graduates and counting.</p>
+        <p>Industry-relevant digital skills training in Lagos — <span data-stat="techGraduatesCount" data-suffix="+">300+</span> graduates and counting.</p>
         <div class="hero-ctas">
-          <a href="register2.html" class="btn btn-accent btn-lg">Enrol Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          <a href="#programs" class="btn btn-ghost-light btn-lg">View Programs</a>
+          <a href="register2.html" class="btn btn-primary btn-lg">Enrol now</a>
+          <a href="#programs" class="btn btn-outline btn-lg">View programs</a>
         </div>
       </div>
     </section>
 
-    <section class="band-dark" aria-label="GeoTech Academy in numbers">
+    <section class="section-tight">
       <div class="container">
-        <ul class="achievements-inner">
-          <li class="ach-item"><strong><span data-stat="techGraduatesCount" data-suffix="+">300+</span></strong><span>Tech Graduates</span></li>
-          <li class="ach-item"><strong><span data-stat="techProgramsCount" data-suffix="">11</span></strong><span>Tech Programs</span></li>
-          <li class="ach-item"><strong><span data-stat="techJobPlacementRate" data-suffix="%">90%</span></strong><span>Job Placement Rate</span></li>
-          <li class="ach-item"><strong><span data-stat="monthsToJobReady" data-suffix="">6</span></strong><span>Months to Job-Ready</span></li>
+        <div class="media media-16x9 media-lg"><picture><source type="image/webp" srcset="../images/p/lab-16x9-800.webp 800w, ../images/p/lab-16x9.webp 1600w" sizes="(max-width: 1120px) 100vw, 1072px"><img src="../images/p/lab-16x9.jpg" srcset="../images/p/lab-16x9-800.jpg 800w, ../images/p/lab-16x9.jpg 1600w" sizes="(max-width: 1120px) 100vw, 1072px" width="1600" height="900" alt="Students at work in the GeoTech Academy computer lab" loading="lazy" decoding="async"></picture></div>
+      </div>
+    </section>
+
+    <section class="stats-band" aria-label="Geosolution in numbers">
+      <div class="container">
+        <ul class="stat-row">
+          <li class="stat-item"><strong><span data-stat="techGraduatesCount" data-suffix="+">300+</span></strong><span>Tech graduates</span></li>
+          <li class="stat-item"><strong><span data-stat="techProgramsCount" data-suffix="">11</span></strong><span>Programs</span></li>
+          <li class="stat-item"><strong><span data-stat="techJobPlacementRate" data-suffix="%">90%</span></strong><span>Job placement rate</span></li>
+          <li class="stat-item"><strong><span data-stat="monthsToJobReady" data-suffix="">6</span></strong><span>Months to job-ready</span></li>
         </ul>
       </div>
     </section>
-
-    <section class="section section-muted" id="programs" aria-labelledby="programs-title">
+    <section class="section" id="programs" aria-labelledby="progs-title">
       <div class="container">
         <div class="section-head">
-          <span class="section-label">Our Programs</span>
-          <h2 class="section-title" id="programs-title">Tech Training Programs</h2>
-          <p class="section-subtitle">Practical, project-based learning designed for real-world employment.</p>
+          <span class="eyebrow">Programs</span>
+          <h2 id="progs-title">Choose your track</h2>
+          <p>Practical, project-based learning designed for real-world employment.</p>
         </div>
-        <div class="detail-grid">
+        <div class="cards-3">
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-code"></i></div><div><h3>Web Development</h3><small>6 Months • Beginner to Pro</small></div></div>
-            <div class="tp-body">
-              <p>Build modern, responsive websites and web applications from scratch — from HTML/CSS basics to React and Node.js backends.</p>
-              <div class="tp-tags"><span class="tp-tag">HTML &amp; CSS</span><span class="tp-tag">JavaScript</span><span class="tp-tag">React</span><span class="tp-tag">Node.js</span><span class="tp-tag">MongoDB</span></div>
-              <a href="courses/web-development.html" class="link-arrow">Course details <span class="visually-hidden">for Web Development</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">6 months · Beginner to pro</span>
+            <h3>Web Development</h3>
+            <p>HTML, CSS, JavaScript, React and Node.js — from web design to full-stack.</p>
+            <a href="courses/web-development.html" class="link-arrow stretched">Course details <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></div><div><h3>Data Analytics</h3><small>4 Months • All Levels</small></div></div>
-            <div class="tp-body">
-              <p>Turn raw data into actionable business insights using Excel, Python, SQL, Power BI and Tableau. A high-demand career path.</p>
-              <div class="tp-tags"><span class="tp-tag">Excel</span><span class="tp-tag">Python</span><span class="tp-tag">SQL</span><span class="tp-tag">Power BI</span><span class="tp-tag">Tableau</span></div>
-              <a href="courses/data-analytics.html" class="link-arrow">Course details <span class="visually-hidden">for Data Analytics</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">4 months · All levels</span>
+            <h3>Data Analytics</h3>
+            <p>Excel, Python, SQL, Power BI and Tableau on real datasets.</p>
+            <a href="courses/data-analytics.html" class="link-arrow stretched">Course details <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-shield-halved"></i></div><div><h3>Cybersecurity</h3><small>4 Months • Intermediate</small></div></div>
-            <div class="tp-body">
-              <p>Ethical hacking, network security, penetration testing and digital forensics. Prepare for globally recognised certifications.</p>
-              <div class="tp-tags"><span class="tp-tag">Ethical Hacking</span><span class="tp-tag">Network Security</span><span class="tp-tag">Forensics</span><span class="tp-tag">CompTIA</span></div>
-              <a href="courses/cybersecurity.html" class="link-arrow">Course details <span class="visually-hidden">for Cybersecurity</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">4 months · Intermediate</span>
+            <h3>Cybersecurity</h3>
+            <p>Ethical hacking, network security, penetration testing and forensics.</p>
+            <a href="courses/cybersecurity.html" class="link-arrow stretched">Course details <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-pen-ruler"></i></div><div><h3>UI/UX Design</h3><small>3 Months • Beginner</small></div></div>
-            <div class="tp-body">
-              <p>Design beautiful, user-friendly digital products. Learn Figma, wireframing, prototyping and user research techniques.</p>
-              <div class="tp-tags"><span class="tp-tag">Figma</span><span class="tp-tag">Wireframing</span><span class="tp-tag">Prototyping</span><span class="tp-tag">User Research</span></div>
-              <a href="courses/ui-ux-design.html" class="link-arrow">Course details <span class="visually-hidden">for UI/UX Design</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">3 months · Beginner</span>
+            <h3>UI/UX Design</h3>
+            <p>Figma, wireframing, prototyping and user research.</p>
+            <a href="courses/ui-ux-design.html" class="link-arrow stretched">Course details <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-bullhorn"></i></div><div><h3>Digital Marketing</h3><small>3 Months • All Levels</small></div></div>
-            <div class="tp-body">
-              <p>Master social media marketing, SEO, content strategy, Google Ads, email and affiliate marketing to grow businesses online.</p>
-              <div class="tp-tags"><span class="tp-tag">SEO</span><span class="tp-tag">Google Ads</span><span class="tp-tag">Social Media</span><span class="tp-tag">Affiliate</span></div>
-              <a href="courses/digital-marketing.html" class="link-arrow">Course details <span class="visually-hidden">for Digital Marketing</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">Basic &amp; advanced</span>
+            <h3>Graphics Design</h3>
+            <p>Design fundamentals, Canva, branding, flyers and social media.</p>
+            <a href="courses/graphics-design.html" class="link-arrow stretched">Course details <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-palette"></i></div><div><h3>Graphics Design</h3><small>Basic &amp; Advanced</small></div></div>
-            <div class="tp-body">
-              <p>Create professional graphics for brands, events and social media — from design fundamentals to advanced projects, including Canva.</p>
-              <div class="tp-tags"><span class="tp-tag">Design Principles</span><span class="tp-tag">Canva</span><span class="tp-tag">Branding</span><span class="tp-tag">Social Media</span></div>
-              <a href="courses/graphics-design.html" class="link-arrow">Course details <span class="visually-hidden">for Graphics Design</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">3 months · All levels</span>
+            <h3>Digital Marketing</h3>
+            <p>SEO, Google Ads, social media, email and affiliate marketing.</p>
+            <a href="courses/digital-marketing.html" class="link-arrow stretched">Course details <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-mobile-screen"></i></div><div><h3>Mobile App Development</h3><small>6 Months • All Levels</small></div></div>
-            <div class="tp-body">
-              <p>Create professional mobile applications for Android and iOS. Learn React Native or Flutter for cross-platform development.</p>
-              <div class="tp-tags"><span class="tp-tag">React Native</span><span class="tp-tag">Flutter</span><span class="tp-tag">Firebase</span><span class="tp-tag">App Store</span></div>
-              <a href="register2.html?course=mobile-apps" class="link-arrow">Register <span class="visually-hidden">for Mobile App Development</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">6 months · All levels</span>
+            <h3>Mobile App Development</h3>
+            <p>Android and iOS apps with React Native or Flutter.</p>
+            <a href="register2.html" class="link-arrow stretched">Register <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-network-wired"></i></div><div><h3>Networking &amp; IT Support</h3><small>3 Months • Beginner</small></div></div>
-            <div class="tp-body">
-              <p>Learn computer hardware, networking fundamentals, system administration and IT support. Prepare for CompTIA A+ and Network+.</p>
-              <div class="tp-tags"><span class="tp-tag">CompTIA A+</span><span class="tp-tag">Networking</span><span class="tp-tag">Windows Server</span></div>
-              <a href="register2.html?course=networking" class="link-arrow">Register <span class="visually-hidden">for Networking &amp; IT Support</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">3 months · Beginner</span>
+            <h3>Networking &amp; IT Support</h3>
+            <p>Hardware, networking and system administration. CompTIA A+ and Network+.</p>
+            <a href="register2.html" class="link-arrow stretched">Register <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-video"></i></div><div><h3>Video Production &amp; Editing</h3><small>2 Months • All Levels</small></div></div>
-            <div class="tp-body">
-              <p>Professional video editing, colour grading, animation and content creation for YouTube, TikTok and commercial clients.</p>
-              <div class="tp-tags"><span class="tp-tag">Premiere Pro</span><span class="tp-tag">After Effects</span><span class="tp-tag">DaVinci</span></div>
-              <a href="register2.html?course=video-production" class="link-arrow">Register <span class="visually-hidden">for Video Production &amp; Editing</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">2 months · All levels</span>
+            <h3>Video Production &amp; Editing</h3>
+            <p>Editing, colour grading and content creation for social platforms.</p>
+            <a href="register2.html" class="link-arrow stretched">Register <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-keyboard"></i></div><div><h3>Computer Foundation Class</h3><small>Beginner</small></div></div>
-            <div class="tp-body">
-              <p>Build confidence with computers — typing, files and folders, everyday software and using the internet safely.</p>
-              <div class="tp-tags"><span class="tp-tag">Typing</span><span class="tp-tag">Files &amp; Folders</span><span class="tp-tag">Internet</span></div>
-              <a href="register2.html?course=computer-foundation" class="link-arrow">Register <span class="visually-hidden">for Computer Foundation Class</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">Beginner</span>
+            <h3>Computer Foundation Class</h3>
+            <p>Typing, files, everyday software and using the internet safely.</p>
+            <a href="register2.html" class="link-arrow stretched">Register <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
 
-          <article class="card tech-prog-card reveal">
-            <div class="tp-header"><div class="tc-icon" aria-hidden="true"><i class="fas fa-bitcoin-sign"></i></div><div><h3>Cryptocurrency Trading</h3><small>All Levels</small></div></div>
-            <div class="tp-body">
-              <p>Understand digital assets, how exchanges and wallets work, and how to manage risk when trading.</p>
-              <div class="tp-tags"><span class="tp-tag">Exchanges</span><span class="tp-tag">Wallets</span><span class="tp-tag">Risk Management</span></div>
-              <a href="register2.html?course=crypto" class="link-arrow">Register <span class="visually-hidden">for Cryptocurrency Trading</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
+          <article class="card photo-card">
+            <span class="eyebrow">All levels</span>
+            <h3>Cryptocurrency Trading</h3>
+            <p>Digital assets, exchanges, wallets and managing trading risk.</p>
+            <a href="register2.html" class="link-arrow stretched">Register <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="process-title">
+    <section class="section section-alt" aria-labelledby="how-title">
       <div class="container">
         <div class="section-head">
-          <span class="section-label">The Process</span>
-          <h2 class="section-title" id="process-title">How GeoTech Academy Works</h2>
+          <span class="eyebrow">How it works</span>
+          <h2 id="how-title">From enrolment to certificate</h2>
         </div>
-        <ol class="steps-grid">
-          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">01</span><h3>Choose a Program</h3><p>Select an in-demand tech course that matches your goals.</p></li>
-          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">02</span><h3>Enrol &amp; Pay</h3><p>Flexible payment plans make quality tech education accessible.</p></li>
-          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">03</span><h3>Learn &amp; Build</h3><p>Hands-on projects with expert instructors and peer support.</p></li>
-          <li class="card step-card reveal"><span class="step-num" aria-hidden="true">04</span><h3>Get Certified</h3><p>Graduate with a portfolio and certificate employers recognise.</p></li>
+        <ol class="cards-2">
+          <li class="card"><span class="eyebrow">Step 01</span><h3>Choose a program</h3><p>Pick the track that matches your goal — our team will advise if you're unsure.</p></li>
+          <li class="card"><span class="eyebrow">Step 02</span><h3>Enrol &amp; pay</h3><p>Register online and pay by card or bank transfer. Flexible payment plans are available.</p></li>
+          <li class="card"><span class="eyebrow">Step 03</span><h3>Learn &amp; build</h3><p>Hands-on projects with expert instructors and peer support, in class or online.</p></li>
+          <li class="card"><span class="eyebrow">Step 04</span><h3>Get certified</h3><p>Graduate with a portfolio of work and a certificate employers recognise.</p></li>
         </ol>
       </div>
     </section>
 
-    <section class="cta-banner" aria-labelledby="cta-title">
+    <section class="cta-band center" aria-labelledby="cta-title">
       <div class="container">
-        <h2 id="cta-title">Ready to Launch Your Tech Career?</h2>
-        <p>Join 300+ graduates who have transformed their lives through GeoTech Academy.</p>
+        <h2 id="cta-title">Ready to start your tech career?</h2>
+        <p>Join 300+ graduates who trained at GeoTech Academy.</p>
         <div class="cta-buttons">
-          <a href="register2.html" class="btn btn-accent btn-lg">Apply Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp" aria-hidden="true"></i> Chat With Us</a>
+          <a href="register2.html" class="btn btn-light btn-lg">Apply now</a>
+          <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp" aria-hidden="true"></i> Chat with us</a>
         </div>
       </div>
     </section>
@@ -291,7 +274,8 @@
           </div>
         </div>
         <div class="footer-col">
-          <h2>Explore</h2>
+          <details class="footer-acc" open>
+            <summary>Explore<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
@@ -300,9 +284,11 @@
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
-          <h2>Programs</h2>
+          <details class="footer-acc" open>
+            <summary>Programs<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="courses/jamb-preparation.html">JAMB / UTME Prep</a></li>
             <li><a href="courses/waec-neco.html">WAEC / NECO</a></li>
@@ -311,15 +297,18 @@
             <li><a href="courses/admission-processing.html">Admission Processing</a></li>
             <li><a href="programs.html">Special Programs</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
-          <h2>Students</h2>
+          <details class="footer-acc" open>
+            <summary>Students<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="register2.html">Register Now</a></li>
             <li><a href="login2.html">Student Portal</a></li>
             <li><a href="payment.html">Make a Payment</a></li>
             <li><a href="register-staff.html">Staff Registration</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
           <h2>Contact Us</h2>
@@ -340,7 +329,7 @@
   </a>
   <button type="button" id="scroll-top" aria-label="Back to top"><i class="fas fa-chevron-up" aria-hidden="true"></i></button>
 
-  <script src="../js/site-config.js" defer></script>
-  <script src="../js/script.js" defer></script>
+  <script src="../js/site-config.js?v=20260916" defer></script>
+  <script src="../js/script.js?v=20260916" defer></script>
 </body>
 </html>

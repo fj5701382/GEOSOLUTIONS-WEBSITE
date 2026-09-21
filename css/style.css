@@ -563,8 +563,10 @@ main { display: block; }
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 56px;
+  /* Visual column takes the larger share — the hero photo is the page's
+     main image and was previously the narrower of the two columns. */
+  grid-template-columns: 1fr 1.1fr;
+  gap: 48px;
   align-items: center;
 }
 .hero-badge {
@@ -594,11 +596,15 @@ main { display: block; }
 .hero-visual { position: relative; }
 .hero-img-wrap {
   overflow: hidden;
-  aspect-ratio: 4 / 3.4;
+  aspect-ratio: 1 / 1;
   border-radius: 30px 30px 30px 90px;
   background: var(--brand-light);
   box-shadow: var(--shadow-lg);
 }
+/* <picture> needs a definite height, or the img's height:100% resolves
+   against auto and collapses to the photo's natural aspect — leaving the
+   bottom of the wrapper empty. */
+.hero-img-wrap picture { display: block; width: 100%; height: 100%; }
 .hero-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
 .hero-caption {
   position: absolute;
@@ -684,6 +690,21 @@ main { display: block; }
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
 .split-media { position: relative; }
 .split-media img { width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+
+/* Photo columns fill the row height rather than sitting centred with dead
+   space above and below a much taller text column. .media boxes are excluded
+   — they carry their own aspect-ratio. */
+.split > .split-media:not(.media),
+.split > .about-teaser-img { align-self: stretch; }
+.split > .split-media:not(.media) > picture,
+.split > .about-teaser-img > picture:first-of-type { display: block; height: 100%; }
+.split > .split-media:not(.media) > picture > img,
+.split > .about-teaser-img > picture:first-of-type > img {
+  height: 100%;
+  min-height: 340px;
+  object-fit: cover;
+  object-position: center;
+}
 .media-badge {
   position: absolute;
   right: -18px;
@@ -1638,7 +1659,166 @@ main { display: block; }
 .not-found h1 { margin-bottom: 12px; font-size: clamp(1.5rem, 4vw, 2.2rem); }
 .not-found p { max-width: 440px; margin: 0 auto 28px; }
 
+/* ── 25. SHARED LAYOUT PRIMITIVES ───────────────────────────── */
+/* Page head, bands, media boxes and card grids used across the
+   about, services, GeoTech, contact and course pages. */
+
+/* Inner page header. Must clear the fixed navbar, or the breadcrumb
+   and <h1> slide underneath it. */
+.page-head {
+  padding: calc(var(--nav-h) + 56px) 0 64px;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--brand-light) 100%);
+  text-align: center;
+}
+.page-head h1 { margin-bottom: 12px; }
+.page-head p { max-width: 640px; margin: 0 auto; font-size: 1.05rem; color: var(--text-secondary); }
+.page-head .cta-buttons { margin-top: 28px; }
+.page-head.band-dark { background: var(--bg-inverse); }
+.page-head.band-dark h1 { color: #fff; }
+.page-head.band-dark p { color: rgba(255, 255, 255, 0.72); }
+
+/* Small uppercase label above a heading */
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--link);
+}
+
+.section-tight { padding: 64px 0; }
+
+/* Card grids */
+.cards-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.cards-2 > .card,
+.cards-3 > .card { display: flex; flex-direction: column; }
+.cards-2 > .card h3,
+.cards-3 > .card h3 { margin-bottom: 10px; }
+.cards-2 > .card p,
+.cards-3 > .card p { font-size: 0.94rem; }
+
+/* Program card: arrow link pinned to the bottom, whole card clickable */
+.photo-card { position: relative; }
+.photo-card > p { flex: 1; margin-bottom: 12px; }
+.photo-card .link-arrow { margin-top: auto; }
+.photo-card .stretched::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+
+/* Media boxes — a fixed aspect ratio so images never reflow on load */
+.media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-lg);
+}
+.media picture { display: block; width: 100%; height: 100%; }
+/* box-shadow is carried by the container, which clips it on the image */
+.media img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; box-shadow: none; }
+.media-4x3 { aspect-ratio: 4 / 3; }
+.media-16x9 { aspect-ratio: 16 / 9; }
+.media-lg { width: 100%; margin: 0 auto; }
+
+/* Stats band */
+.stats-band { padding: 56px 0; background: var(--bg-inverse); }
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+.stat-item { text-align: center; }
+.stat-item strong { display: block; font-size: clamp(1.9rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.1; color: #fff; }
+.stat-item > span { display: block; margin-top: 6px; font-size: 0.92rem; color: rgba(255, 255, 255, 0.78); }
+
+/* Wide photo band with a caption underneath */
+.band-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 20px;
+  margin-top: 18px;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+.band-caption .link-arrow { flex-shrink: 0; }
+/* The centre building photo reads as black & white — on a container
+   (about page) or on the image itself (home page story section) */
+.media-bw img,
+img.media-bw { filter: grayscale(1); }
+
+/* CTA band */
+.cta-band {
+  position: relative;
+  overflow: hidden;
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--primary) 0%, #0f3d7a 100%);
+}
+.cta-band::after {
+  content: '';
+  position: absolute;
+  right: -120px;
+  bottom: -160px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(248, 56, 56, 0.22) 0%, transparent 70%);
+}
+.cta-band .container { position: relative; z-index: 1; }
+.cta-band h2 { margin-bottom: 12px; color: #fff; }
+.cta-band p { max-width: 560px; margin: 0 auto 28px; color: rgba(255, 255, 255, 0.88); }
+.cta-band .btn-whatsapp { background: var(--whatsapp); color: #06301a; }
+.cta-band .btn-whatsapp:hover { background: #1fbd5a; }
+
+/* Program index columns (services page) */
+.program-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.program-group h3 {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--brand);
+  font-size: 1.05rem;
+}
+.program-list { display: grid; gap: 2px; }
+.program-list li a,
+.program-list li .muted {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+.program-list li a { color: var(--text-primary); transition: background 0.2s, color 0.2s; }
+.program-list li a i { font-size: 0.72rem; color: var(--brand); transition: transform 0.2s; }
+.program-list li a:hover { background: var(--brand-light); color: var(--link); }
+.program-list li a:hover i { transform: translateX(3px); }
+
+/* Footer link groups — plain headings on desktop, accordions on mobile */
+.footer-acc > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: default;
+  list-style: none;
+}
+.footer-acc > summary::-webkit-details-marker { display: none; }
+.footer-acc > summary i { display: none; font-size: 0.75rem; opacity: 0.6; transition: transform 0.2s; }
+
+.center { text-align: center; }
+.muted { color: var(--text-muted); }
+
 /* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (min-width: 769px) {
+  /* Footer groups stay expanded on desktop regardless of [open] */
+  .footer-acc > ul { display: block; }
+}
+
 @media (max-width: 1180px) {
   .nav-menu, .nav-actions .btn { display: none; }
   .hamburger { display: flex; }
@@ -1649,6 +1829,9 @@ main { display: block; }
 
 @media (max-width: 1024px) {
   .hero-inner, .split, .contact-layout { grid-template-columns: 1fr; gap: 44px; }
+  /* Stacked: there is no taller neighbour to match, so let photos be natural */
+  .split > .split-media:not(.media) > picture > img,
+  .split > .about-teaser-img > picture:first-of-type > img { height: auto; min-height: 0; }
   .hero-visual { max-width: 560px; }
   .hero-caption { left: 12px; }
   .program-row.reverse .split-media { order: 0; }
@@ -1661,6 +1844,9 @@ main { display: block; }
   .media-badge { right: 12px; }
   .about-year-badge { left: 12px; }
   .about-img-small { right: 12px; }
+  .cards-3 { grid-template-columns: repeat(2, 1fr); }
+  .program-columns { grid-template-columns: repeat(2, 1fr); }
+  .stat-row { gap: 24px 16px; }
 }
 
 @media (max-width: 768px) {
@@ -1691,6 +1877,23 @@ main { display: block; }
 
   .whatsapp-float { right: 16px; bottom: 76px; width: 52px; height: 52px; font-size: 1.7rem; }
   #scroll-top { right: 20px; bottom: 16px; }
+
+  /* Shared layout primitives */
+  .page-head { padding: calc(var(--nav-h) + 36px) 0 44px; }
+  .page-head p { font-size: 1rem; }
+  .section-tight { padding: 48px 0; }
+  .cards-2, .cards-3 { grid-template-columns: 1fr; }
+  .program-columns { grid-template-columns: 1fr; gap: 28px; }
+  .stats-band { padding: 44px 0; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); gap: 28px 16px; }
+  .cta-band { padding: 56px 0; }
+  .cta-band::after { right: -160px; bottom: -200px; }
+  .band-caption { justify-content: flex-start; gap: 8px 16px; }
+
+  /* Footer groups become tap-to-open accordions */
+  .footer-acc > summary { min-height: 44px; margin-bottom: 8px; padding: 6px 0; cursor: pointer; }
+  .footer-acc > summary i { display: block; }
+  .footer-acc[open] > summary i { transform: rotate(180deg); }
 }
 
 @media (max-width: 480px) {
@@ -1714,6 +1917,17 @@ main { display: block; }
   .lightbox-prev, .lightbox-next { top: auto; bottom: 16px; transform: none; }
   .lightbox-prev { left: calc(50% - 64px); }
   .lightbox-next { right: calc(50% - 64px); }
+
+  /* Shared layout primitives */
+  .section-tight { padding: 40px 0; }
+  .stat-row { gap: 22px 12px; }
+  .stat-item strong { font-size: 1.65rem; }
+  .stat-item > span { font-size: 0.8rem; line-height: 1.35; }
+  .cta-band { padding: 48px 0; }
+  .band-caption { flex-direction: column; align-items: flex-start; }
+  /* A 16:9 strip is too letterboxed to read on a phone — go slightly
+     taller so object-fit crops the sides and the subject fills more */
+  .media-16x9 { aspect-ratio: 3 / 2; }
 }
 
 @media print {

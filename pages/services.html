@@ -24,8 +24,8 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/style.css?v=20260916">
+  <script src="../js/theme.js?v=20260916"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -116,161 +116,120 @@
   </nav>
 
   <main id="main-content" tabindex="-1">
-    <section class="page-hero">
+    <section class="page-head">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">Services</li></ol></nav>
-        <h1>Our Services &amp; Courses</h1>
-        <p>Academic coaching, tech training and educational consultancy designed to help you succeed.</p>
-        <div class="hero-ctas">
-          <a href="#academic" class="btn btn-outline btn-sm">Academic</a>
-          <a href="#tech" class="btn btn-outline btn-sm">Tech</a>
-          <a href="#consultancy" class="btn btn-outline btn-sm">Consultancy</a>
+        <h1>Programs &amp; services</h1>
+        <p>Academic coaching, tech training and educational consultancy — all delivered from our centre in Lagos.</p>
+      </div>
+    </section>
+
+    <section class="section-tight" id="academic">
+      <div class="container split reverse">
+        <div class="media media-4x3 split-media"><picture><source type="image/webp" srcset="../images/p/lecture-4x3-600.webp 600w, ../images/p/lecture-4x3.webp 1200w" sizes="(max-width: 1024px) 100vw, 500px"><img src="../images/p/lecture-4x3.jpg" srcset="../images/p/lecture-4x3-600.jpg 600w, ../images/p/lecture-4x3.jpg 1200w" sizes="(max-width: 1024px) 100vw, 500px" width="1200" height="900" alt="A Geosolution exam preparation class in progress" loading="lazy" decoding="async"></picture></div>
+        <div>
+          <span class="eyebrow">Academic</span>
+          <h2>Exam preparation</h2>
+          <p>Intensive coaching for the exams that decide admission — with past questions, mock exams and computer-based practice.</p>
+          <ul class="check-list">
+            <li><i class="fas fa-circle" aria-hidden="true"></i> JAMB / UTME, including JOT orientation training</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> WAEC, NECO and GCE, with science practicals</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> CBT training on real exam simulation software</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> IELTS and TOEFL for study abroad</li>
+          </ul>
+          <a href="courses/jamb-preparation.html" class="btn btn-outline">View JAMB program</a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="academic" aria-labelledby="academic-title">
+    <section class="section" id="tech">
+      <div class="container split">
+        <div class="media media-4x3 split-media"><picture><source type="image/webp" srcset="../images/p/mentoring-4x3-600.webp 600w, ../images/p/mentoring-4x3.webp 1200w" sizes="(max-width: 1024px) 100vw, 500px"><img src="../images/p/mentoring-4x3.jpg" srcset="../images/p/mentoring-4x3-600.jpg 600w, ../images/p/mentoring-4x3.jpg 1200w" sizes="(max-width: 1024px) 100vw, 500px" width="1200" height="900" alt="An instructor teaching a student at GeoTech Academy" loading="lazy" decoding="async"></picture></div>
+        <div>
+          <span class="eyebrow">Technology</span>
+          <h2>GeoTech Academy</h2>
+          <p>Practical, project-based training in the digital skills Nigerian employers and clients are paying for.</p>
+          <ul class="check-list">
+            <li><i class="fas fa-circle" aria-hidden="true"></i> Web development, data analytics and cybersecurity</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> UI/UX and graphics design, including Canva</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> Digital marketing, SEO and affiliate marketing</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> Computer foundation classes for complete beginners</li>
+          </ul>
+          <a href="techhub.html" class="btn btn-outline">All tech programs</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="consultancy">
+      <div class="container split reverse">
+        <div class="media media-4x3 split-media"><picture><source type="image/webp" srcset="../images/p/admissions-4x3-600.webp 600w, ../images/p/admissions-4x3.webp 1200w" sizes="(max-width: 1024px) 100vw, 500px"><img src="../images/p/admissions-4x3.jpg" srcset="../images/p/admissions-4x3-600.jpg 600w, ../images/p/admissions-4x3.jpg 1200w" sizes="(max-width: 1024px) 100vw, 500px" width="1200" height="900" alt="An adviser helping a student with admission paperwork" loading="lazy" decoding="async"></picture></div>
+        <div>
+          <span class="eyebrow">Consultancy</span>
+          <h2>Admissions &amp; guidance</h2>
+          <p>We handle the paperwork and deadlines so students and parents can focus on the exams.</p>
+          <ul class="check-list">
+            <li><i class="fas fa-circle" aria-hidden="true"></i> JAMB change of institution and direct entry</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> O'Level result upload and verification</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> Post-UTME preparation</li>
+            <li><i class="fas fa-circle" aria-hidden="true"></i> Career counselling, scholarships and study abroad</li>
+          </ul>
+          <a href="courses/admission-processing.html" class="btn btn-outline">Admission processing</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="all-title">
       <div class="container">
         <div class="section-head">
-          <span class="section-label">Academic Programs</span>
-          <h2 class="section-title" id="academic-title">Exam Preparation &amp; Academic Services</h2>
-          <p class="section-subtitle">Expert coaching with proven results across all major Nigerian and international examinations.</p>
+          <span class="eyebrow">At a glance</span>
+          <h2 id="all-title">Every program we run</h2>
         </div>
-        <div class="detail-grid">
-
-          <article class="card detail-card reveal">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-book-open"></i></div>
-            <h3>JAMB / UTME Preparation</h3>
-            <p>Intensive coaching for the Unified Tertiary Matriculation Examination with computer-based practice, past questions and subject mastery sessions.</p>
-            <ul class="check-list"><li><i class="fas fa-circle-check" aria-hidden="true"></i> All UTME subjects covered</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Daily mock CBT practice tests</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Score prediction &amp; strategy sessions</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Results tracking &amp; feedback</li></ul>
-            <div class="detail-card-actions"><a href="courses/jamb-preparation.html" class="link-arrow">Course details <span class="visually-hidden">for JAMB / UTME Preparation</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a><a href="register2.html?course=jamb" class="link-arrow">Register <span class="visually-hidden">for JAMB / UTME Preparation</span><i class="fas fa-user-plus" aria-hidden="true"></i></a></div>
-          </article>
-
-          <article class="card detail-card reveal">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-pen-to-square"></i></div>
-            <h3>WAEC / NECO / GCE</h3>
-            <p>Comprehensive preparation for WAEC, NECO and GCE examinations covering science, art and commercial subjects.</p>
-            <ul class="check-list"><li><i class="fas fa-circle-check" aria-hidden="true"></i> Full syllabus coverage</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Past question mastery</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Practical sessions for science subjects</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Essay and objective techniques</li></ul>
-            <div class="detail-card-actions"><a href="courses/waec-neco.html" class="link-arrow">Course details <span class="visually-hidden">for WAEC / NECO / GCE</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a><a href="register2.html?course=waec-neco" class="link-arrow">Register <span class="visually-hidden">for WAEC / NECO / GCE</span><i class="fas fa-user-plus" aria-hidden="true"></i></a></div>
-          </article>
-
-          <article class="card detail-card reveal">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-computer"></i></div>
-            <h3>CBT Training</h3>
-            <p>Hands-on computer-based test training designed to eliminate exam anxiety and maximise performance in computer-administered exams.</p>
-            <ul class="check-list"><li><i class="fas fa-circle-check" aria-hidden="true"></i> Real exam simulation software</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Speed &amp; accuracy training</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Keyboard and navigation skills</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Time management strategies</li></ul>
-            <div class="detail-card-actions"><a href="courses/cbt-training.html" class="link-arrow">Course details <span class="visually-hidden">for CBT Training</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a><a href="register2.html?course=cbt" class="link-arrow">Register <span class="visually-hidden">for CBT Training</span><i class="fas fa-user-plus" aria-hidden="true"></i></a></div>
-          </article>
-
-          <article class="card detail-card reveal">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-earth-africa"></i></div>
-            <h3>IELTS / TOEFL Training</h3>
-            <p>Structured IELTS and TOEFL preparation for students targeting universities in the UK, Canada, USA, Australia and beyond.</p>
-            <ul class="check-list"><li><i class="fas fa-circle-check" aria-hidden="true"></i> Listening, Reading, Writing, Speaking</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Band-targeted coaching</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Mock full-length test sessions</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> British Council exam registration guidance</li></ul>
-            <div class="detail-card-actions"><a href="courses/ielts-training.html" class="link-arrow">Course details <span class="visually-hidden">for IELTS / TOEFL Training</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a><a href="register2.html?course=ielts" class="link-arrow">Register <span class="visually-hidden">for IELTS / TOEFL Training</span><i class="fas fa-user-plus" aria-hidden="true"></i></a></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-muted" id="tech" aria-labelledby="tech-title">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-label">GeoTech Academy</span>
-          <h2 class="section-title" id="tech-title">Tech Training Programs</h2>
-          <p class="section-subtitle">Practical, project-based courses for in-demand digital careers.</p>
-        </div>
-        <div class="services-grid">
-
-          <article class="service-card">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-code"></i></div>
-            <h3>Web Development</h3>
-            <p>HTML, CSS, JavaScript, React and Node.js.</p>
-            <a href="courses/web-development.html" class="link-arrow stretched">Learn More <span class="visually-hidden">about Web Development</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          </article>
-
-          <article class="service-card">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-chart-line"></i></div>
-            <h3>Data Analytics</h3>
-            <p>Excel, Python, SQL, Power BI and Tableau.</p>
-            <a href="courses/data-analytics.html" class="link-arrow stretched">Learn More <span class="visually-hidden">about Data Analytics</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          </article>
-
-          <article class="service-card">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-pen-ruler"></i></div>
-            <h3>UI/UX Design</h3>
-            <p>Figma, wireframing, prototyping and user research.</p>
-            <a href="courses/ui-ux-design.html" class="link-arrow stretched">Learn More <span class="visually-hidden">about UI/UX Design</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          </article>
-
-          <article class="service-card">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-palette"></i></div>
-            <h3>Graphics Design</h3>
-            <p>Design principles, Canva, branding and social media graphics.</p>
-            <a href="courses/graphics-design.html" class="link-arrow stretched">Learn More <span class="visually-hidden">about Graphics Design</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          </article>
-
-          <article class="service-card">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-shield-halved"></i></div>
-            <h3>Cybersecurity</h3>
-            <p>Ethical hacking, network security and forensics.</p>
-            <a href="courses/cybersecurity.html" class="link-arrow stretched">Learn More <span class="visually-hidden">about Cybersecurity</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          </article>
-
-          <article class="service-card">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-bullhorn"></i></div>
-            <h3>Digital Marketing</h3>
-            <p>SEO, Google Ads, social media and affiliate marketing.</p>
-            <a href="courses/digital-marketing.html" class="link-arrow stretched">Learn More <span class="visually-hidden">about Digital Marketing</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          </article>
-        </div>
-        <p class="gallery-more"><a href="techhub.html#programs" class="btn btn-outline">View all <span data-stat="techProgramsCount" data-suffix="">11</span> tech programs <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
-      </div>
-    </section>
-
-    <section class="section" id="consultancy" aria-labelledby="consult-title">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-label">Consultancy</span>
-          <h2 class="section-title" id="consult-title">Admission &amp; Educational Consultancy</h2>
-          <p class="section-subtitle">Expert guidance from admission forms to career and study-abroad decisions.</p>
-        </div>
-        <div class="detail-grid">
-
-          <article class="card detail-card reveal">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-building-columns"></i></div>
-            <h3>Admission Processing</h3>
-            <p>End-to-end support for university, polytechnic and college of education admission — from JAMB to departmental screening.</p>
-            <ul class="check-list"><li><i class="fas fa-circle-check" aria-hidden="true"></i> JAMB change of institution</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> O'Level result upload &amp; verification</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Direct entry applications</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Post-UTME preparation</li></ul>
-            <div class="detail-card-actions"><a href="courses/admission-processing.html" class="link-arrow">Course details <span class="visually-hidden">for Admission Processing</span><i class="fas fa-arrow-right" aria-hidden="true"></i></a><a href="register2.html?course=admission-processing" class="link-arrow">Register <span class="visually-hidden">for Admission Processing</span><i class="fas fa-user-plus" aria-hidden="true"></i></a></div>
-          </article>
-
-          <article class="card detail-card reveal">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-handshake"></i></div>
-            <h3>Educational Consultancy</h3>
-            <p>Expert guidance on academic pathways, career counselling, scholarship applications and study-abroad strategies tailored to each student.</p>
-            <ul class="check-list"><li><i class="fas fa-circle-check" aria-hidden="true"></i> Career path counselling</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Scholarship research &amp; applications</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Study abroad guidance</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> CV &amp; personal statement writing</li></ul>
-            <div class="detail-card-actions"><a href="register2.html?course=consultancy" class="link-arrow">Register <span class="visually-hidden">for Educational Consultancy</span><i class="fas fa-user-plus" aria-hidden="true"></i></a></div>
-          </article>
-
-          <article class="card detail-card reveal">
-            <div class="icon-tile" aria-hidden="true"><i class="fas fa-chalkboard-user"></i></div>
-            <h3>Online &amp; Private Tutoring</h3>
-            <p>Personal lessons for students who want extra support in specific subjects, online or at our centre.</p>
-            <ul class="check-list"><li><i class="fas fa-circle-check" aria-hidden="true"></i> One-on-one or small groups</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Online or in-person lessons</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Flexible lesson times</li><li><i class="fas fa-circle-check" aria-hidden="true"></i> Focused on your weak areas</li></ul>
-            <div class="detail-card-actions"><a href="register2.html?course=tutoring" class="link-arrow">Register <span class="visually-hidden">for Online &amp; Private Tutoring</span><i class="fas fa-user-plus" aria-hidden="true"></i></a></div>
-          </article>
+        <div class="program-columns">
+          <div class="program-group">
+            <h3>Academic</h3>
+            <ul class="program-list">
+            <li><a href="courses/jamb-preparation.html">JAMB / UTME Preparation <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/waec-neco.html">WAEC / NECO / GCE <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/cbt-training.html">CBT Training <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/ielts-training.html">IELTS / TOEFL Training <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><span class="muted">Online &amp; Private Tutoring</span></li>
+            </ul>
+          </div>
+          <div class="program-group">
+            <h3>GeoTech Academy</h3>
+            <ul class="program-list">
+            <li><a href="courses/web-development.html">Web Development <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/data-analytics.html">Data Analytics <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/ui-ux-design.html">UI/UX Design <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/graphics-design.html">Graphics Design <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/cybersecurity.html">Cybersecurity <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><a href="courses/digital-marketing.html">Digital Marketing <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><span class="muted">Mobile App Development</span></li>
+            <li><span class="muted">Networking &amp; IT Support</span></li>
+            <li><span class="muted">Video Production &amp; Editing</span></li>
+            <li><span class="muted">Computer Foundation Class</span></li>
+            <li><span class="muted">Cryptocurrency Trading</span></li>
+            </ul>
+          </div>
+          <div class="program-group">
+            <h3>Consultancy</h3>
+            <ul class="program-list">
+            <li><a href="courses/admission-processing.html">Admission Processing <i class="fas fa-chevron-right" aria-hidden="true"></i></a></li>
+            <li><span class="muted">Educational Consultancy</span></li>
+            <li><span class="muted">Career &amp; Study-Abroad Guidance</span></li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="cta-banner" aria-labelledby="cta-title">
+    <section class="cta-band center" aria-labelledby="cta-title">
       <div class="container">
-        <h2 id="cta-title">Ready to Start Your Journey?</h2>
-        <p>Register online in a few minutes, or chat with our team to find the right program. Flexible schedules available.</p>
+        <h2 id="cta-title">Not sure which program fits?</h2>
+        <p>Tell us your goal and our team will point you to the right class and schedule.</p>
         <div class="cta-buttons">
-          <a href="register2.html" class="btn btn-accent btn-lg">Register Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp" aria-hidden="true"></i> Chat With Us</a>
+          <a href="register2.html" class="btn btn-light btn-lg">Register now</a>
+          <a href="https://wa.me/2347014673935" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg"><i class="fab fa-whatsapp" aria-hidden="true"></i> Chat with us</a>
         </div>
       </div>
     </section>
@@ -290,7 +249,8 @@
           </div>
         </div>
         <div class="footer-col">
-          <h2>Explore</h2>
+          <details class="footer-acc" open>
+            <summary>Explore<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
@@ -299,9 +259,11 @@
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
-          <h2>Programs</h2>
+          <details class="footer-acc" open>
+            <summary>Programs<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="courses/jamb-preparation.html">JAMB / UTME Prep</a></li>
             <li><a href="courses/waec-neco.html">WAEC / NECO</a></li>
@@ -310,15 +272,18 @@
             <li><a href="courses/admission-processing.html">Admission Processing</a></li>
             <li><a href="programs.html">Special Programs</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
-          <h2>Students</h2>
+          <details class="footer-acc" open>
+            <summary>Students<i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
           <ul>
             <li><a href="register2.html">Register Now</a></li>
             <li><a href="login2.html">Student Portal</a></li>
             <li><a href="payment.html">Make a Payment</a></li>
             <li><a href="register-staff.html">Staff Registration</a></li>
           </ul>
+          </details>
         </div>
         <div class="footer-col">
           <h2>Contact Us</h2>
@@ -339,7 +304,7 @@
   </a>
   <button type="button" id="scroll-top" aria-label="Back to top"><i class="fas fa-chevron-up" aria-hidden="true"></i></button>
 
-  <script src="../js/site-config.js" defer></script>
-  <script src="../js/script.js" defer></script>
+  <script src="../js/site-config.js?v=20260916" defer></script>
+  <script src="../js/script.js?v=20260916" defer></script>
 </body>
 </html>
